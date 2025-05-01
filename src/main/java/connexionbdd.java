@@ -2,12 +2,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class connexionbdd {
+public class Connexionbdd {
 
     // Informations de connexion
-    private static final String DB_URL = "jdbc:mysql://192.168.1.16:3306/codegame";
-    private static final String DB_USER = "remy";
-    private static final String DB_PASSWORD = "javadoc8%";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/codyngame";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "cytech0001";
 
     /**
      * Méthode pour obtenir une connexion à la base de données
