@@ -10,6 +10,5 @@ CREATE Table Exercice(
 	language VARCHAR(100)
 );
 
-Insert Into Exercice Values(1,"facile","écrivez un programme pour que le terminal renvoie 'hello world'", 'print("hello world")',0,0,"java");
-
-192.168.1.207
+Insert Into Exercice Values(1,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0,"Python");
+Insert Into Exercice Values(2,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0,"Python");
