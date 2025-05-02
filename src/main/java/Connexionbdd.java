@@ -103,4 +103,29 @@ public class Connexionbdd {
         }
     }
 
+    public String showConsigne(int choice) {
+        Connection conn = getConnection(); 
+        if (conn == null) {
+            System.out.println("Impossible de se connecter à la base de données.");
+            return null;
+        }
+    
+        try {
+            Statement stmt = conn.createStatement();
+            String query = "SELECT Question FROM Exercice WHERE Id = " + choice;
+            ResultSet rs = stmt.executeQuery(query);
+    
+            if (rs.next()) {
+                String question = rs.getString("Question");
+                return question;
+            } else {
+                System.out.println("Aucune consigne trouvée pour l'exercice " + choice);
+            }
+    
+            conn.close();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de la consigne : " + e.getMessage());
+        }
+        return null;
+    }
 }
