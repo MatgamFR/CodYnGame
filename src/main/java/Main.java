@@ -75,7 +75,7 @@ public class Main extends Application {
     private void executeCode(String code) {
         try {
             // Créer un fichier temporaire avec extension .py
-            Path tempFile = Files.createTempFile("codyngame_", ".py");
+            Path tempFile = Files.createTempFile("codyngame", ".py");
             
             // Écrire le code dans le fichier temporaire
             Files.writeString(tempFile, code);
@@ -84,15 +84,18 @@ public class Main extends Application {
             String[] predefinedInputs = {"Valeur1", "Valeur2", "Valeur3"};
             
             // Créer un fichier temporaire pour les entrées
-            Path inputFile = Files.createTempFile("inputs_", ".txt");
+            Path inputFile = Files.createTempFile("inputs", ".txt");
+
+            // Créer un fichier temporaire pour la sortie
+            Path outputFile = Files.createTempFile("output", ".txt");
             
             // Écrire toutes les entrées dans le fichier, une par ligne
-            Files.writeString(inputFile, String.join("\n", predefinedInputs));
+            Files.writeString(inputFile, String.join("\n", predefinedInputs));        
 
             // Créer un script shell pour gérer la redirection
             Path shellScript = Files.createTempFile("execute_", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                   "python3 " + tempFile.toAbsolutePath() + " < " + inputFile.toAbsolutePath() + " 2>&1";
+                                   "python3 " + tempFile.toAbsolutePath() + " < " + inputFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
             
             // Rendre le script exécutable
@@ -100,23 +103,6 @@ public class Main extends Application {
             
             // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
             Process process = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-            
-            // Créer un thread pour lire la sortie de manière asynchrone (faut demander à Romuald d'expliquer)
-            StringBuffer outputBuffer = new StringBuffer();
-            Thread outputReader = new Thread(() -> {
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println("Output: " + line);
-                        outputBuffer.append(line).append("\n");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            outputReader.setDaemon(true); // Marquer comme thread daemon pour qu'il se termine avec le programme principal
-            outputReader.start();
             
             // Définir un timeout global de 15 secondes
             boolean completed = process.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
@@ -132,16 +118,18 @@ public class Main extends Application {
             } else {
                 int exitCode = process.exitValue();
                 System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+
+                // Lire le contenu du fichier de sortie
+                String output = Files.readString(outputFile);
+                System.out.println(output);
             }
-            
-            // Attendre que le thread de lecture termine (avec un petit timeout)
-            outputReader.join(500);
             
             // Nettoyer les fichiers temporaires
             try {
                 Files.deleteIfExists(tempFile);
                 Files.deleteIfExists(inputFile);
                 Files.deleteIfExists(shellScript);
+                Files.deleteIfExists(outputFile);
             } catch (IOException e) {
                 System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
@@ -154,6 +142,7 @@ public class Main extends Application {
     
     public static void main(String[] args) {
         Connexionbdd.getConnection(); // Juste pour tester la connexion à la base de données
+        
         // Launch the JavaFX application
         launch(args);
     }
