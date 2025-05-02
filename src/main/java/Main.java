@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -59,6 +57,8 @@ public class Main extends Application {
         
         // Create a scene with a background color
         Scene scene = new Scene(root, 1280, 720, backgroundColor);
+
+        setDatabase(codeArea);
         
         // Config the stage
         Image appIcon = new Image(getClass().getResourceAsStream("/icon.png"));
@@ -66,6 +66,16 @@ public class Main extends Application {
         primaryStage.setTitle("JAVADOCodYnGame"); // Set the title of the window
         primaryStage.setScene(scene); // Set the scene to the stage
         primaryStage.show(); // Show the stage
+    }
+
+    private void setDatabase(TextArea textArea){
+        int choice = 0;
+        Connexionbdd dbService = new Connexionbdd();
+        dbService.showExolist();
+        choice = dbService.choiceExo();
+        String Consigne = dbService.showConsigne(choice);
+        System.out.println("Consigne: " + Consigne);
+        textArea.setText("#"+Consigne+"\n\nword = input()\n\nprint(word)");
     }
     
     /**
@@ -141,11 +151,9 @@ public class Main extends Application {
     }
     
     public static void main(String[] args) {
-        int choice = 0;
-        Connexionbdd dbService = new Connexionbdd();
-        dbService.showExolist();
-        choice = dbService.choiceExo();
+        
         // Launch the JavaFX application
         launch(args);
+        
     }
 }
