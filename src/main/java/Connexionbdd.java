@@ -41,16 +41,21 @@ public class Connexionbdd {
                 String question = rs.getString("Question");
                 int tries = rs.getInt("Try");
                 int successfulTries = rs.getInt("Successfulltry");
-                String language = rs.getString("language");
     
                 System.out.println("Exercice " + id +
-                    ", difficulty: " + difficulty +
+                    ", Difficulty: " + difficulty +
                     ", Question: " + question +
                     ", Try: " + tries +
                     ", SuccessfulTry: " + successfulTries +
-                    ", Language disponible: " + language);
+                    ", Language disponible: ");
+                    Statement stmt2 = conn.createStatement();
+                    String query2 = "SELECT NomLanguage FROM LanguageCode WHERE Exerciceid = "+id;
+                    ResultSet rs2 = stmt2.executeQuery(query2);
+                    while (rs2.next()) {
+                        String language = rs2.getString("NomLanguage");
+                        System.out.println("*"+language);
             }
-    
+        }
             conn.close();
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des exercices : " + e.getMessage());

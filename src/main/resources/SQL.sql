@@ -1,3 +1,4 @@
+Drop table LanguageCode;
 Drop table Exercice;
 
 CREATE Table Exercice(
@@ -6,9 +7,17 @@ CREATE Table Exercice(
 	Question VARCHAR(1000),
 	Answer VARCHAR(1000),
 	Try INT,
-	Successfulltry INT,
-	language VARCHAR(100)
+	Successfulltry INT
 );
 
-Insert Into Exercice Values(1,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0,"Python");
-Insert Into Exercice Values(2,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0,"Python");
+Create table LanguageCode(
+	Id INT AUTO_INCREMENT PRIMARY KEY,
+	Exerciceid INT,
+	NomLanguage VARCHAR(100),
+	FOREIGN KEY (Exerciceid) REFERENCES Exercice(Id)
+);
+
+Insert Into Exercice Values(1,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0);
+Insert Into Exercice Values(2,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0);
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python');
