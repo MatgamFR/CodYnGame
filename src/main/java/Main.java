@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -34,14 +35,35 @@ public class Main extends Application {
         // Créer un bouton pour exécuter le code
         Button runButton = new Button("Exécuter");
         runButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
-        
+
+        ComboBox<String> languageSelector = new ComboBox<>();
+        languageSelector.getItems().addAll("Python", "Java");
+        languageSelector.setValue("Python"); // Sélection par défaut
+        languageSelector.setStyle("-fx-background-color:rgb(236, 227, 227); -fx-text-fill: white;");   
+
+        String consigne = setDatabase(codeArea);
+
         // Add a action button with a lamdbda function
         runButton.setOnAction(event -> {
-            JavaExecuteCode.executeCode(codeArea.getText());
+            String code = codeArea.getText();
+            String language = languageSelector.getValue();
+            
+            IDEExecuteCode executor = LanguageChoice.choice(language);
+
+            executor.executeCode(code);         
+        });
+
+        languageSelector.setOnAction(event -> {
+            String language = languageSelector.getValue();     
+            if(language.equals("Python")){
+                codeArea.setText("#"+consigne+"\n\nword = input()\n\nprint(word)");
+            }else if(language.equals("Java")){  
+                codeArea.setText("#"+consigne+"\n\nScanner sc = new Scanner(System.in);\nword = sc.nextLine();\n\nSystem.out.println(word);");
+            }
         });
         
         // Créer une HBox pour contenir le bouton
-        HBox buttonBox = new HBox(runButton);
+        HBox buttonBox = new HBox(10, languageSelector, runButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: #2D2D2D;");
 
@@ -53,8 +75,6 @@ public class Main extends Application {
         
         // Create a scene with a background color
         Scene scene = new Scene(root, 1280, 720, backgroundColor);
-
-        setDatabase(codeArea);
         
         // Config the stage
         Image appIcon = new Image(getClass().getResourceAsStream("/icon.png"));
@@ -64,7 +84,7 @@ public class Main extends Application {
         primaryStage.show(); // Show the stage
     }
 
-    private void setDatabase(TextArea textArea){
+    private String setDatabase(TextArea textArea){
         int choice = 0;
         Connexionbdd dbService = new Connexionbdd();
         dbService.showExolist();
@@ -72,6 +92,7 @@ public class Main extends Application {
         String Consigne = dbService.showConsigne(choice);
         System.out.println("Consigne: " + Consigne);
         textArea.setText("#"+Consigne+"\n\nword = input()\n\nprint(word)");
+        return Consigne;
     }
     
 

@@ -5,13 +5,13 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JavaExecuteCode {
-
+public class JavaExecuteCode extends IDEExecuteCode {
     /**
      * Méthode qui exécute le code saisi par l'utilisateur
      * @param code Le code à exécuter
      */
-    static public void executeCode(String code) {
+    @Override
+    public void executeCode(String code) {
         try {
             // Créer un fichier temporaire avec extension .java
             Path tempFile = Files.createTempFile("codyngame", ".java");
@@ -86,5 +86,10 @@ public class JavaExecuteCode {
             e.printStackTrace();
             System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void compileCode(String code) {
+
     }
 }
