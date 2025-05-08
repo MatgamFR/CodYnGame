@@ -39,7 +39,6 @@ public class Connexionbdd {
                 int id = rs.getInt("Id");
                 String difficulty = rs.getString("difficulty");
                 String question = rs.getString("Question");
-                String answer = rs.getString("Answer");
                 int tries = rs.getInt("Try");
                 int successfulTries = rs.getInt("Successfulltry");
                 String language = rs.getString("language");
@@ -47,7 +46,6 @@ public class Connexionbdd {
                 System.out.println("Exercice " + id +
                     ", difficulty: " + difficulty +
                     ", Question: " + question +
-                    ", Answer: " + answer +
                     ", Try: " + tries +
                     ", SuccessfulTry: " + successfulTries +
                     ", Language disponible: " + language);
