@@ -1,5 +1,5 @@
-Drop table LanguageCode;
-Drop table Exercice;
+Drop table if exists LanguageCode;
+Drop table if exists Exercice;
 
 CREATE Table Exercice(
 	Id INT PRIMARY KEY,
