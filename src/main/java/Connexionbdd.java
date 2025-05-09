@@ -3,14 +3,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.io.File;
-import java.net.URL;
-import java.net.URISyntaxException;
-import java.io.IOException;
 
 public class Connexionbdd {
 
@@ -29,6 +24,27 @@ public class Connexionbdd {
         }
     }
 
+    public int maxexo(){
+        int id = 0;
+        Connection conn = getConnection();
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS max_id FROM Exercice");
+    
+            if (rs.next()) {
+                id = rs.getInt("max_id");
+            }
+    
+            rs.close();
+            stmt.close();
+            conn.close();
+            return id;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return id;
+    }
+}
+
     // 2. Méthode pour afficher les exos
     public void showExolist() {
         Connection conn = getConnection(); // Connexion à la BDD
@@ -44,12 +60,14 @@ public class Connexionbdd {
     
             while (rs.next()) {
                 int id = rs.getInt("Id");
+                String Titre = rs.getString("Titre");
                 String difficulty = rs.getString("difficulty");
                 String question = rs.getString("Question");
                 int tries = rs.getInt("Try");
                 int successfulTries = rs.getInt("Successfulltry");
     
                 System.out.println("Exercice " + id +
+                    ", Titre: " + Titre +
                     ", Difficulty: " + difficulty +
                     ", Question: " + question +
                     ", Try: " + tries +
@@ -96,22 +114,7 @@ public class Connexionbdd {
         return choice;
     }
 
-    public void choiceExo(int choice){
-        Connection conn = getConnection(); // Récupère la connexion
-        if (conn == null) {
-            System.out.println("Impossible de se connecter à la base de données.");
-        }
-        try {
-            Statement stmt = conn.createStatement();
-            String query = "SELECT Question FROM Exercice WHERE Id = choice";
-            ResultSet rs = stmt.executeQuery(query);
 
-
-            conn.close();
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération des données : " + e.getMessage());
-        }
-    }
 
     public String showConsigne(int choice) {
         Connection conn = getConnection(); 
@@ -139,48 +142,33 @@ public class Connexionbdd {
         return null;
     }
 
-    public void addResources() {
-        Connection conn = getConnection(); // Connexion à la BDD
-        if (conn == null) {
-            System.out.println("Impossible de se connecter à la base de données.");
-            return;
-        }
+    public List<String> getAvailableLanguages(int exerciseId) {
+        List<String> languages = new ArrayList<>();
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT NomLanguage FROM LanguageCode WHERE Exerciceid = " + exerciseId)) {
 
-        try {
-            URL resourceUrl = getClass().getResource("/SQL.sql");
-            if (resourceUrl == null) {
-                System.err.println("Impossible de trouver le fichier SQL.sql dans les ressources.");
-                return;
+            while (rs.next()) {
+                languages.add(rs.getString("NomLanguage"));
             }
-            
-            try {
-                // Lire le contenu du fichier SQL
-                String sqlScript = Files.readString(Path.of(new File(resourceUrl.toURI()).getAbsolutePath()));
-                System.out.println("Fichier SQL trouvé et lu avec succès");
-                
-                // Diviser le script en instructions SQL individuelles
-                String[] sqlCommande= sqlScript.split(";");
-                
-                Statement stmt = conn.createStatement();
-                
-                // Exécuter chaque instruction SQL séparément
-                for (String sqlLigne : sqlCommande) {
-                    // Ignorer les lignes vides ou les commentaires
-                    String trimmedSql = sqlLigne.trim();
-                    if (!trimmedSql.isEmpty() && !trimmedSql.startsWith("--") && !trimmedSql.startsWith("#")) {
-                        stmt.execute(trimmedSql);
-                    }
-                }
-                
-                stmt.close();
-                System.out.println("Script SQL exécuté avec succès.");
-            } catch (URISyntaxException | IOException e) {
-                System.err.println("Erreur lors de la lecture du fichier SQL : " + e.getMessage());
-            }
-            
-            conn.close();
         } catch (SQLException e) {
-            System.err.println("Erreur SQL : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des langages disponibles : " + e.getMessage());
         }
+        return languages;
+    }
+
+    public String getExerciceTitle(int exerciseId) {
+        String titre = "Titre non disponible";
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT Titre FROM Exercice WHERE Id = " + exerciseId)) {
+
+            if (rs.next()) {
+                titre = rs.getString("Titre");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération du titre de l'exercice : " + e.getMessage());
+        }
+        return titre;
     }
 }

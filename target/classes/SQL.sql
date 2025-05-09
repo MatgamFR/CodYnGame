@@ -1,8 +1,9 @@
-Drop table if exists LanguageCode;
-Drop table if exists Exercice;
+Drop table LanguageCode;
+Drop table Exercice;
 
 CREATE Table Exercice(
 	Id INT PRIMARY KEY,
+	Titre VARCHAR(50),
 	difficulty VARCHAR(20),
 	Question VARCHAR(1000),
 	Answer VARCHAR(1000),
@@ -17,7 +18,7 @@ Create table LanguageCode(
 	FOREIGN KEY (Exerciceid) REFERENCES Exercice(Id)
 );
 
-Insert Into Exercice Values(1,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0);
-Insert Into Exercice Values(2,"facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0);
+Insert Into Exercice Values(1,"Hello World!","facile","écrivez un programme pour que le terminal renvoie rien", 'print("hello world")',0,0);
+Insert Into Exercice Values(2,"Hello World!(sans python)","facile","écrivez un programme pour que le terminal renvoie hello world", 'print("hello world")',0,0);
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java');
-INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Java');
