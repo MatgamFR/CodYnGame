@@ -97,10 +97,25 @@ public class Main extends Application {
         exerciseList.setOnMouseClicked(event -> {
             HBox selectedItem = exerciseList.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
+                // Récupérer le numéro de l'exercice à partir du premier label dans l'HBox
                 Label exerciseNumberLabel = (Label) selectedItem.getChildren().get(0);
-                int selectedExo = Integer.parseInt(exerciseNumberLabel.getText().replace("Exercice ", ""));
+                String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
+                int selectedExo;
+
+                try {
+                    selectedExo = Integer.parseInt(exerciseNumberText); // Convertir en entier
+                } catch (NumberFormatException e) {
+                    System.err.println("Erreur : Impossible de convertir le numéro de l'exercice. Texte : " + exerciseNumberText);
+                    return; // Arrêter si le numéro est invalide
+                }
+
+                // Récupérer et afficher la consigne
                 String consigne = dbService.showConsigne(selectedExo);
-                codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
+                if (consigne != null) {
+                    codeArea.setText("/* " + consigne + " */\n\nword = input()\n\nprint(word)");
+                } else {
+                    codeArea.setText("/* Aucune consigne disponible pour cet exercice. */\n\nword = input()\n\nprint(word)");
+                }
 
                 // Récupérer les langages disponibles pour l'exercice sélectionné
                 languageSelector.getItems().clear();
@@ -109,12 +124,7 @@ public class Main extends Application {
                 // Définir le premier langage disponible comme valeur par défaut
                 if (!languageSelector.getItems().isEmpty()) {
                     languageSelector.setValue(languageSelector.getItems().get(0));
-                }
-
-                primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
-
-                // Mettre à jour la consigne dans la fonction languageSelector.setOnAction
-                languageSelector.setOnAction(eventLang -> {
+                    // Mettre à jour la zone de code en fonction du langage sélectionné
                     String language = languageSelector.getValue();
                     if (language.equals("Python")) {
                         codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
@@ -124,12 +134,16 @@ public class Main extends Application {
                             "import java.util.Scanner;\n\n" +
                             "public class Main {\n" +
                             "    public static void main(String[] args) {\n" +
-                            "        System.out.println(\"word\");\n" +
+                            "        Scanner sc = new Scanner(System.in);\n" +
+                            "        String word = sc.nextLine();\n" +
+                            "        System.out.println(word);\n" +
                             "    }\n" +
                             "}"
                         );
                     }
-                });
+                }
+
+                primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
             }
         });
 
@@ -138,13 +152,11 @@ public class Main extends Application {
             String language = languageSelector.getValue();
             
             if (language.equals("Java")) {
-                JavaCompilerCode compiler = new JavaCompilerCode();
-                compiler.compileCode(code); // Compile le code Java
-                JavaExecuteCode executor = new JavaExecuteCode();
-                executor.executeCode(code); // Exécute le code compilé
+                JavaCompilerExecuteCode compiler = new JavaCompilerExecuteCode();
+                compiler.executeCode(code); // Utiliser JavaCompilerExecuteCode pour compiler et exécuter le code
             } else {
                 IDEExecuteCode executor = LanguageChoice.choice(language);
-                executor.executeCode(code); // Exécute le code Python
+                executor.executeCode(code); // Exécuter le code Python
             }
         });
 
