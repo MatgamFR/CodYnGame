@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -31,6 +32,7 @@ public class Main extends Application {
         Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
         descriptionLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
 
+
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
         exerciseList.setStyle("-fx-control-inner-background: #2D2D2D; -fx-text-fill: white;");
@@ -56,6 +58,105 @@ public class Main extends Application {
 
         // Créer une scène pour la fenêtre principale
         Scene mainScene = new Scene(mainRoot, 1600, 900, backgroundColorMain);
+
+        // Ajouter un bouton "+" pour ajouter des exercices
+        Button addButton = new Button("+");
+        addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        
+        // Nouvelle scène pour ajouter des exercices
+        BorderPane addExerciseRoot = new BorderPane();
+        VBox addExerciseBox = new VBox(10);
+        addExerciseBox.setAlignment(Pos.CENTER);
+        addExerciseBox.setStyle("-fx-background-color: #1E1E1E;");
+
+        Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
+        addExerciseLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
+
+        TextArea titleInput = new TextArea();
+        titleInput.setPromptText("Titre de l'exercice");
+        titleInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+
+        TextArea questionInput = new TextArea();
+        questionInput.setPromptText("Question de l'exercice");
+        questionInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+
+        TextArea difficultyInput = new TextArea();
+        difficultyInput.setPromptText("Difficulté de l'exercice (facile, moyen, difficile)");
+        difficultyInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+
+        // Ajouter des cases à cocher pour choisir les langages
+        CheckBox pythonCheckBox = new CheckBox("Python");
+        pythonCheckBox.setStyle("-fx-text-fill: white;");
+        CheckBox javaCheckBox = new CheckBox("Java");
+        javaCheckBox.setStyle("-fx-text-fill: white;");
+
+        HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox);
+        languageSelectionBox.setAlignment(Pos.CENTER);
+        languageSelectionBox.setStyle("-fx-padding: 10px;");
+
+        Button saveButton = new Button("Enregistrer");
+        saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        Button cancelButton = new Button("Annuler");
+        cancelButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: white; -fx-font-weight: bold;");
+        cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
+
+        saveButton.setOnAction(event -> {
+            String title = titleInput.getText();
+            String question = questionInput.getText();
+            String difficulty = difficultyInput.getText();
+            boolean isPythonSelected = pythonCheckBox.isSelected();
+            boolean isJavaSelected = javaCheckBox.isSelected();
+
+            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isJavaSelected)) {
+                if (dbService.isTitleExists(title)) {
+                    System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
+                } else {
+                    int exerciseId = dbService.addExercise(title, question, difficulty); // Ajouter l'exercice à la base de données
+
+                    // Ajouter les langages sélectionnés à la base de données
+                    if (isPythonSelected) {
+                        dbService.addLanguageToExercise(exerciseId, "Python");
+                    }
+                    if (isJavaSelected) {
+                        dbService.addLanguageToExercise(exerciseId, "Java");
+                    }
+
+                    // Mettre à jour la liste des exercices
+                    exerciseList.getItems().clear();
+                    for (int i = 1; i <= dbService.maxexo(); i++) {
+                        String titre = dbService.getExerciceTitle(i);
+                        Label exerciseNumber = new Label("Exercice " + i);
+                        exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                        Label exerciseTitle = new Label(titre);
+                        exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                        HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                        exerciseItem.setSpacing(10);
+                        exerciseList.getItems().add(exerciseItem);
+                    }
+                    primaryStage.setScene(mainScene); // Retour à la scène principale
+                }
+            } else {
+                // Afficher un message d'erreur si les champs sont incomplets ou aucun langage n'est sélectionné
+                System.err.println("Veuillez remplir tous les champs et sélectionner au moins un langage.");
+            }
+        });
+
+        HBox buttonBoxAdd = new HBox(10, cancelButton, saveButton);
+        buttonBoxAdd.setAlignment(Pos.CENTER);
+
+        addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, languageSelectionBox, buttonBoxAdd);
+        addExerciseRoot.setCenter(addExerciseBox);
+
+        Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
+
+        addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
+
+        // Ajouter le bouton "+" en haut de la scène principale
+        HBox topBar = new HBox(10, addButton);
+        topBar.setAlignment(Pos.CENTER_RIGHT);
+        topBar.setStyle("-fx-background-color: #2D2D2D; -fx-padding: 10px;");
+        mainRoot.setTop(topBar);
 
         // Fenêtre secondaire (zone de code)
         BorderPane secondaryRoot = new BorderPane();

@@ -2,7 +2,7 @@ Drop table if exists LanguageCode;
 Drop table if exists Exercice;
 
 CREATE Table Exercice(
-	Id INT PRIMARY KEY,
+	Id INT AUTO_INCREMENT PRIMARY KEY,
 	Titre VARCHAR(50),
 	difficulty VARCHAR(20),
 	Question VARCHAR(1000),

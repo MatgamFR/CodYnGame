@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Scanner;
+import java.util.Scanner;
 
 public class Connexionbdd {
 
@@ -87,7 +87,7 @@ public class Connexionbdd {
         }
     }
 
-    /*public int choiceExo() {
+    public int choiceExo() {
         int id = 0;
         Connection conn = getConnection();
         try {
@@ -112,7 +112,7 @@ public class Connexionbdd {
             choice = scanner.nextInt();
         }
         return choice;
-    }*/
+    }
 
 
 
@@ -170,5 +170,51 @@ public class Connexionbdd {
             System.err.println("Erreur lors de la récupération du titre de l'exercice : " + e.getMessage());
         }
         return titre;
+    }
+
+    public int addExercise(String title, String question, String difficulty) {
+        String query = "INSERT INTO Exercice (Titre, Question, difficulty, Try, Successfulltry) VALUES (?, ?, ?, 0, 0)";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, title);
+            stmt.setString(2, question);
+            stmt.setString(3, difficulty);
+            stmt.executeUpdate();
+
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1); // Retourner l'ID généré
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout de l'exercice : " + e.getMessage());
+        }
+        return -1; // Retourner -1 en cas d'erreur
+    }
+
+    public void addLanguageToExercise(int exerciseId, String language) {
+        String query = "INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            stmt.setString(2, language);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout du langage à l'exercice : " + e.getMessage());
+        }
+    }
+
+    public boolean isTitleExists(String title) {
+        String query = "SELECT COUNT(*) FROM Exercice WHERE Titre = ?";
+        try (Connection conn = getConnection();
+            java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, title);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Retourne true si le titre existe
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification du titre : " + e.getMessage());
+        }
+        return false; // Retourne false en cas d'erreur ou si le titre n'existe pas
     }
 }
