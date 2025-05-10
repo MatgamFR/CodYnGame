@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+//a
 public class Connexionbdd {
 
     // Informations de connexion
