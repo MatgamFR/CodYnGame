@@ -26,16 +26,15 @@ public class Main extends Application {
 
         // Titre de la page
         Label titleLabel = new Label("Le codyngame de la javadocance");
-        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
+        titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Description
         Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
-        descriptionLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
-
+        descriptionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
-        exerciseList.setStyle("-fx-control-inner-background: #2D2D2D; -fx-text-fill: white;");
+        exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         for (int i = 1; i <= maxExo; i++) {
             String titre = dbService.getExerciceTitle(i); // Récupérer le titre de l'exercice
             Label exerciseNumber = new Label("Exercice " + i);
@@ -50,7 +49,7 @@ public class Main extends Application {
 
         // Organiser les composants dans un VBox
         VBox contentBox = new VBox(10, titleLabel, descriptionLabel, exerciseList);
-        contentBox.setStyle("-fx-background-color: #1E1E1E;");
+        contentBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         contentBox.setAlignment(Pos.CENTER);
 
         // Ajouter le contenu au centre de la fenêtre principale
@@ -61,44 +60,46 @@ public class Main extends Application {
 
         // Ajouter un bouton "+" pour ajouter des exercices
         Button addButton = new Button("+");
-        addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
-        
+        addButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #ffffff); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 8, 0.5, 0, 2);"));
+        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);"));
+
         // Nouvelle scène pour ajouter des exercices
         BorderPane addExerciseRoot = new BorderPane();
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
-        addExerciseBox.setStyle("-fx-background-color: #1E1E1E;");
+        addExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
-        addExerciseLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
+        addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         TextArea titleInput = new TextArea();
         titleInput.setPromptText("Titre de l'exercice");
-        titleInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+        titleInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         TextArea questionInput = new TextArea();
         questionInput.setPromptText("Question de l'exercice");
-        questionInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+        questionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         TextArea difficultyInput = new TextArea();
         difficultyInput.setPromptText("Difficulté de l'exercice (facile, moyen, difficile)");
-        difficultyInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black; -fx-background-color: white;");
+        difficultyInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Ajouter des cases à cocher pour choisir les langages
         CheckBox pythonCheckBox = new CheckBox("Python");
-        pythonCheckBox.setStyle("-fx-text-fill: white;");
+        pythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
         CheckBox javaCheckBox = new CheckBox("Java");
-        javaCheckBox.setStyle("-fx-text-fill: white;");
+        javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox);
         languageSelectionBox.setAlignment(Pos.CENTER);
         languageSelectionBox.setStyle("-fx-padding: 10px;");
 
         Button saveButton = new Button("Enregistrer");
-        saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        saveButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
 
         Button cancelButton = new Button("Annuler");
-        cancelButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: white; -fx-font-weight: bold;");
+        cancelButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
 
         saveButton.setOnAction(event -> {
@@ -155,7 +156,7 @@ public class Main extends Application {
         // Ajouter le bouton "+" en haut de la scène principale
         HBox topBar = new HBox(10, addButton);
         topBar.setAlignment(Pos.CENTER_RIGHT);
-        topBar.setStyle("-fx-background-color: #2D2D2D; -fx-padding: 10px;");
+        topBar.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         mainRoot.setTop(topBar);
 
         // Fenêtre secondaire (zone de code)
@@ -164,20 +165,20 @@ public class Main extends Application {
 
         // Ajouter une zone de texte pour écrire du code
         TextArea codeArea = new TextArea();
-        codeArea.setStyle("-fx-control-inner-background: #1E1E1E; -fx-text-fill:rgb(255, 254, 254); -fx-background-color: #1E1E1E;");
+        codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         codeArea.setWrapText(false);
 
         // Ajouter un bouton pour exécuter le code
         Button runButton = new Button("Exécuter");
-        runButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        runButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
 
         // Ajouter un bouton pour revenir à la liste des exercices
         Button backButton = new Button("Retour à la liste des exercices");
-        backButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: white; -fx-font-weight: bold;");
+        backButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         backButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Revenir à la scène principale
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.setStyle("-fx-background-color:rgb(236, 227, 227); -fx-text-fill: white;");
+        languageSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Ajouter une boîte pour organiser les composants
         HBox codeBox = new HBox(codeArea);
@@ -186,7 +187,7 @@ public class Main extends Application {
 
         HBox buttonBox = new HBox(10, backButton, languageSelector, runButton);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setStyle("-fx-background-color: #2D2D2D;");
+        buttonBox.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
         secondaryRoot.setCenter(codeBox);
         secondaryRoot.setBottom(buttonBox);

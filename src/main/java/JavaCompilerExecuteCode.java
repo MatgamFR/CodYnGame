@@ -11,7 +11,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             if (!code.contains("public class Main")) {
                 throw new IllegalArgumentException("Le code Java doit contenir une classe publique nommée 'Main'.");
             }
-
+            
             tempDir = Files.createTempDirectory("codyngame");
             Path tempFile = tempDir.resolve("Main.java");
             Files.writeString(tempFile, code);
