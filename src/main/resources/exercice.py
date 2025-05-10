@@ -6,6 +6,10 @@ def main():
             # exercice corrigé
             print("hello world")
             pass
+        case 2:    
+            # exercice corrigé
+            print("Hello")
+            pass
 
     
 

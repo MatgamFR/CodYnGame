@@ -8,7 +8,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
      * @param code Le code à exécuter
      */
     @Override
-    public void executeCode(String code) {
+    public void executeCode(String code, int id) {
         try {
             // Créer un fichier temporaire avec extension .py
             Path tempFile = Files.createTempFile("codyngame", ".py");
@@ -28,12 +28,12 @@ public class PythonExecuteCode extends IDEExecuteCode {
 
             Path shellScript = Files.createTempFile("execute", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                   "python3 src/main/resources/randomGeneration.py " + seed + " 1 | python3 " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+                                   "python3 src/main/resources/randomGeneration.py " + seed + id + " | python3 " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
 
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
             String scriptContent2 = "#!/bin/bash\n" +
-                                   "python3 src/main/resources/randomGeneration.py " + seed + " 1 | python3 src/main/resources/exercice.py 1" + " > " + outputFile2.toAbsolutePath() + " 2>&1";
+                                   "python3 src/main/resources/randomGeneration.py " + seed + id + " | python3 src/main/resources/exercice.py 1" + " > " + outputFile2.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript2, scriptContent2);
             
             // Rendre le script exécutable

@@ -247,13 +247,16 @@ public class Main extends Application {
         runButton.setOnAction(event -> {
             String code = codeArea.getText();
             String language = languageSelector.getValue();
-            
+            HBox selectedItem = exerciseList.getSelectionModel().getSelectedItem();
+            Label exerciseNumberLabel = (Label) selectedItem.getChildren().get(0);
+            String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
+            int id = Integer.parseInt(exerciseNumberText); 
             if (language.equals("Java")) {
                 JavaCompilerExecuteCode compiler = new JavaCompilerExecuteCode();
-                compiler.executeCode(code); // Utiliser JavaCompilerExecuteCode pour compiler et exécuter le code
+                compiler.executeCode(code, id); // Utiliser JavaCompilerExecuteCode pour compiler et exécuter le code
             } else {
                 IDEExecuteCode executor = LanguageChoice.choice(language);
-                executor.executeCode(code); // Exécuter le code Python
+                executor.executeCode(code, id); // Exécuter le code Python
             }
         });
 
