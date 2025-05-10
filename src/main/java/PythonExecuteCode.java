@@ -15,23 +15,16 @@ public class PythonExecuteCode extends IDEExecuteCode {
             
             // Écrire le code dans le fichier temporaire
             Files.writeString(tempFile, code);
-            
-            // Définir les entrées prédéfinies
-            String[] predefinedInputs = {"Valeur1", "Valeur2", "Valeur3"};
-            
-            // Créer un fichier temporaire pour les entrées
-            Path inputFile = Files.createTempFile("inputs", ".txt");
 
             // Créer un fichier temporaire pour la sortie
             Path outputFile = Files.createTempFile("output", ".txt");
             
-            // Écrire toutes les entrées dans le fichier, une par ligne
-            Files.writeString(inputFile, String.join("\n", predefinedInputs));        
+            long seed = System.currentTimeMillis();
 
             // Créer un script shell pour gérer la redirection
             Path shellScript = Files.createTempFile("execute_", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                   "python3 " + tempFile.toAbsolutePath() + " < " + inputFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+                                   "python3 src/main/resources/randomGeneration.py " + seed + " 1 | python3 " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
             
             // Rendre le script exécutable
@@ -63,7 +56,6 @@ public class PythonExecuteCode extends IDEExecuteCode {
             // Nettoyer les fichiers temporaires
             try {
                 Files.deleteIfExists(tempFile);
-                Files.deleteIfExists(inputFile);
                 Files.deleteIfExists(shellScript);
                 Files.deleteIfExists(outputFile);
             } catch (IOException e) {

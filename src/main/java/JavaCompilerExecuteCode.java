@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -18,7 +16,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             Path tempFile = tempDir.resolve("Main.java");
             Files.writeString(tempFile, code);
 
-            Process process = Runtime.getRuntime().exec("javac " + tempFile.toAbsolutePath());
+            Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
             if (process.waitFor() != 0) {
                 System.err.println("Erreur de compilation :");
                 process.getErrorStream().transferTo(System.err);
@@ -49,21 +47,14 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             Path tempFile = tempDir.resolve("Main.java");
             Files.writeString(tempFile, code);
 
-            // Définir les entrées prédéfinies
-            String[] predefinedInputs = {"Valeur1", "Valeur2", "Valeur3"};
-            
-            // Créer un fichier temporaire pour les entrées
-            Path inputFile = Files.createTempFile("inputs", ".txt");
-
             // Créer un fichier temporaire pour la sortie
             Path outputFile = Files.createTempFile("output", ".txt");
-
-            // Écrire toutes les entrées dans le fichier, une par ligne
-            Files.writeString(inputFile, String.join("\n", predefinedInputs));     
+            
+            long seed = System.currentTimeMillis();
 
             Path shellScript = Files.createTempFile("execute_", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                    "java " + tempFile.toAbsolutePath() + " < " + inputFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+                                    "python3 src/main/resources/randomGeneration.py " + seed + " 1 | java " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
 
             Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
@@ -91,7 +82,6 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             // Nettoyer les fichiers temporaires
             try {
                 Files.deleteIfExists(tempFile);
-                Files.deleteIfExists(inputFile);
                 Files.deleteIfExists(shellScript);
                 Files.deleteIfExists(outputFile);
             } catch (IOException e) {
