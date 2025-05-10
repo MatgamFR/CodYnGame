@@ -43,39 +43,65 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
     @Override
     public void executeCode(String code) {
-        Path tempDir = null;
-        try {
+        try{
+            Path tempDir = null;
             tempDir = Files.createTempDirectory("codyngame");
             Path tempFile = tempDir.resolve("Main.java");
             Files.writeString(tempFile, code);
 
-            Process compileProcess = Runtime.getRuntime().exec("javac " + tempFile.toAbsolutePath());
-            if (compileProcess.waitFor() != 0) {
-                System.err.println("Erreur de compilation :");
-                compileProcess.getErrorStream().transferTo(System.err);
-                return;
+            // Définir les entrées prédéfinies
+            String[] predefinedInputs = {"Valeur1", "Valeur2", "Valeur3"};
+            
+            // Créer un fichier temporaire pour les entrées
+            Path inputFile = Files.createTempFile("inputs", ".txt");
+
+            // Créer un fichier temporaire pour la sortie
+            Path outputFile = Files.createTempFile("output", ".txt");
+
+            // Écrire toutes les entrées dans le fichier, une par ligne
+            Files.writeString(inputFile, String.join("\n", predefinedInputs));     
+
+            Path shellScript = Files.createTempFile("execute_", ".sh");
+            String scriptContent = "#!/bin/bash\n" +
+                                    "java " + tempFile.toAbsolutePath() + " < " + inputFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+            Files.writeString(shellScript, scriptContent);
+
+            Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
+
+            // Définir un timeout global de 15 secondes
+            boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+            
+            if (!completed) {
+                System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                executeProcess.destroy();
+                executeProcess.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                if (executeProcess.isAlive()) {
+                    executeProcess.destroyForcibly();
+                }
+                System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+            } else {
+                int exitCode = executeProcess.exitValue();
+                System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+
+                // Lire le contenu du fichier de sortie
+                String output = Files.readString(outputFile);
+                System.out.println(output);
             }
 
-            Process executeProcess = Runtime.getRuntime().exec("java -cp " + tempDir + " Main");
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(executeProcess.getInputStream()))) {
-                reader.lines().forEach(System.out::println);
-            }
-            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(executeProcess.getErrorStream()))) {
-                errorReader.lines().forEach(System.err::println);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            System.err.println("Erreur lors de l'exécution : " + e.getMessage());
-        } finally {
             // Nettoyer les fichiers temporaires
-            if (tempDir != null) {
-                try {
-                    Files.walk(tempDir).map(Path::toFile).forEach(file -> file.delete());
-                    tempDir.toFile().delete();
-                } catch (IOException e) {
-                    System.err.println("Erreur lors du nettoyage des fichiers temporaires : " + e.getMessage());
-                }
+            try {
+                Files.deleteIfExists(tempFile);
+                Files.deleteIfExists(inputFile);
+                Files.deleteIfExists(shellScript);
+                Files.deleteIfExists(outputFile);
+            } catch (IOException e) {
+                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
+            
+        } 
+        catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
     }
 }
