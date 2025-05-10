@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 public class Connexionbdd {
 
@@ -87,7 +87,7 @@ public class Connexionbdd {
         }
     }
 
-    public int choiceExo() {
+    /*public int choiceExo() {
         int id = 0;
         Connection conn = getConnection();
         try {
@@ -112,7 +112,7 @@ public class Connexionbdd {
             choice = scanner.nextInt();
         }
         return choice;
-    }
+    }*/
 
 
 

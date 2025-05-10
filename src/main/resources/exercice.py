@@ -1,9 +1,10 @@
 import sys
 
 def main():
-    match sys.argv[1]:
+    match int(sys.argv[1]):
         case 1:    
             # exercice corrigé
+            print("hello world")
             pass
 
     
