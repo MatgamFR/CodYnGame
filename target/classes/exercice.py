@@ -5,12 +5,10 @@ def main():
         case 1:    
             # exercice corrigé
             print("hello world")
-            pass
         case 2:    
             # exercice corrigé
-            def somme(a, b):
-                return a + b
-            pass
+            print(int(input())+int(input()))
+            
 
     
 
