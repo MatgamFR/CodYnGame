@@ -145,19 +145,4 @@ public class CcompilerExecuter extends IDEExecuteCode {
             System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
     } 
-
-
-    private void analyzeCompilationErrors(String errorOutputC) {
-        System.err.println("ERREURS DE COMPILATION");
-        
-        if (errorOutputC.contains("error:")) {
-            System.err.println("[ERREUR SYNTAXE]");
-        } 
-        if (errorOutputC.contains("warning:")) {
-            System.err.println("[AVERTISSEMENT]");
-        }
-        
-        System.err.println(errorOutputC);
-    }
-
 }
