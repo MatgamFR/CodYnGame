@@ -62,7 +62,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
             String scriptContent2 = "#!/bin/bash\n" +
-                                   "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | python3 src/main/resources/exercice.py" + id + " > " + outputFile2.toAbsolutePath() + " 2>&1";
+                                   "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | python3 src/main/resources/exercice.py " + id + " > " + outputFile2.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript2, scriptContent2);
             
             // Rendre le script exécutable
