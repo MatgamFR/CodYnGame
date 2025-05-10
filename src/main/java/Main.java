@@ -160,6 +160,27 @@ public class Main extends Application {
             }
         });
 
+        languageSelector.setOnAction(event -> {
+            String selectedLanguage = languageSelector.getValue();
+            String consigne = dbService.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
+            if (selectedLanguage.equals("Python")) {
+                codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
+            } else if (selectedLanguage.equals("Java")) {
+                codeArea.setText(
+                    "/* " + consigne + " */\n\n" +
+                    "import java.util.Scanner;\n\n" +
+                    "public class Main {\n" +
+                    "    public static void main(String[] args) {\n" +
+                    "        Scanner sc = new Scanner(System.in);\n" +
+                    "        String word = sc.nextLine();\n" +
+                    "        System.out.println(word);\n" +
+                    "    }\n" +
+                    "}"
+                );
+            }
+        });
+
+
         // Configurer et afficher la fenêtre principale
         primaryStage.setTitle("Liste des Exercices");
         primaryStage.setScene(mainScene);
