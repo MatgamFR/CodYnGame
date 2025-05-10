@@ -4,8 +4,9 @@ import sys
 def main():
     seed(sys.argv[1])
     match sys.argv[2]:
-        case _:    
-            print(randint(0, 100))
+        case _: 
+            for i in range(10):
+                print(randint(0, 100))  
 
     
 

@@ -8,7 +8,8 @@ def main():
             pass
         case 2:    
             # exercice corrigé
-            print("Hello")
+            def somme(a, b):
+                return a + b
             pass
 
     
