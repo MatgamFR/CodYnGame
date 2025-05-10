@@ -212,11 +212,6 @@ public class Main extends Application {
 
                 // Récupérer et afficher la consigne
                 String consigne = dbService.showConsigne(selectedExo);
-                if (consigne != null) {
-                    codeArea.setText("/* " + consigne + " */\n\nword = input()\n\nprint(word)");
-                } else {
-                    codeArea.setText("/* Aucune consigne disponible pour cet exercice. */\n\nword = input()\n\nprint(word)");
-                }
 
                 // Récupérer les langages disponibles pour l'exercice sélectionné
                 languageSelector.getItems().clear();
@@ -225,23 +220,24 @@ public class Main extends Application {
                 // Définir le premier langage disponible comme valeur par défaut
                 if (!languageSelector.getItems().isEmpty()) {
                     languageSelector.setValue(languageSelector.getItems().get(0));
-                    // Mettre à jour la zone de code en fonction du langage sélectionné
-                    String language = languageSelector.getValue();
-                    if (language.equals("Python")) {
-                        codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
-                    } else if (language.equals("Java")) {
-                        codeArea.setText(
-                            "/* " + consigne + " */\n\n" +
-                            "import java.util.Scanner;\n\n" +
-                            "public class Main {\n" +
-                            "    public static void main(String[] args) {\n" +
-                            "        Scanner sc = new Scanner(System.in);\n" +
-                            "        String word = sc.nextLine();\n" +
-                            "        System.out.println(word);\n" +
-                            "    }\n" +
-                            "}"
-                        );
-                    }
+                }
+
+                // Mettre à jour la zone de code en fonction du langage sélectionné
+                String language = languageSelector.getValue();
+                if (language.equals("Python")) {
+                    codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
+                } else if (language.equals("Java")) {
+                    codeArea.setText(
+                        "/* " + consigne + " */\n\n" +
+                        "import java.util.Scanner;\n\n" +
+                        "public class Main {\n" +
+                        "    public static void main(String[] args) {\n" +
+                        "        Scanner sc = new Scanner(System.in);\n" +
+                        "        String word = sc.nextLine();\n" +
+                        "        System.out.println(word);\n" +
+                        "    }\n" +
+                        "}"
+                    );
                 }
 
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
@@ -260,27 +256,6 @@ public class Main extends Application {
                 executor.executeCode(code); // Exécuter le code Python
             }
         });
-
-        languageSelector.setOnAction(event -> {
-            String selectedLanguage = languageSelector.getValue();
-            String consigne = dbService.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
-            if (selectedLanguage.equals("Python")) {
-                codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
-            } else if (selectedLanguage.equals("Java")) {
-                codeArea.setText(
-                    "/* " + consigne + " */\n\n" +
-                    "import java.util.Scanner;\n\n" +
-                    "public class Main {\n" +
-                    "    public static void main(String[] args) {\n" +
-                    "        Scanner sc = new Scanner(System.in);\n" +
-                    "        String word = sc.nextLine();\n" +
-                    "        System.out.println(word);\n" +
-                    "    }\n" +
-                    "}"
-                );
-            }
-        });
-
 
         // Configurer et afficher la fenêtre principale
         primaryStage.setTitle("Liste des Exercices");
