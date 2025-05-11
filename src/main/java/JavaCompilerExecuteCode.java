@@ -42,6 +42,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
     @Override
     public void executeCode(String code, int id) {
         try{
+            this.compileCode(code);
             Path tempDir = null;
             tempDir = Files.createTempDirectory("codyngame");
             Path tempFile = tempDir.resolve("Main.java");
@@ -57,7 +58,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
             Path shellScript = Files.createTempFile("execute_", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | java " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | java " + tempFile.toAbsolutePath().toString() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
 
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
@@ -70,7 +71,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             shellScript.toFile().setExecutable(true);
 
             Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()});
+            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
             // Définir un timeout global de 15 secondes
             boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);

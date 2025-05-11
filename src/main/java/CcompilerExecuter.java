@@ -6,10 +6,10 @@ public class CcompilerExecuter extends IDEExecuteCode {
     private Path compiledExecutable = null;
 
     @Override
-    public void compileCode(String code){
+    public void compileCode(String code) {
         Path tempDir = null;
         try {
-            tempDir = Files.createTempDirectory("codeyngame");
+            tempDir = Files.createTempDirectory("codyngame");
             Path tempFile = tempDir.resolve("main.c");
             Files.writeString(tempFile, code);
 
@@ -17,28 +17,27 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 new String[]{"gcc", tempFile.toAbsolutePath().toString(), "-o", tempDir.resolve("exe").toString()}
             );
 
-
-            if(!compileProcess.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)){
+            if(!compileProcess.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
                 compileProcess.destroyForcibly();
-                System.err.println("Timeout de compilation dépassé (10s)");
+                System.out.println("Timeout de compilation dépassé (10s)");
             }
 
             if (compileProcess.exitValue() != 0) {
-                String errorOutputC = new String(compileProcess.getInputStream().readAllBytes());
+                String errorOutputC = new String(compileProcess.getErrorStream().readAllBytes());
                 if (errorOutputC.contains("error:")) {
-                    System.err.println("[ERREUR SYNTAXE]");
+                    System.out.println("[ERREUR SYNTAXE]");
                 } 
                 if (errorOutputC.contains("warning:")) {
-                    System.err.println("[AVERTISSEMENT]");
+                    System.out.println("[AVERTISSEMENT]");
                 }
                 
-                System.err.println(errorOutputC);
+                System.out.println(errorOutputC);
             }
-            else{
+            else {
                 System.out.println("Compilation C reussie.");
                 this.compiledExecutable = tempDir.resolve("exe");  // Sauvegarde le chemin de l'exécutable
-                String warningC = new String(compileProcess.getInputStream().readAllBytes());
-                if (warningC.contains("warning:")){
+                String warningC = new String(compileProcess.getErrorStream().readAllBytes());
+                if (warningC.contains("warning")) {
                     System.out.println("Avertissement de compilation:");
                     System.out.println(warningC);
                 }
@@ -46,21 +45,14 @@ public class CcompilerExecuter extends IDEExecuteCode {
             
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de la compilation : " + e.getMessage());
-        } finally {
-            if (tempDir != null) {
-                try {
-                    Files.walk(tempDir).map(Path::toFile).forEach(File -> File.delete());
-                    tempDir.toFile().delete();
-                } catch (IOException e) {
-                    System.err.println("Erreur lors du nettoyage des fichiers temporaires:" + e.getMessage());
-                }
-            }
-        }
+            System.out.println("Erreur lors de la compilation : " + e.getMessage());
+        } 
     }
 
     @Override
-    public void executeCode(String code) {
+    public void executeCode(String code, int id) {
+        this.compileCode(code);
+
         if (compiledExecutable == null || !Files.exists(compiledExecutable)) {
             System.err.println("Erreur: Aucun exécutable compilé trouvé. Compilez d'abord le code.");
             return;
@@ -68,10 +60,6 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
         
         try{
-            Path tempDir = null;
-            tempDir = Files.createTempDirectory("codyngame");
-            Path tempFile = tempDir.resolve("main.c");
-            Files.writeString(tempFile, code);
 
             // Créer un fichier temporaire pour la sortie
             Path outputFile = Files.createTempFile("output", ".txt");
@@ -81,12 +69,12 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
             Path shellScript = Files.createTempFile("execute_", ".sh");
             String scriptContent = "#!/bin/bash\n" +
-                                    "python3 src/main/resources/randomGeneration.py " + seed + " 1 | exe " + tempFile.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
+                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | " + compiledExecutable.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript, scriptContent);
 
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
             String scriptContent2 = "#!/bin/bash\n" +
-                                   "python3 src/main/resources/randomGeneration.py " + seed + " | python3 src/main/resources/exercice.py  > " + outputFile2.toAbsolutePath() + " 2>&1";
+                                   "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | python3 src/main/resources/exercice.py " + id + " > " + outputFile2.toAbsolutePath() + " 2>&1";
             Files.writeString(shellScript2, scriptContent2);
 
 
@@ -94,7 +82,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
             shellScript.toFile().setExecutable(true);
 
             Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()});
+            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
             // Définir un timeout global de 15 secondes
             boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
@@ -132,7 +120,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
             // Nettoyer les fichiers temporaires
             try {
-                Files.deleteIfExists(tempFile);
+                Files.deleteIfExists(this.compiledExecutable);
                 Files.deleteIfExists(shellScript);
                 Files.deleteIfExists(outputFile);
             } catch (IOException e) {

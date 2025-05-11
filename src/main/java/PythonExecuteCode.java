@@ -42,7 +42,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
             
             // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
             Process process = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()});
+            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
             
             // Définir un timeout global de 15 secondes
             boolean completed = process.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);

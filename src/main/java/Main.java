@@ -227,7 +227,8 @@ public class Main extends Application {
                 String language = languageSelector.getValue();
                 if (language.equals("Python")) {
                     codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
-                } else if (language.equals("Java")) {
+                } 
+                else if (language.equals("Java")) {
                     codeArea.setText(
                         "/* " + consigne + " */\n\n" +
                         "import java.util.Scanner;\n\n" +
@@ -237,6 +238,18 @@ public class Main extends Application {
                         "        String word = sc.nextLine();\n" +
                         "        System.out.println(word);\n" +
                         "    }\n" +
+                        "}"
+                    );
+                }
+                else if (language.equals("C")) {
+                    codeArea.setText(
+                        "/* " + consigne + " */\n\n" +
+                        "#include <stdio.h>\n\n" +
+                        "int main() {\n" +
+                        "    char word[100];\n" +
+                        "    scanf(\"%s\", word);\n" +
+                        "    printf(\"%s\", word);\n" +
+                        "    return 0;\n" +
                         "}"
                     );
                 }
@@ -252,13 +265,8 @@ public class Main extends Application {
             Label exerciseNumberLabel = (Label) selectedItem.getChildren().get(0);
             String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
             int id = Integer.parseInt(exerciseNumberText); 
-            if (language.equals("Java")) {
-                JavaCompilerExecuteCode compiler = new JavaCompilerExecuteCode();
-                compiler.executeCode(code, id); // Utiliser JavaCompilerExecuteCode pour compiler et exécuter le code
-            } else {
-                IDEExecuteCode executor = LanguageChoice.choice(language);
-                executor.executeCode(code, id); // Exécuter le code Python
-            }
+            IDEExecuteCode executor = LanguageChoice.choice(language);
+            executor.executeCode(code, id);
         });
 
         languageSelector.setOnAction(event -> {
@@ -266,7 +274,8 @@ public class Main extends Application {
             String consigne = dbService.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
             if (selectedLanguage.equals("Python")) {
                 codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
-            } else if (selectedLanguage.equals("Java")) {
+            } 
+            else if (selectedLanguage.equals("Java")) {
                 codeArea.setText(
                     "/* " + consigne + " */\n\n" +
                     "import java.util.Scanner;\n\n" +
@@ -276,6 +285,18 @@ public class Main extends Application {
                     "        String word = sc.nextLine();\n" +
                     "        System.out.println(word);\n" +
                     "    }\n" +
+                    "}"
+                );
+            }
+            else if (selectedLanguage.equals("C")) {
+                codeArea.setText(
+                    "/* " + consigne + " */\n\n" +
+                    "#include <stdio.h>\n\n" +
+                    "int main() {\n" +
+                    "    char word[100];\n" +
+                    "    scanf(\"%s\", word);\n" +
+                    "    printf(\"%s\", word);\n" +
+                    "    return 0;\n" +
                     "}"
                 );
             }

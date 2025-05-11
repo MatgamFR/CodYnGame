@@ -20,5 +20,5 @@ Create table LanguageCode(
 
 Insert Into Exercice Values(1,"Hello World!","facile","écrivez un programme pour que le terminal envoie hello world", 'print("hello world")',0,0);
 Insert Into Exercice Values(2,"Somme","facile","écrivez un programme pour que le terminal renvoie renvoie la somme de deux nombres", 'print("hello world")',0,0);
-INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python'),(2,'Java');
