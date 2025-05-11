@@ -8,9 +8,9 @@ def main():
         case 2:    
             # exercice corrigé
             print(int(input())+int(input()))
-            
-
-    
+        case 3:
+            # exercice corrigé
+            print("a")
 
 
 if __name__ == "__main__":

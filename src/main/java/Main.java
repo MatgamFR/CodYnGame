@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -90,8 +93,10 @@ public class Main extends Application {
         pythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
         CheckBox javaCheckBox = new CheckBox("Java");
         javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        CheckBox CCheckBox = new CheckBox("C");
+        CCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
-        HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox);
+        HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox, CCheckBox);
         languageSelectionBox.setAlignment(Pos.CENTER);
         languageSelectionBox.setStyle("-fx-padding: 10px;");
 
@@ -108,20 +113,136 @@ public class Main extends Application {
             String difficulty = difficultyInput.getText();
             boolean isPythonSelected = pythonCheckBox.isSelected();
             boolean isJavaSelected = javaCheckBox.isSelected();
+            boolean isCSelected = CCheckBox.isSelected();
 
-            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isJavaSelected)) {
+            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty()) {
                 if (dbService.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
-                    int exerciseId = dbService.addExercise(title, question, difficulty); // Ajouter l'exercice à la base de données
+                    // Ajouter l'exercice à la base de données
+                    int exerciseId = dbService.addExercise(title, question, difficulty);
 
-                    // Ajouter les langages sélectionnés à la base de données
+                    // Ajouter le langage Python à la base de données
                     if (isPythonSelected) {
                         dbService.addLanguageToExercise(exerciseId, "Python");
                     }
                     if (isJavaSelected) {
                         dbService.addLanguageToExercise(exerciseId, "Java");
                     }
+                    if (isCSelected) {
+                        dbService.addLanguageToExercise(exerciseId, "C");
+                    }
+
+                    // Demander la correction en Python
+                    TextArea correctionInput = new TextArea();
+                    correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
+                    correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+
+                    // Fenêtre pour saisir la correction
+                    Stage correctionStage = new Stage();
+                    VBox correctionBox = new VBox(10, new Label("Correction en Python :"), correctionInput);
+                    correctionBox.setAlignment(Pos.CENTER);
+                    correctionBox.setStyle("-fx-padding: 20px; -fx-background-color: #1E1E1E;");
+
+                    Button saveCorrectionButton = new Button("Enregistrer la correction");
+                    saveCorrectionButton.setOnAction(e -> {
+                        String correction = correctionInput.getText();
+                        if (!correction.isEmpty()) {
+                            try {
+                                // Ajouter la correction au fichier exercice.py
+                                Path exerciceFile = Path.of("src/main/resources/exercice.py");
+                                String content = Files.readString(exerciceFile);
+                                
+                                // Formater la nouvelle correction avec l'indentation correcte
+                                String newCase = String.format(
+                                    "        case %d:\n            # exercice corrigé\n            %s\n",
+                                    exerciseId,
+                                    correction.replace("\n", "\n            ")
+                                );
+                                
+                                // Trouver l'endroit où insérer le nouveau cas
+                                int matchBlock = content.indexOf("    match int(sys.argv[1]):");
+                                if (matchBlock == -1) {
+                                    throw new IOException("Structure du fichier exercice.py invalide: bloc match non trouvé");
+                                }
+                                
+                                // Vérifier si le case existe déjà et le supprimer
+                                String casePattern = String.format("        case %d:", exerciseId);
+                                int existingCasePos = content.indexOf(casePattern);
+                                
+                                if (existingCasePos != -1) {
+                                    // Le case existe déjà, trouver où il se termine
+                                    int nextCasePos = content.indexOf("        case ", existingCasePos + casePattern.length());
+                                    int ifNamePos = content.indexOf("if __name__", existingCasePos);
+                                    
+                                    int endOfExistingCase;
+                                    if (nextCasePos != -1) {
+                                        // Il y a un autre case après celui-ci
+                                        endOfExistingCase = nextCasePos;
+                                    } else if (ifNamePos != -1) {
+                                        // Il n'y a pas d'autre case, mais il y a le bloc if __name__
+                                        // Reculer jusqu'à la ligne vide avant if __name__
+                                        endOfExistingCase = content.lastIndexOf("\n\n", ifNamePos);
+                                        if (endOfExistingCase == -1) {
+                                            // Si pas de ligne vide, utiliser la position juste avant if __name__
+                                            endOfExistingCase = content.lastIndexOf("\n", ifNamePos);
+                                        }
+                                    } else {
+                                        // Ni d'autre case, ni de bloc if __name__, aller jusqu'à la fin du fichier
+                                        endOfExistingCase = content.length();
+                                    }
+                                    
+                                    // Supprimer l'ancien case
+                                    content = content.substring(0, existingCasePos) + content.substring(endOfExistingCase);
+                                    
+                                    // Insérer le nouveau case au même endroit
+                                    content = content.substring(0, existingCasePos) + newCase + content.substring(existingCasePos);
+                                    
+                                    System.out.println("Case existant remplacé pour l'exercice " + exerciseId);
+                                } else {
+                                    // Le case n'existe pas, l'ajouter normalement
+                                    // Chercher la dernière instruction case correctement indentée
+                                    int lastCasePos = content.lastIndexOf("        case ", content.indexOf("if __name__"));
+                                    if (lastCasePos == -1) {
+                                        // Pas de case existant, ajouter après la ligne match
+                                        int matchLineEnd = content.indexOf('\n', matchBlock) + 1;
+                                        content = content.substring(0, matchLineEnd) + newCase + content.substring(matchLineEnd);
+                                    } else {
+                                        // Trouver la fin du dernier case
+                                        int endOfLastCase = content.indexOf("\n\n", lastCasePos);
+                                        if (endOfLastCase == -1) {
+                                            // Si pas de ligne vide après le dernier case, chercher le bloc if __name__
+                                            endOfLastCase = content.indexOf("if __name__", lastCasePos);
+                                            if (endOfLastCase == -1) {
+                                                // Si if __name__ non trouvé, utiliser la fin du fichier
+                                                endOfLastCase = content.length();
+                                            } else {
+                                                // Remonter à la ligne précédant if __name__
+                                                endOfLastCase = content.lastIndexOf("\n", endOfLastCase);
+                                            }
+                                        }
+                                        
+                                        // Insérer le nouveau cas après le dernier cas existant
+                                        content = content.substring(0, endOfLastCase) + "\n" + newCase + content.substring(endOfLastCase);
+                                    }
+                                    System.out.println("Nouveau case ajouté pour l'exercice " + exerciseId);
+                                }
+                                
+                                // Écrire le contenu mis à jour
+                                Files.writeString(exerciceFile, content);
+                                System.out.println("Correction ajoutée au fichier exercice.py");
+                            } catch (IOException ex) {
+                                System.out.println("Erreur lors de l'écriture dans exercice.py : " + ex.getMessage());
+                            }
+                            correctionStage.close();
+                        } else {
+                            System.out.println("La correction ne peut pas être vide.");
+                        }
+                    });
+
+                    correctionBox.getChildren().add(saveCorrectionButton);
+                    correctionStage.setScene(new Scene(correctionBox, 400, 300));
+                    correctionStage.showAndWait();
 
                     // Mettre à jour la liste des exercices
                     exerciseList.getItems().clear();
@@ -139,7 +260,7 @@ public class Main extends Application {
                 }
             } else {
                 // Afficher un message d'erreur si les champs sont incomplets ou aucun langage n'est sélectionné
-                System.err.println("Veuillez remplir tous les champs et sélectionner au moins un langage.");
+                System.err.println("Veuillez remplir tous les champs et sélectionner au moins le langage Python.");
             }
         });
 
