@@ -66,7 +66,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
             Path shellScript = Files.createTempFile("execute_", ".sh");
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
             
-            boolean valide = false;
+            boolean valide = true;
             String output = "";
             String output2 = "";
             int exitCode = 1;
@@ -120,8 +120,6 @@ public class CcompilerExecuter extends IDEExecuteCode {
                     output = Files.readString(outputFile);
                     output2 = Files.readString(outputFile2);
                     if (output.equals(output2)) {
-                        valide = true;
-                    } else {
                         valide = false;
                         break;
                     }

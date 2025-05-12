@@ -26,7 +26,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
 
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
 
-            boolean valide = false;
+            boolean valide = true;
 
             String output = Files.readString(outputFile);
             String output2 = Files.readString(outputFile2);
@@ -70,12 +70,10 @@ public class PythonExecuteCode extends IDEExecuteCode {
                     // Lire le contenu du fichier de sortie
                     output = Files.readString(outputFile);
                     output2 = Files.readString(outputFile2);
-                    if(output.equals(output2)) {
-                        valide = true;
-                    } else {
+                    if(!output.equals(output2)) {
                         valide = false;
                         break;
-                    }
+                    } 
                 }
             }
             

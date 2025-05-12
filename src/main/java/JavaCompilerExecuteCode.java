@@ -49,7 +49,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             Path shellScript = Files.createTempFile("execute_", ".sh");
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
             
-            boolean valide = false;
+            boolean valide = true;
             String output = "";
             String output2 = "";
             int exitCode = 1;
@@ -95,9 +95,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     // Lire et comparer les sorties
                     output = Files.readString(outputFile);
                     output2 = Files.readString(outputFile2);
-                    if(output.equals(output2)) {
-                        valide = true;
-                    } else {
+                    if(!output.equals(output2)) {
                         valide = false;
                         break;
                     }
