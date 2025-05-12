@@ -445,6 +445,9 @@ public class Main extends Application {
         languageSelector.setOnAction(event -> {
             String selectedLanguage = languageSelector.getValue();
             String consigne = dbService.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
+            if (selectedLanguage == null) {
+                return; // Ne rien faire si aucun langage n'est sélectionné
+            }
             if (selectedLanguage.equals("Python")) {
                 codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
             } 
