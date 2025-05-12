@@ -217,4 +217,30 @@ public class Connexionbdd {
         }
         return false; // Retourne false en cas d'erreur ou si le titre n'existe pas
     }
+
+    public int getExerciseAttempts(int exerciseId) {
+        String query = "SELECT Try FROM Exercice WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("Try");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération du nombre d'essais : " + e.getMessage());
+        }
+        return 0; // Retourne 0 en cas d'erreur
+    }
+
+    public void incrementExerciseAttempts(int exerciseId) {
+        String query = "UPDATE Exercice SET Try = Try + 1 WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'incrémentation du nombre d'essais : " + e.getMessage());
+        }
+    }
 }

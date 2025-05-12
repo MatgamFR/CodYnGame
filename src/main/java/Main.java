@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -288,6 +290,10 @@ public class Main extends Application {
         codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         codeArea.setWrapText(false);
 
+        // Ajouter un label pour afficher le nombre d'essais
+        Text attemptsLabel = new Text();
+        attemptsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+
         // Ajouter un bouton pour exécuter le code
         Button runButton = new Button("Exécuter");
         runButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -301,9 +307,9 @@ public class Main extends Application {
         languageSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Ajouter une boîte pour organiser les composants
-        HBox codeBox = new HBox(codeArea);
+        VBox codeBox = new VBox(10, codeArea, attemptsLabel);
         codeBox.setStyle("-fx-background-color: #1E1E1E;");
-        HBox.setHgrow(codeArea, javafx.scene.layout.Priority.ALWAYS);
+        VBox.setVgrow(codeArea, javafx.scene.layout.Priority.ALWAYS);
 
         HBox buttonBox = new HBox(10, backButton, languageSelector, runButton);
         buttonBox.setAlignment(Pos.CENTER);
@@ -374,6 +380,11 @@ public class Main extends Application {
                     );
                 }
 
+                // Récupérer et afficher le nombre d'essais
+                int attempts = dbService.getExerciseAttempts(selectedExo);
+                attemptsLabel.setText("Nombre d'essais : " + attempts);
+                attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
             }
         });
@@ -387,6 +398,14 @@ public class Main extends Application {
             int id = Integer.parseInt(exerciseNumberText); 
             IDEExecuteCode executor = LanguageChoice.choice(language);
             executor.executeCode(code, id);
+
+            // Incrémenter le nombre d'essais dans la base de données
+            dbService.incrementExerciseAttempts(id);
+
+            // Mettre à jour l'affichage du nombre d'essais
+            int updatedAttempts = dbService.getExerciseAttempts(id);
+            attemptsLabel.setText("Nombre d'essais : " + updatedAttempts);
+            attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
         });
 
         languageSelector.setOnAction(event -> {
