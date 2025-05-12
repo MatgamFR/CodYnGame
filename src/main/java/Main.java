@@ -115,24 +115,10 @@ public class Main extends Application {
             boolean isJavaSelected = javaCheckBox.isSelected();
             boolean isCSelected = CCheckBox.isSelected();
 
-            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty()) {
+            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected)) {
                 if (dbService.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
-                    // Ajouter l'exercice à la base de données
-                    int exerciseId = dbService.addExercise(title, question, difficulty);
-
-                    // Ajouter le langage Python à la base de données
-                    if (isPythonSelected) {
-                        dbService.addLanguageToExercise(exerciseId, "Python");
-                    }
-                    if (isJavaSelected) {
-                        dbService.addLanguageToExercise(exerciseId, "Java");
-                    }
-                    if (isCSelected) {
-                        dbService.addLanguageToExercise(exerciseId, "C");
-                    }
-
                     // Demander la correction en Python
                     TextArea correctionInput = new TextArea();
                     correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
@@ -152,6 +138,19 @@ public class Main extends Application {
                                 // Ajouter la correction au fichier exercice.py
                                 Path exerciceFile = Path.of("src/main/resources/exercice.py");
                                 String content = Files.readString(exerciceFile);
+                                                    // Ajouter l'exercice à la base de données
+                                int exerciseId = dbService.addExercise(title, question, difficulty);
+
+                                // Ajouter le langage Python à la base de données
+                                if (isPythonSelected) {
+                                    dbService.addLanguageToExercise(exerciseId, "Python");
+                                }
+                                if (isJavaSelected) {
+                                    dbService.addLanguageToExercise(exerciseId, "Java");
+                                }
+                                if (isCSelected) {
+                                    dbService.addLanguageToExercise(exerciseId, "C");
+                                }
                                 
                                 // Formater la nouvelle correction avec l'indentation correcte
                                 String newCase = String.format(
@@ -260,7 +259,7 @@ public class Main extends Application {
                 }
             } else {
                 // Afficher un message d'erreur si les champs sont incomplets ou aucun langage n'est sélectionné
-                System.err.println("Veuillez remplir tous les champs et sélectionner au moins le langage Python.");
+                System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue");
             }
         });
 

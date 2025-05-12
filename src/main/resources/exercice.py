@@ -10,7 +10,9 @@ def main():
             print(int(input())+int(input()))
         case 3:
             # exercice corrigé
-            print("a")
+            n = int(input())
+            
+            print(int(n*(n+1)/2))
 
 
 if __name__ == "__main__":
