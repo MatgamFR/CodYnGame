@@ -58,79 +58,100 @@ public class CcompilerExecuter extends IDEExecuteCode {
             return;
         }
 
-        
-        try{
-
+        try {
             // Créer un fichier temporaire pour la sortie
             Path outputFile = Files.createTempFile("output", ".txt");
             Path outputFile2 = Files.createTempFile("output2", ".txt");
             
-            long seed = System.currentTimeMillis();
-
             Path shellScript = Files.createTempFile("execute_", ".sh");
-            String scriptContent = "#!/bin/bash\n" +
-                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | " + compiledExecutable.toAbsolutePath() + " > " + outputFile.toAbsolutePath() + " 2>&1";
-            Files.writeString(shellScript, scriptContent);
-
             Path shellScript2 = Files.createTempFile("execute2", ".sh");
-            String scriptContent2 = "#!/bin/bash\n" +
-                                   "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | python3 src/main/resources/exercice.py " + id + " > " + outputFile2.toAbsolutePath() + " 2>&1";
-            Files.writeString(shellScript2, scriptContent2);
-
-
-            shellScript2.toFile().setExecutable(true);  
-            shellScript.toFile().setExecutable(true);
-
-            Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
-
-            // Définir un timeout global de 15 secondes
-            boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
             
-            if (!completed) {
-                System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
-                executeProcess.destroy();
-                executeProcess.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-                if (executeProcess.isAlive()) {
-                    executeProcess.destroyForcibly();
-                }
-                System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+            boolean valide = false;
+            String output = "";
+            String output2 = "";
+            int exitCode = 1;
 
+            // Tester avec 10 seeds différentes
+            for (int i = 0; i < 10; i++) {
+                long seed = System.currentTimeMillis();
 
-            } else {
-                int exitCode = executeProcess.exitValue();
+                String scriptContent = "#!/bin/bash\n" +
+                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + 
+                                    " | " + compiledExecutable.toAbsolutePath() + 
+                                    " > " + outputFile.toAbsolutePath() + " 2>&1";
+                Files.writeString(shellScript, scriptContent);
 
-                System.out.println("Programme terminé avec le code de sortie: " + exitCode);
-                // Lire le contenu du fichier de sortie
+                String scriptContent2 = "#!/bin/bash\n" +
+                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + 
+                                    " | python3 src/main/resources/exercice.py " + id + 
+                                    " > " + outputFile2.toAbsolutePath() + " 2>&1";
+                Files.writeString(shellScript2, scriptContent2);
+
+                shellScript2.toFile().setExecutable(true);  
+                shellScript.toFile().setExecutable(true);
+
+                Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
+                Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+
+                // Définir un timeout global de 15 secondes
+                boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
                 
-                String output = Files.readString(outputFile);
-                // regarde les erreurs de segmentation
-                if(exitCode==1){
-                    System.out.println("ERREUR DE SEGMENTATION");
-                }
-                String output2 = Files.readString(outputFile2); 
-                if(output.equals(output2)) {
-                    System.out.println("Le code est correct");
+                if (!completed) {
+                    System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                    executeProcess.destroy();
+                    executeProcess.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                    if (executeProcess.isAlive()) {
+                        executeProcess.destroyForcibly();
+                    }
+                    System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                    valide = false;
+                    break;
                 } else {
-                    System.out.println("Le code est incorrect");
-                    System.out.println("Reçu : " + output);
-                    System.out.println("Attendu : " + output2);
+                    exitCode = executeProcess.exitValue();
+
+                    // Vérifier les erreurs de segmentation
+                    if (exitCode == 1) {
+                        System.out.println("ERREUR DE SEGMENTATION");
+                        valide = false;
+                        break;
+                    }
+
+                    // Lire et comparer les sorties
+                    output = Files.readString(outputFile);
+                    output2 = Files.readString(outputFile2);
+                    if (output.equals(output2)) {
+                        valide = true;
+                    } else {
+                        valide = false;
+                        break;
+                    }
                 }
+            }
+            
+            System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+            if (valide) {
+                System.out.println("Le code est correct");
+            } else {
+                System.out.println("Le code est incorrect");
+                System.out.println("Reçu : " + output);
+                System.out.println("Attendu : " + output2);
             }
 
             // Nettoyer les fichiers temporaires
             try {
                 Files.deleteIfExists(this.compiledExecutable);
                 Files.deleteIfExists(shellScript);
+                Files.deleteIfExists(shellScript2);
                 Files.deleteIfExists(outputFile);
+                Files.deleteIfExists(outputFile2);
             } catch (IOException e) {
                 System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
-            
         } 
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
             System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
-    } 
+    }
 }
+
