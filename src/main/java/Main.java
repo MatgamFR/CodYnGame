@@ -97,8 +97,10 @@ public class Main extends Application {
         javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
         CheckBox CCheckBox = new CheckBox("C");
         CCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        CheckBox jsCheckBox = new CheckBox("JavaScript");
+        jsCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
-        HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox, CCheckBox);
+        HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox, CCheckBox, jsCheckBox);
         languageSelectionBox.setAlignment(Pos.CENTER);
         languageSelectionBox.setStyle("-fx-padding: 10px;");
 
@@ -116,8 +118,9 @@ public class Main extends Application {
             boolean isPythonSelected = pythonCheckBox.isSelected();
             boolean isJavaSelected = javaCheckBox.isSelected();
             boolean isCSelected = CCheckBox.isSelected();
+            boolean isJSSelected = jsCheckBox.isSelected();
 
-            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected)) {
+            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected || isJSSelected)) {
                 if (dbService.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
@@ -152,6 +155,9 @@ public class Main extends Application {
                                 }
                                 if (isCSelected) {
                                     dbService.addLanguageToExercise(exerciseId, "C");
+                                }
+                                if (isJSSelected) {
+                                    dbService.addLanguageToExercise(exerciseId, "JavaScript");
                                 }
                                 
                                 // Formater la nouvelle correction avec l'indentation correcte
@@ -379,6 +385,9 @@ public class Main extends Application {
                         "}"
                     );
                 }
+                else if (language.equals("JavaScript")) {
+                    codeArea.setText("// " + consigne + "\n\nconst word = prompt();\nconsole.log(word);");
+                }
 
                 // Récupérer et afficher le nombre d'essais
                 int attempts = dbService.getExerciseAttempts(selectedExo);
@@ -438,6 +447,9 @@ public class Main extends Application {
                     "    return 0;\n" +
                     "}"
                 );
+            }
+            else if (selectedLanguage.equals("JavaScript")) {
+                codeArea.setText("// " + consigne + "\n\nconst word = prompt();\nconsole.log(word);");
             }
         });
 
