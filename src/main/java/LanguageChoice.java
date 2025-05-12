@@ -9,6 +9,9 @@ public class LanguageChoice {
         else if (langage.equals("C")) {
             return new CcompilerExecuter(); // Utiliser JavaCompilerExecuteCode pour Java
         }
+        else if (langage.equals("JavaScript")) {
+            return new JavaScriptCompilerExecute(); // Utiliser JavaCompilerExecuteCode pour Java
+        }
         else {
             throw new IllegalArgumentException("Langage non supporté : " + langage);
         }

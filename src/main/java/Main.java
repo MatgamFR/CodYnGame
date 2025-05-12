@@ -386,7 +386,20 @@ public class Main extends Application {
                     );
                 }
                 else if (language.equals("JavaScript")) {
-                    codeArea.setText("// " + consigne + "\n\nconst word = prompt();\nconsole.log(word);");
+                    codeArea.setText("// " + consigne + "\n\nconst readline = require('readline');\n" + //
+                                                "const rl = readline.createInterface({\n" + //
+                                                "  input: process.stdin,\n" + //
+                                                "  output: process.stdout\n" + //
+                                                "});\n" + //
+                                                "\n" + //
+                                                "// Lire une ligne d'entrée\n" + //
+                                                "rl.question('', (word) => {\n" + //
+                                                "  // Afficher la saisie\n" + //
+                                                "  console.log(word);\n" + //
+                                                "  \n" + //
+                                                "  // Fermer l'interface readline\n" + //
+                                                "  rl.close();\n" + //
+                                                "});");
                 }
 
                 // Récupérer et afficher le nombre d'essais
@@ -449,7 +462,20 @@ public class Main extends Application {
                 );
             }
             else if (selectedLanguage.equals("JavaScript")) {
-                codeArea.setText("// " + consigne + "\n\nconst word = prompt();\nconsole.log(word);");
+                codeArea.setText("// " + consigne + "\n\nconst readline = require('readline');\n" + //
+                                        "const rl = readline.createInterface({\n" + //
+                                        "  input: process.stdin,\n" + //
+                                        "  output: process.stdout\n" + //
+                                        "});\n" + //
+                                        "\n" + //
+                                        "// Lire une ligne d'entrée\n" + //
+                                        "rl.question('', (word) => {\n" + //
+                                        "  // Afficher la saisie\n" + //
+                                        "  console.log(word);\n" + //
+                                        "  \n" + //
+                                        "  // Fermer l'interface readline\n" + //
+                                        "  rl.close();\n" + //
+                                        "});");
             }
         });
 
