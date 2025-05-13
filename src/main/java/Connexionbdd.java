@@ -248,4 +248,25 @@ public class Connexionbdd {
         }
     }
 
+    public static void deleteExercise(int exerciseId) {
+        String deleteExerciseQuery = "DELETE FROM Exercice WHERE Id = ?";
+        String deleteLanguageQuery = "DELETE FROM LanguageCode WHERE Exerciceid = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement deleteExerciseStmt = conn.prepareStatement(deleteExerciseQuery);
+             java.sql.PreparedStatement deleteLanguageStmt = conn.prepareStatement(deleteLanguageQuery)) {
+
+            // Supprimer les langages associés à l'exercice
+            deleteLanguageStmt.setInt(1, exerciseId);
+            deleteLanguageStmt.executeUpdate();
+
+            // Supprimer l'exercice
+            deleteExerciseStmt.setInt(1, exerciseId);
+            deleteExerciseStmt.executeUpdate();
+
+            System.out.println("Exercice avec ID " + exerciseId + " supprimé avec succès.");
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression de l'exercice : " + e.getMessage());
+        }
+    }
+
 }
