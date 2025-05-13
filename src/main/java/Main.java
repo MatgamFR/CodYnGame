@@ -22,8 +22,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Connexionbdd dbService = new Connexionbdd();
-        int maxExo = dbService.maxexo();
+        int maxExo = Connexionbdd.maxexo();
 
         // Fenêtre principale (liste des exercices)
         BorderPane mainRoot = new BorderPane();
@@ -41,7 +40,7 @@ public class Main extends Application {
         ListView<HBox> exerciseList = new ListView<>();
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         for (int i = 1; i <= maxExo; i++) {
-            String titre = dbService.getExerciceTitle(i); // Récupérer le titre de l'exercice
+            String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
             Label exerciseNumber = new Label("Exercice " + i);
             exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
             Label exerciseTitle = new Label(titre);
@@ -124,7 +123,7 @@ public class Main extends Application {
             boolean isPHPSelected = phpCheckBox.isSelected();
 
             if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
-                if (dbService.isTitleExists(title)) {
+                if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
                     // Demander la correction en Python
@@ -147,23 +146,23 @@ public class Main extends Application {
                                 Path exerciceFile = Path.of("src/main/resources/exercice.py");
                                 String content = Files.readString(exerciceFile);
                                                     // Ajouter l'exercice à la base de données
-                                int exerciseId = dbService.addExercise(title, question, difficulty);
+                                int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
 
                                 // Ajouter le langage Python à la base de données
                                 if (isPythonSelected) {
-                                    dbService.addLanguageToExercise(exerciseId, "Python");
+                                    Connexionbdd.addLanguageToExercise(exerciseId, "Python");
                                 }
                                 if (isJavaSelected) {
-                                    dbService.addLanguageToExercise(exerciseId, "Java");
+                                    Connexionbdd.addLanguageToExercise(exerciseId, "Java");
                                 }
                                 if (isCSelected) {
-                                    dbService.addLanguageToExercise(exerciseId, "C");
+                                    Connexionbdd.addLanguageToExercise(exerciseId, "C");
                                 }
                                 if (isJSSelected) {
-                                    dbService.addLanguageToExercise(exerciseId, "JavaScript");
+                                    Connexionbdd.addLanguageToExercise(exerciseId, "JavaScript");
                                 }
                                 if (isPHPSelected) {
-                                    dbService.addLanguageToExercise(exerciseId, "PHP");
+                                    Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
                                 }
                                 
                                 // Formater la nouvelle correction avec l'indentation correcte
@@ -259,8 +258,8 @@ public class Main extends Application {
 
                     // Mettre à jour la liste des exercices
                     exerciseList.getItems().clear();
-                    for (int i = 1; i <= dbService.maxexo(); i++) {
-                        String titre = dbService.getExerciceTitle(i);
+                    for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+                        String titre = Connexionbdd.getExerciceTitle(i);
                         Label exerciseNumber = new Label("Exercice " + i);
                         exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
                         Label exerciseTitle = new Label(titre);
@@ -350,11 +349,11 @@ public class Main extends Application {
                 }
 
                 // Récupérer et afficher la consigne
-                String consigne = dbService.showConsigne(selectedExo);
+                String consigne = Connexionbdd.showConsigne(selectedExo);
 
                 // Récupérer les langages disponibles pour l'exercice sélectionné
                 languageSelector.getItems().clear();
-                languageSelector.getItems().addAll(dbService.getAvailableLanguages(selectedExo));
+                languageSelector.getItems().addAll(Connexionbdd.getAvailableLanguages(selectedExo));
 
                 // Définir le premier langage disponible comme valeur par défaut
                 if (!languageSelector.getItems().isEmpty()) {
@@ -415,7 +414,7 @@ public class Main extends Application {
                 }
 
                 // Récupérer et afficher le nombre d'essais
-                int attempts = dbService.getExerciseAttempts(selectedExo);
+                int attempts = Connexionbdd.getExerciseAttempts(selectedExo);
                 attemptsLabel.setText("Nombre d'essais : " + attempts);
                 attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
 
@@ -434,17 +433,17 @@ public class Main extends Application {
             executor.executeCode(code, id);
 
             // Incrémenter le nombre d'essais dans la base de données
-            dbService.incrementExerciseAttempts(id);
+            Connexionbdd.incrementExerciseAttempts(id);
 
             // Mettre à jour l'affichage du nombre d'essais
-            int updatedAttempts = dbService.getExerciseAttempts(id);
+            int updatedAttempts = Connexionbdd.getExerciseAttempts(id);
             attemptsLabel.setText("Nombre d'essais : " + updatedAttempts);
             attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
         });
 
         languageSelector.setOnAction(event -> {
             String selectedLanguage = languageSelector.getValue();
-            String consigne = dbService.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
+            String consigne = Connexionbdd.showConsigne(exerciseList.getSelectionModel().getSelectedIndex() + 1);
             if (selectedLanguage == null) {
                 return; // Ne rien faire si aucun langage n'est sélectionné
             }

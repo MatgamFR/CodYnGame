@@ -6,16 +6,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-//a
+
 public class Connexionbdd {
 
     // Informations de connexion
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/codegame";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "cytech0001";
+    private static String DB_URL;
+    private static String DB_USER;
+    private static String DB_PASSWORD;
 
-    // 1. Méthode pour obtenir la connexion
-    public Connection getConnection() {
+    // Constructeur pour initialiser les informations de connexion
+    public Connexionbdd(String dbUrl, String dbUser, String dbPassword) {
+        DB_URL = dbUrl;
+        DB_USER = dbUser;
+        DB_PASSWORD = dbPassword;
+    }
+
+    // Méthode pour obtenir la connexion
+    public static Connection getConnection() {
         try {
             return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch (SQLException e) {
@@ -24,7 +31,7 @@ public class Connexionbdd {
         }
     }
 
-    public int maxexo(){
+    public static int maxexo() {
         int id = 0;
         Connection conn = getConnection();
         try {
@@ -42,11 +49,10 @@ public class Connexionbdd {
         } catch (SQLException e) {
             e.printStackTrace();
             return id;
+        }
     }
-}
 
-    // 2. Méthode pour afficher les exos
-    public void showExolist() {
+    public static void showExolist() {
         Connection conn = getConnection(); // Connexion à la BDD
         if (conn == null) {
             System.out.println("Impossible de se connecter à la base de données.");
@@ -79,15 +85,15 @@ public class Connexionbdd {
                     while (rs2.next()) {
                         String language = rs2.getString("NomLanguage");
                         System.out.println("*"+language);
+                    }
             }
-        }
             conn.close();
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des exercices : " + e.getMessage());
         }
     }
 
-    public int choiceExo() {
+    public static int choiceExo() {
         int id = 0;
         Connection conn = getConnection();
         try {
@@ -114,9 +120,7 @@ public class Connexionbdd {
         return choice;
     }
 
-
-
-    public String showConsigne(int choice) {
+    public static String showConsigne(int choice) {
         Connection conn = getConnection(); 
         if (conn == null) {
             System.out.println("Impossible de se connecter à la base de données.");
@@ -142,7 +146,7 @@ public class Connexionbdd {
         return null;
     }
 
-    public List<String> getAvailableLanguages(int exerciseId) {
+    public static List<String> getAvailableLanguages(int exerciseId) {
         List<String> languages = new ArrayList<>();
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
@@ -157,7 +161,7 @@ public class Connexionbdd {
         return languages;
     }
 
-    public String getExerciceTitle(int exerciseId) {
+    public static String getExerciceTitle(int exerciseId) {
         String titre = "Titre non disponible";
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
@@ -172,7 +176,7 @@ public class Connexionbdd {
         return titre;
     }
 
-    public int addExercise(String title, String question, String difficulty) {
+    public static int addExercise(String title, String question, String difficulty) {
         String query = "INSERT INTO Exercice (Titre, Question, difficulty, Try, Successfulltry) VALUES (?, ?, ?, 0, 0)";
         try (Connection conn = getConnection();
              java.sql.PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -191,7 +195,7 @@ public class Connexionbdd {
         return -1; // Retourner -1 en cas d'erreur
     }
 
-    public void addLanguageToExercise(int exerciseId, String language) {
+    public static void addLanguageToExercise(int exerciseId, String language) {
         String query = "INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (?, ?)";
         try (Connection conn = getConnection();
              java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -203,7 +207,7 @@ public class Connexionbdd {
         }
     }
 
-    public boolean isTitleExists(String title) {
+    public static boolean isTitleExists(String title) {
         String query = "SELECT COUNT(*) FROM Exercice WHERE Titre = ?";
         try (Connection conn = getConnection();
             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -218,7 +222,7 @@ public class Connexionbdd {
         return false; // Retourne false en cas d'erreur ou si le titre n'existe pas
     }
 
-    public int getExerciseAttempts(int exerciseId) {
+    public static int getExerciseAttempts(int exerciseId) {
         String query = "SELECT Try FROM Exercice WHERE Id = ?";
         try (Connection conn = getConnection();
              java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -233,7 +237,7 @@ public class Connexionbdd {
         return 0; // Retourne 0 en cas d'erreur
     }
 
-    public void incrementExerciseAttempts(int exerciseId) {
+    public static void incrementExerciseAttempts(int exerciseId) {
         String query = "UPDATE Exercice SET Try = Try + 1 WHERE Id = ?";
         try (Connection conn = getConnection();
              java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -243,4 +247,5 @@ public class Connexionbdd {
             System.err.println("Erreur lors de l'incrémentation du nombre d'essais : " + e.getMessage());
         }
     }
+
 }
