@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +24,33 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        try {
+            // Lire les valeurs de configuration depuis configue.txt
+            BufferedReader reader = new BufferedReader(new FileReader("/home/cytech/CodYnGame-main/CodYnGame/configue.txt"));
+            String dbUrl = null, dbUser = null, dbPassword = null;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("db_url=")) {
+                    dbUrl = line.split("=")[1];
+                } else if (line.startsWith("db_user=")) {
+                    dbUser = line.split("=")[1];
+                } else if (line.startsWith("db_password=")) {
+                    dbPassword = line.split("=")[1];
+                }
+            }
+            reader.close();
+
+            if (dbUrl == null || dbUser == null || dbPassword == null) {
+                throw new IllegalArgumentException("Configuration invalide dans configue.txt");
+            }
+
+            // Initialiser Connexionbdd avec les valeurs lues
+            new Connexionbdd(dbUrl, dbUser, dbPassword);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture de la configuration : " + e.getMessage());
+            return;
+        }
+
         int maxExo = Connexionbdd.maxexo();
 
         // Fenêtre principale (liste des exercices)

@@ -1,0 +1,3 @@
+db_url=jdbc:mysql://localhost:3306/codegame
+db_user=root
+db_password=cytech0001
