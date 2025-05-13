@@ -317,8 +317,64 @@ public class Main extends Application {
 
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
 
-        // Ajouter le bouton "+" en haut de la scène principale
-        HBox topBar = new HBox(10, addButton);
+        // Ajouter un bouton "-" pour supprimer des exercices
+        Button removeButton = new Button("-");
+        removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);");
+        removeButton.setOnMouseEntered(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff3333, #ff6666); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.8), 8, 0.5, 0, 2);"));
+        removeButton.setOnMouseExited(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);"));
+
+// Nouvelle scène pour supprimer un exercice
+        BorderPane removeExerciseRoot = new BorderPane();
+        VBox removeExerciseBox = new VBox(10);
+        removeExerciseBox.setAlignment(Pos.CENTER);
+        removeExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
+
+        Label removeExerciseLabel = new Label("Supprimer un exercice");
+        removeExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+
+        // Liste déroulante pour sélectionner l'exercice à supprimer
+        ComboBox<String> exerciseSelector = new ComboBox<>();
+        exerciseSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        for (int i = 1; i <= maxExo; i++) {
+            String titre = Connexionbdd.getExerciceTitle(i);
+            exerciseSelector.getItems().add("Exercice " + i + ": " + titre);
+        }
+
+        // Boutons pour confirmer ou annuler la suppression
+        Button confirmRemoveButton = new Button("Confirmer");
+        confirmRemoveButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);");
+
+        Button cancelRemoveButton = new Button("Annuler");
+        cancelRemoveButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        cancelRemoveButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
+
+        confirmRemoveButton.setOnAction(event -> {
+            String selectedExercise = exerciseSelector.getValue();
+            if (selectedExercise != null) {
+                int exerciseId = Integer.parseInt(selectedExercise.split(" ")[1].replace(":", ""));
+                Connexionbdd.deleteExercise(exerciseId); // Suppression de l'exercice dans la base de données
+                exerciseList.getItems().removeIf(item -> {
+                    Label label = (Label) item.getChildren().get(0);
+                    return label.getText().equals("Exercice " + exerciseId);
+                });
+                primaryStage.setScene(mainScene); // Retour à la scène principale
+            } else {
+                System.err.println("Veuillez sélectionner un exercice à supprimer.");
+            }
+        });
+
+        HBox buttonBoxRemove = new HBox(10, cancelRemoveButton, confirmRemoveButton);
+        buttonBoxRemove.setAlignment(Pos.CENTER);
+
+        removeExerciseBox.getChildren().addAll(removeExerciseLabel, exerciseSelector, buttonBoxRemove);
+        removeExerciseRoot.setCenter(removeExerciseBox);
+
+        Scene removeExerciseScene = new Scene(removeExerciseRoot, 600, 400);
+
+        removeButton.setOnAction(event -> primaryStage.setScene(removeExerciseScene));
+
+        // Ajouter le bouton "-" à gauche du bouton "+"
+        HBox topBar = new HBox(10, removeButton, addButton);
         topBar.setAlignment(Pos.CENTER_RIGHT);
         topBar.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         mainRoot.setTop(topBar);

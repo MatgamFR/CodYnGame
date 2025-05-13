@@ -10,7 +10,7 @@ def main():
             print(int(input())+int(input()))
         case 3:
             # exercice corrigé
-            ae
+            printf("test")
 
 
 if __name__ == "__main__":
