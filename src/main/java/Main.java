@@ -26,7 +26,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Lire les valeurs de configuration depuis configue.txt
-            BufferedReader reader = new BufferedReader(new FileReader("/home/cytech/CodYnGame-main/CodYnGame/configue.txt"));
+            Path configPath = Path.of("configue.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(configPath.toFile()));
+
             String dbUrl = null, dbUser = null, dbPassword = null;
             String line;
             while ((line = reader.readLine()) != null) {
