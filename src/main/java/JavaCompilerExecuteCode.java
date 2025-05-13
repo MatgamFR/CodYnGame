@@ -61,9 +61,8 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 process.waitFor();
                 
                 // Étape 2: Exécuter le code de correction
-                Process process2 = Runtime.getRuntime().exec(new String[]{
-                    "python3", "src/main/resources/exercice.py", String.valueOf(id)
-                });
+                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
+
                 process2.getOutputStream().write(resultat);
                 process2.getOutputStream().close();
                 

@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import javafx.application.Application;
@@ -174,8 +175,6 @@ public class Main extends Application {
                         if (!correction.isEmpty()) {
                             try {
                                 // Ajouter la correction au fichier exercice.py
-                                Path exerciceFile = Path.of("src/main/resources/exercice.py");
-                                String content = Files.readString(exerciceFile);
                                                     // Ajouter l'exercice à la base de données
                                 int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
 
@@ -196,84 +195,20 @@ public class Main extends Application {
                                     Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
                                 }
                                 
-                                // Formater la nouvelle correction avec l'indentation correcte
-                                String newCase = String.format(
-                                    "        case %d:\n            # exercice corrigé\n            %s\n",
-                                    exerciseId,
-                                    correction.replace("\n", "\n            ")
-                                );
+                                File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
                                 
-                                // Trouver l'endroit où insérer le nouveau cas
-                                int matchBlock = content.indexOf("    match int(sys.argv[1]):");
-                                if (matchBlock == -1) {
-                                    throw new IOException("Structure du fichier exercice.py invalide: bloc match non trouvé");
+                                if (exerciceFile.exists()) {
+                                    // Si le fichier existe déjà, on l'écrase
+                                    exerciceFile.delete();
                                 }
-                                
-                                // Vérifier si le case existe déjà et le supprimer
-                                String casePattern = String.format("        case %d:", exerciseId);
-                                int existingCasePos = content.indexOf(casePattern);
-                                
-                                if (existingCasePos != -1) {
-                                    // Le case existe déjà, trouver où il se termine
-                                    int nextCasePos = content.indexOf("        case ", existingCasePos + casePattern.length());
-                                    int ifNamePos = content.indexOf("if __name__", existingCasePos);
-                                    
-                                    int endOfExistingCase;
-                                    if (nextCasePos != -1) {
-                                        // Il y a un autre case après celui-ci
-                                        endOfExistingCase = nextCasePos;
-                                    } else if (ifNamePos != -1) {
-                                        // Il n'y a pas d'autre case, mais il y a le bloc if __name__
-                                        // Reculer jusqu'à la ligne vide avant if __name__
-                                        endOfExistingCase = content.lastIndexOf("\n\n", ifNamePos);
-                                        if (endOfExistingCase == -1) {
-                                            // Si pas de ligne vide, utiliser la position juste avant if __name__
-                                            endOfExistingCase = content.lastIndexOf("\n", ifNamePos);
-                                        }
-                                    } else {
-                                        // Ni d'autre case, ni de bloc if __name__, aller jusqu'à la fin du fichier
-                                        endOfExistingCase = content.length();
-                                    }
-                                    
-                                    // Supprimer l'ancien case
-                                    content = content.substring(0, existingCasePos) + content.substring(endOfExistingCase);
-                                    
-                                    // Insérer le nouveau case au même endroit
-                                    content = content.substring(0, existingCasePos) + newCase + content.substring(existingCasePos);
-                                    
-                                    System.out.println("Case existant remplacé pour l'exercice " + exerciseId);
-                                } else {
-                                    // Le case n'existe pas, l'ajouter normalement
-                                    // Chercher la dernière instruction case correctement indentée
-                                    int lastCasePos = content.lastIndexOf("        case ", content.indexOf("if __name__"));
-                                    if (lastCasePos == -1) {
-                                        // Pas de case existant, ajouter après la ligne match
-                                        int matchLineEnd = content.indexOf('\n', matchBlock) + 1;
-                                        content = content.substring(0, matchLineEnd) + newCase + content.substring(matchLineEnd);
-                                    } else {
-                                        // Trouver la fin du dernier case
-                                        int endOfLastCase = content.indexOf("\n\n", lastCasePos);
-                                        if (endOfLastCase == -1) {
-                                            // Si pas de ligne vide après le dernier case, chercher le bloc if __name__
-                                            endOfLastCase = content.indexOf("if __name__", lastCasePos);
-                                            if (endOfLastCase == -1) {
-                                                // Si if __name__ non trouvé, utiliser la fin du fichier
-                                                endOfLastCase = content.length();
-                                            } else {
-                                                // Remonter à la ligne précédant if __name__
-                                                endOfLastCase = content.lastIndexOf("\n", endOfLastCase);
-                                            }
-                                        }
-                                        
-                                        // Insérer le nouveau cas après le dernier cas existant
-                                        content = content.substring(0, endOfLastCase) + "\n" + newCase + content.substring(endOfLastCase);
-                                    }
-                                    System.out.println("Nouveau case ajouté pour l'exercice " + exerciseId);
+
+                                if(!exerciceFile.createNewFile()){
+                                    throw new IOException("Erreur lors de la création du fichier : " + exerciceFile.getAbsolutePath());
                                 }
-                                
-                                // Écrire le contenu mis à jour
-                                Files.writeString(exerciceFile, content);
-                                System.out.println("Correction ajoutée au fichier exercice.py");
+
+                                FileWriter fileWriter = new FileWriter(exerciceFile);
+                                fileWriter.write(correction);
+                                fileWriter.close();
                             } catch (IOException ex) {
                                 System.out.println("Erreur lors de l'écriture dans exercice.py : " + ex.getMessage());
                             }

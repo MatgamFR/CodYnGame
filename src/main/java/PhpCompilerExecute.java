@@ -29,7 +29,7 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
-                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/exercice.py", String.valueOf(id)});
+                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
                 process2.getOutputStream().write(resultat);
                 process2.getOutputStream().close();
 
