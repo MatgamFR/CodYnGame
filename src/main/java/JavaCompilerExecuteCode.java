@@ -41,60 +41,58 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 System.err.println("Erreur: Le fichier compilé Main.class n'a pas été trouvé");
                 return;
             }
-
-            // Créer des fichiers temporaires pour les sorties
-            Path outputFile = Files.createTempFile("output", ".txt");
-            Path outputFile2 = Files.createTempFile("output2", ".txt");
-            
-            Path shellScript = Files.createTempFile("execute_", ".sh");
-            Path shellScript2 = Files.createTempFile("execute2", ".sh");
             
             boolean valide = true;
+
             String output = "";
             String output2 = "";
+
             int exitCode = 1;
 
             // Tester avec 10 seeds différentes
             for (int i = 0; i < 10; i++) {
                 long seed = System.currentTimeMillis();
 
-                // Créer et exécuter le script principal (utilisant la classe compilée)
-                String scriptContent = "#!/bin/bash\n" +
-                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | java -cp " + tempClassDir.toAbsolutePath().toString() + " Main > " + outputFile.toAbsolutePath() + " 2>&1";
-                Files.writeString(shellScript, scriptContent);
-
-                // Créer et exécuter le script pour la correction Python
-                String scriptContent2 = "#!/bin/bash\n" +
-                                    "python3 src/main/resources/randomGeneration.py " + seed + " " + id + " | python3 src/main/resources/exercice.py " + id + " > " + outputFile2.toAbsolutePath() + " 2>&1";
-                Files.writeString(shellScript2, scriptContent2);
+                // Étape 1: Générer les données d'entrée aléatoires
+                Process process = Runtime.getRuntime().exec(new String[]{
+                    "python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)
+                });
+                byte[] resultat = process.getInputStream().readAllBytes();
+                process.waitFor();
                 
-                // Rendre les scripts exécutables
-                shellScript2.toFile().setExecutable(true);  
-                shellScript.toFile().setExecutable(true);
-
-                // Exécuter les deux scripts
-                Process executeProcess = Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript.toString()});
-                Runtime.getRuntime().exec(new String[]{"/bin/bash", shellScript2.toString()}).waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                // Étape 2: Exécuter le code de correction
+                Process process2 = Runtime.getRuntime().exec(new String[]{
+                    "python3", "src/main/resources/exercice.py", String.valueOf(id)
+                });
+                process2.getOutputStream().write(resultat);
+                process2.getOutputStream().close();
+                
+                // Étape 3: Exécuter le code Java compilé de l'utilisateur
+                Process process3 = Runtime.getRuntime().exec(new String[]{
+                    "java", "-cp", tempClassDir.toAbsolutePath().toString(), "Main"
+                });
+                process3.getOutputStream().write(resultat);
+                process3.getOutputStream().close();
 
                 // Définir un timeout global de 15 secondes
-                boolean completed = executeProcess.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
                 
                 if (!completed) {
                     System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
-                    executeProcess.destroy();
-                    executeProcess.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-                    if (executeProcess.isAlive()) {
-                        executeProcess.destroyForcibly();
+                    process3.destroy();
+                    process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                    if (process3.isAlive()) {
+                        process3.destroyForcibly();
                     }
                     System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                     valide = false;
                     break;
                 } else {
-                    exitCode = executeProcess.exitValue();
+                    exitCode = process3.exitValue();
 
                     // Lire et comparer les sorties
-                    output = Files.readString(outputFile);
-                    output2 = Files.readString(outputFile2);
+                    output = new String(process2.getInputStream().readAllBytes());
+                    output2 = new String(process3.getInputStream().readAllBytes());
                     if(!output.equals(output2)) {
                         valide = false;
                         break;
@@ -107,26 +105,10 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 System.out.println("Le code est correct");
             } else {
                 System.out.println("Le code est incorrect");
-                System.out.println("Reçu : " + output);
-                System.out.println("Attendu : " + output2);
+                System.out.println("Reçu : " + output2);
+                System.out.println("Attendu : " + output);
             }
 
-            // Nettoyer les fichiers temporaires
-            try {
-                Files.deleteIfExists(shellScript);
-                Files.deleteIfExists(shellScript2);
-                Files.deleteIfExists(outputFile);
-                Files.deleteIfExists(outputFile2);
-                // Supprimer le répertoire temporaire et son contenu
-                if (tempClassDir != null) {
-                    Files.walk(tempClassDir)
-                        .sorted(java.util.Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(file -> file.delete());
-                }
-            } catch (IOException e) {
-                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
-            }
         } 
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
