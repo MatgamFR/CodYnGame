@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-
+      
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,8 +20,47 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 public class Main extends Application {
+
+    public int tabulationNumber(String codeArea, int caretPosition) {
+        int lineStart = caretPosition;
+        String currentLine = "";
+        int tabulationCount = 0;
+    
+        // Remonter jusqu'à trouver une ligne non vide ou atteindre le début du texte
+        while (lineStart != 0) {
+            // Trouver le début de la ligne actuelle
+            lineStart = codeArea.lastIndexOf("\n", lineStart - 1) + 1;
+    
+            // Trouver la fin de la ligne actuelle
+            int lineEnd = codeArea.indexOf("\n", lineStart);
+            if (lineEnd == -1) {
+                lineEnd = codeArea.length(); // Si c'est la dernière ligne
+            }   
+    
+            // Extraire la ligne actuelle
+            currentLine = codeArea.substring(lineStart, lineEnd).trim();
+    
+            // Si la ligne n'est pas vide, on arrête la recherche
+            if (!currentLine.isEmpty()) {
+                break;
+            }
+        }
+    
+        // Si aucune ligne pleine n'est trouvée, retourner 0
+        if (!currentLine.isEmpty()) {
+            return tabulationCount;
+        }
+    
+        // Compter les tabulations dans la ligne trouvée
+        for (char c : currentLine.toCharArray()) {
+            if (c == '\t') {
+                tabulationCount++;
+            }
+        }
+    
+        return tabulationCount;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -389,7 +428,7 @@ public class Main extends Application {
         secondaryRoot.setCenter(codeBox);
         secondaryRoot.setBottom(buttonBox);
 
-        // Créer une scène pour la fenêtre secondaire
+       // Créer une scène pour la fenêtre secondaire
         Scene secondaryScene = new Scene(secondaryRoot, 1280, 720, backgroundColorSecondary);
 
         // Gestion de l'événement de clic sur un exercice
@@ -479,6 +518,18 @@ public class Main extends Application {
                 attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
 
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
+            }
+        });
+
+        codeArea.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("ENTER")) {
+                int caretPosition = codeArea.getCaretPosition();
+                String text = codeArea.getText();
+                int tab = tabulationNumber(text, caretPosition);
+                for (int i = 0; i < tab; i++) {
+                    codeArea.insertText(caretPosition, "\t");
+                    caretPosition++; // Mettre à jour la position du curseur après chaque insertion
+                }
             }
         });
 
