@@ -11,9 +11,10 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
             Path tempFile = Files.createTempFile("codyngame", ".js");
 
             boolean valide = true;
+            int compt = 0;
 
-            String output = "";
-            String output2 = "";
+            String[] output = {""};
+            String[] output2 = {""};
 
             int exitCode = 1;
             
@@ -35,7 +36,7 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 process3.getOutputStream().close();
                 
                 // Définir un timeout global de 15 secondes
-                boolean completed = process.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
                 
                 if (!completed) {
                     System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
@@ -45,25 +46,50 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                         process.destroyForcibly();
                     }
                     System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
-                } else {
-                    exitCode = process.exitValue();
-                    System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+                } 
+                else {
+                    exitCode = process3.exitValue();
 
-                    // Lire le contenu du fichier de sortie
-                    output = new String(process2.getInputStream().readAllBytes());
-                    output2 = new String(process3.getInputStream().readAllBytes());
-                    if(!output.equals(output2)) {
-                        valide = false;
-                        break;
+                    if (exitCode != 0) {
+                        System.out.println(new String(process3.getErrorStream().readAllBytes()));
+                        return;
                     }
+                    else {
+                        // Lire le contenu du fichier de sortie
+                        output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                        output2 = new String(process3.getInputStream().readAllBytes()).split("\n");
+                    }
+
+                    for (int j = 0; j < output.length; j++) {
+                        if (j >= output2.length) {
+                            valide = false;
+                            compt = j-1;
+                            break;
+                        }
+                        if(!output[j].equals(output2[j])) {
+                            valide = false;
+                            compt = j;
+                            break;
+                        }
+                    }
+
+                    if(!valide) {
+                        break;
+                    } 
                 }
             }
+            
+            System.out.println("Programme terminé avec le code de sortie: " + exitCode);
             if(valide) {
+                if (output.length < output2.length) {
+                    System.out.println("Warning : Le code a produit plus de sorties que prévu.");
+                }
                 System.out.println("Le code est correct");
-            } else {
+            } 
+            else {
                 System.out.println("Le code est incorrect");
-                System.out.println("Reçu : " + output2);
-                System.out.println("Attendu : " + output);
+                System.out.println("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
+                System.out.println("Attendu : '" + output[compt] + "' valeur " + (compt+1));
             }
             
             // Nettoyer les fichiers temporaires
