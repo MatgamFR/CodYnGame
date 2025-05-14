@@ -109,6 +109,54 @@ public class PythonExecuteCode extends IDEExecuteCode {
         }
     }
 
+    public static boolean verification(String code) {
+        try {
+            // Créer un fichier temporaire avec extension .py
+            Path tempFile = Files.createTempFile("codyngame", ".py");
+            
+            // Écrire le code dans le fichier temporaire
+            Files.writeString(tempFile, code);
+
+            long seed = System.currentTimeMillis();
+
+            Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), "1"});
+            byte[] resultat = process.getInputStream().readAllBytes();
+
+            Process process2 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toAbsolutePath().toString()});
+            process2.getOutputStream().write(resultat);
+            process2.getOutputStream().close();
+
+            boolean completed = process2.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                
+            if (!completed) {
+                System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                process2.destroy();
+                process2.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                if (process2.isAlive()) {
+                    process2.destroyForcibly();
+                }
+                System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                return false;
+            }
+
+            int exitCode = process2.exitValue();
+
+            if(exitCode != 0) {
+                System.out.println(new String(process2.getErrorStream().readAllBytes()));
+                return false;
+            }
+            else {
+                System.out.println(new String(process2.getInputStream().readAllBytes()));
+                return true;
+            }
+        }
+        catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
+            return false;
+        }
+    }
+
     @Override
     public void compileCode(String code) {
 

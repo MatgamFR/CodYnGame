@@ -40,10 +40,10 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 
                 if (!completed) {
                     System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
-                    process.destroy();
-                    process.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-                    if (process.isAlive()) {
-                        process.destroyForcibly();
+                    process3.destroy();
+                    process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                    if (process3.isAlive()) {
+                        process3.destroyForcibly();
                     }
                     System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                 } 

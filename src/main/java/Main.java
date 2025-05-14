@@ -221,7 +221,7 @@ public class Main extends Application {
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        if (!correction.isEmpty()) {
+                        if (!correction.isEmpty() && PythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
                                 int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
@@ -275,7 +275,7 @@ public class Main extends Application {
                                 System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
                         } else {
-                            System.err.println("La correction ne peut pas être vide.");
+                            System.err.println("La correction ne peut pas être vide ou invalide.");
                         }
                     });
                 }
