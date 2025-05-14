@@ -80,6 +80,15 @@ public class Main extends Application {
 
             HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
             exerciseItem.setSpacing(10);
+            exerciseItem.setStyle(
+                "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                "-fx-border-radius: 15px; " +
+                "-fx-background-radius: 15px; " +
+                "-fx-padding: 10px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+            );
+        
             exerciseList.getItems().add(exerciseItem);
         }
 
@@ -107,31 +116,49 @@ public class Main extends Application {
         addExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
-        addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
 
         TextArea titleInput = new TextArea();
         titleInput.setPromptText("Titre de l'exercice");
-        titleInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        titleInput.setStyle(
+            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
+            "-fx-text-fill: #FFFFFF; " +
+            "-fx-prompt-text-fill: #BBBBBB; " +
+            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+        );
 
         TextArea questionInput = new TextArea();
         questionInput.setPromptText("Question de l'exercice");
-        questionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        questionInput.setStyle(
+            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
+            "-fx-text-fill: #FFFFFF;  " +
+            "-fx-prompt-text-fill: #BBBBBB; " +
+            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+        );
 
         TextArea difficultyInput = new TextArea();
         difficultyInput.setPromptText("Difficulté de l'exercice (facile, moyen, difficile)");
-        difficultyInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        difficultyInput.setStyle(
+            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
+            "-fx-text-fill: #FFFFFF;  " +
+            "-fx-prompt-text-fill: #BBBBBB; " +
+            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+        );
 
         // Ajouter des cases à cocher pour choisir les langages
         CheckBox pythonCheckBox = new CheckBox("Python");
-        pythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        pythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
         CheckBox javaCheckBox = new CheckBox("Java");
-        javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
         CheckBox CCheckBox = new CheckBox("C");
-        CCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        CCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
         CheckBox jsCheckBox = new CheckBox("JavaScript");
-        jsCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        jsCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
         CheckBox phpCheckBox = new CheckBox("PHP");
-        phpCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        phpCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
 
         HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox, CCheckBox, jsCheckBox, phpCheckBox);
         languageSelectionBox.setAlignment(Pos.CENTER);
@@ -161,11 +188,13 @@ public class Main extends Application {
                     // Demander la correction en Python
                     TextArea correctionInput = new TextArea();
                     correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
-                    correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+                    correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
                     // Fenêtre pour saisir la correction
                     Stage correctionStage = new Stage();
-                    VBox correctionBox = new VBox(10, new Label("Correction en Python :"), correctionInput);
+                    Label correctionLabel = new Label("Correction en Python :");
+                    correctionLabel.setStyle("-fx-text-fill: white;");
+                    VBox correctionBox = new VBox(10, correctionLabel, correctionInput);
                     correctionBox.setAlignment(Pos.CENTER);
                     correctionBox.setStyle("-fx-padding: 20px; -fx-background-color: #1E1E1E;");
 
@@ -265,7 +294,7 @@ public class Main extends Application {
         removeExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
         Label removeExerciseLabel = new Label("Supprimer un exercice");
-        removeExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        removeExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
 
         // Liste déroulante pour sélectionner l'exercice à supprimer
         ComboBox<String> exerciseSelector = new ComboBox<>();
