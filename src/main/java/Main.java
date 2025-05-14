@@ -366,7 +366,6 @@ public class Main extends Application {
         backButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Revenir à la scène principale
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         // Ajouter une boîte pour organiser les composants
         VBox codeBox = new VBox(10, codeArea, attemptsLabel);
