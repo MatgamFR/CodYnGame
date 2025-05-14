@@ -111,6 +111,8 @@ public class Main extends Application {
 
         // Nouvelle scène pour ajouter des exercices
         BorderPane addExerciseRoot = new BorderPane();
+        Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
+        addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
         addExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
@@ -171,6 +173,35 @@ public class Main extends Application {
         cancelButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
 
+        // Créer un BorderPane pour la scène de correction
+        BorderPane correctionRoot = new BorderPane();
+        VBox correctionBox = new VBox(10);
+        correctionBox.setAlignment(Pos.CENTER);
+        correctionBox.setStyle("-fx-padding: 20px; -fx-background-color: #1E1E1E;");
+
+        Label correctionLabel = new Label("Correction en Python :");
+        correctionLabel.setStyle("-fx-text-fill: white;");
+
+        TextArea correctionInput = new TextArea();
+        correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
+        correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+
+        Button saveCorrectionButton = new Button("Enregistrer la correction");
+        saveCorrectionButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+
+        Button backToAddExerciseButton = new Button("Retour");
+        backToAddExerciseButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        backToAddExerciseButton.setOnAction(event -> primaryStage.setScene(addExerciseScene)); // Retour à la scène d'ajout d'exercice
+
+        HBox correctionButtonBox = new HBox(10, backToAddExerciseButton, saveCorrectionButton);
+        correctionButtonBox.setAlignment(Pos.CENTER);
+
+        correctionBox.getChildren().addAll(correctionLabel, correctionInput, correctionButtonBox);
+        correctionRoot.setCenter(correctionBox);
+
+        Scene correctionStage = new Scene(correctionRoot, 600, 400);
+
+        // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
             String title = titleInput.getText();
             String question = questionInput.getText();
@@ -185,29 +216,17 @@ public class Main extends Application {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
-                    // Demander la correction en Python
-                    TextArea correctionInput = new TextArea();
-                    correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
-                    correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+                    // Transition vers la scène de correction
+                    primaryStage.setScene(correctionStage);
 
-                    // Fenêtre pour saisir la correction
-                    Stage correctionStage = new Stage();
-                    Label correctionLabel = new Label("Correction en Python :");
-                    correctionLabel.setStyle("-fx-text-fill: white;");
-                    VBox correctionBox = new VBox(10, correctionLabel, correctionInput);
-                    correctionBox.setAlignment(Pos.CENTER);
-                    correctionBox.setStyle("-fx-padding: 20px; -fx-background-color: #1E1E1E;");
-
-                    Button saveCorrectionButton = new Button("Enregistrer la correction");
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         if (!correction.isEmpty()) {
                             try {
-                                // Ajouter la correction au fichier exercice.py
-                                                    // Ajouter l'exercice à la base de données
+                                // Ajouter l'exercice à la base de données
                                 int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
 
-                                // Ajouter le langage Python à la base de données
+                                // Ajouter les langages sélectionnés à la base de données
                                 if (isPythonSelected) {
                                     Connexionbdd.addLanguageToExercise(exerciseId, "Python");
                                 }
@@ -223,51 +242,45 @@ public class Main extends Application {
                                 if (isPHPSelected) {
                                     Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
                                 }
-                                
+
+                                // Sauvegarder la correction dans un fichier
                                 File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
-                                
                                 if (exerciceFile.exists()) {
-                                    // Si le fichier existe déjà, on l'écrase
                                     exerciceFile.delete();
                                 }
-
-                                if(!exerciceFile.createNewFile()){
+                                if (!exerciceFile.createNewFile()) {
                                     throw new IOException("Erreur lors de la création du fichier : " + exerciceFile.getAbsolutePath());
                                 }
 
                                 FileWriter fileWriter = new FileWriter(exerciceFile);
                                 fileWriter.write(correction);
                                 fileWriter.close();
+
+                                // Mettre à jour la liste des exercices
+                                exerciseList.getItems().clear();
+                                for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+                                    String titre = Connexionbdd.getExerciceTitle(i);
+                                    Label exerciseNumber = new Label("Exercice " + i);
+                                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                                    Label exerciseTitle = new Label(titre);
+                                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                                    exerciseItem.setSpacing(10);
+                                    exerciseList.getItems().add(exerciseItem);
+                                }
+
+                                // Retourner à la scène principale
+                                primaryStage.setScene(mainScene);
                             } catch (IOException ex) {
-                                System.out.println("Erreur lors de l'écriture dans exercice.py : " + ex.getMessage());
+                                System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
-                            correctionStage.close();
                         } else {
-                            System.out.println("La correction ne peut pas être vide.");
+                            System.err.println("La correction ne peut pas être vide.");
                         }
                     });
-
-                    correctionBox.getChildren().add(saveCorrectionButton);
-                    correctionStage.setScene(new Scene(correctionBox, 400, 300));
-                    correctionStage.showAndWait();
-
-                    // Mettre à jour la liste des exercices
-                    exerciseList.getItems().clear();
-                    for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
-                        String titre = Connexionbdd.getExerciceTitle(i);
-                        Label exerciseNumber = new Label("Exercice " + i);
-                        exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
-                        Label exerciseTitle = new Label(titre);
-                        exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                        HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
-                        exerciseItem.setSpacing(10);
-                        exerciseList.getItems().add(exerciseItem);
-                    }
-                    primaryStage.setScene(mainScene); // Retour à la scène principale
                 }
             } else {
-                // Afficher un message d'erreur si les champs sont incomplets ou aucun langage n'est sélectionné
-                System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue");
+                System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue.");
             }
         });
 
@@ -277,9 +290,6 @@ public class Main extends Application {
         addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, languageSelectionBox, buttonBoxAdd);
         addExerciseRoot.setCenter(addExerciseBox);
 
-        Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
-
-        addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
 
         // Ajouter un bouton "-" pour supprimer des exercices
         Button removeButton = new Button("-");
