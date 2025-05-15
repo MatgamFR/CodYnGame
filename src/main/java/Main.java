@@ -46,6 +46,10 @@ public class Main extends Application {
                 codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab);
                 codeArea.positionCaret(caretPosition+1+tab.length());
             }
+            else if (text.lastIndexOf("{", caretPosition-1) == verif){
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.positionCaret(caretPosition+1+tab.length());
+            }
             if (text.lastIndexOf(":", caretPosition-1) == verif){
                 codeArea.insertText(caretPosition, "\t");
                 codeArea.positionCaret(caretPosition+1+tab.length());
