@@ -525,11 +525,17 @@ public class Main extends Application {
             if (event.getCode().toString().equals("ENTER")) {
                 int caretPosition = codeArea.getCaretPosition();
                 String text = codeArea.getText();
-                int tab = tabulationNumber(text, caretPosition);
-                for (int i = 0; i < tab; i++) {
-                    codeArea.insertText(caretPosition, "\t");
-                    caretPosition++; // Mettre à jour la position du curseur après chaque insertion
+                String tab = "";
+                int start = text.lastIndexOf("\n", caretPosition-2) + 1;
+                for (int i=start; i < text.length(); i++){
+                    char c = text.charAt(i);
+                    if (c == '\t' || c == ' '){
+                        tab += c;
+                    } else {
+                        break;
+                    }
                 }
+                codeArea.insertText(caretPosition, tab);   
             }
         });
 
