@@ -269,4 +269,33 @@ public class Connexionbdd {
         }
     }
 
+    public static List<Integer> getExercisesByLanguages(List<String> languages) {
+        List<Integer> exerciseIds = new ArrayList<>();
+        if (languages.isEmpty()) {
+            return exerciseIds; // Retourne une liste vide si aucun langage n'est sélectionné
+        }
+
+        StringBuilder query = new StringBuilder("SELECT DISTINCT Exerciceid FROM LanguageCode WHERE NomLanguage IN (");
+        for (int i = 0; i < languages.size(); i++) {
+            query.append("?");
+            if (i < languages.size() - 1) {
+                query.append(", ");
+            }
+        }
+        query.append(")");
+
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            for (int i = 0; i < languages.size(); i++) {
+                stmt.setString(i + 1, languages.get(i));
+            }
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                exerciseIds.add(rs.getInt("Exerciceid"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des exercices par langage : " + e.getMessage());
+        }
+        return exerciseIds;
+    }
 }

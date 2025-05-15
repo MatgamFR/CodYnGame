@@ -4,7 +4,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import javafx.scene.input.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -105,6 +108,7 @@ public class Main extends Application {
         Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
         descriptionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
+
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -129,8 +133,94 @@ public class Main extends Application {
             exerciseList.getItems().add(exerciseItem);
         }
 
+        // Ajouter des cases à cocher pour filtrer par langage
+        CheckBox filterPythonCheckBox = new CheckBox("Python");
+        filterPythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterJavaCheckBox = new CheckBox("Java");
+        filterJavaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterCCheckBox = new CheckBox("C");
+        filterCCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterJSCheckBox = new CheckBox("JavaScript");
+        filterJSCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterPHPCheckBox = new CheckBox("PHP");
+        filterPHPCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        
+        Button searchButton = new Button("Rechercher");
+        searchButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+
+        // Ajouter les cases à cocher et le bouton de recherche dans une HBox
+        HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
+        filterBox.setAlignment(Pos.CENTER);
+        filterBox.setStyle("-fx-padding: 10px;");
+                
+        searchButton.setOnAction(event -> {
+            // Récupérer les langages sélectionnés
+            List<String> selectedLanguages = new ArrayList<>();
+            if (filterPythonCheckBox.isSelected()){
+                selectedLanguages.add("Python");
+            }
+            if (filterJavaCheckBox.isSelected()){
+                selectedLanguages.add("Java");
+            }
+            if (filterCCheckBox.isSelected()){ 
+                selectedLanguages.add("C");
+            }
+            if (filterJSCheckBox.isSelected()){
+                selectedLanguages.add("JavaScript");
+            }
+            if (filterPHPCheckBox.isSelected()){
+                selectedLanguages.add("PHP");
+            }
+        
+            // Filtrer les exercices
+            List<Integer> filteredExerciseIds = Connexionbdd.getExercisesByLanguages(selectedLanguages);
+            if (filteredExerciseIds.isEmpty()) {
+                exerciseList.getItems().clear();
+                int maxExobis = Connexionbdd.maxexo();
+                for (int i = 1; i <= maxExobis; i++) {
+                    String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                    Label exerciseNumber = new Label("Exercice " + i);
+                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                    Label exerciseTitle = new Label(titre);
+                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                    exerciseItem.setSpacing(10);
+                    exerciseItem.setStyle(
+                        "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                        "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                        "-fx-border-radius: 15px; " +
+                        "-fx-background-radius: 15px; " +
+                        "-fx-padding: 10px; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                    );
+                    exerciseList.getItems().add(exerciseItem);
+                }
+            }
+            else {
+                exerciseList.getItems().clear();
+                for (int id : filteredExerciseIds) {
+                    String titre = Connexionbdd.getExerciceTitle(id);
+                    Label exerciseNumber = new Label("Exercice " + id);
+                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                    Label exerciseTitle = new Label(titre);
+                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                    exerciseItem.setSpacing(10);
+                    exerciseItem.setStyle(
+                        "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                        "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                        "-fx-border-radius: 15px; " +
+                        "-fx-background-radius: 15px; " +
+                        "-fx-padding: 10px; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                    );
+                    exerciseList.getItems().add(exerciseItem);
+                }
+            }
+        });
+        
         // Organiser les composants dans un VBox
-        VBox contentBox = new VBox(10, titleLabel, descriptionLabel, exerciseList);
+        VBox contentBox = new VBox(10, titleLabel, descriptionLabel, filterBox, exerciseList);
         contentBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         contentBox.setAlignment(Pos.CENTER);
 
@@ -316,8 +406,23 @@ public class Main extends Application {
                                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                                     HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
                                     exerciseItem.setSpacing(10);
+                                    exerciseItem.setStyle(
+                                        "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                                        "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                                        "-fx-border-radius: 15px; " +
+                                        "-fx-background-radius: 15px; " +
+                                        "-fx-padding: 10px; " +
+                                        "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                                    );
                                     exerciseList.getItems().add(exerciseItem);
                                 }
+
+                                // Décocher toutes les cases de filtrage
+                                filterPythonCheckBox.setSelected(false);
+                                filterJavaCheckBox.setSelected(false);
+                                filterCCheckBox.setSelected(false);
+                                filterJSCheckBox.setSelected(false);
+                                filterPHPCheckBox.setSelected(false);
 
                                 // Retourner à la scène principale
                                 primaryStage.setScene(mainScene);
