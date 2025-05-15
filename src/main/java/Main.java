@@ -157,6 +157,18 @@ public class Main extends Application {
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
         addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
 
+        TextArea outputArea = new TextArea();
+        outputArea.setEditable(false);
+        outputArea.setWrapText(true);
+        outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
+                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
+                            "-fx-font-family: 'Monospace'; " +
+                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                            "-fx-border-radius: 15px; " +
+                            "-fx-background-radius: 15px; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        outputArea.setPrefHeight(200); // Hauteur préférée
+
         TextArea titleInput = new TextArea();
         titleInput.setPromptText("Titre de l'exercice");
         titleInput.setStyle(
@@ -258,7 +270,8 @@ public class Main extends Application {
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        if (!correction.isEmpty() && PythonExecuteCode.verification(correction)) {
+                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
+                        if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
                                 int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
@@ -414,17 +427,25 @@ public class Main extends Application {
 
         ComboBox<String> languageSelector = new ComboBox<>();
 
-        // Ajouter une boîte pour organiser les composants
-        VBox codeBox = new VBox(10, codeArea, attemptsLabel);
-        codeBox.setStyle("-fx-background-color: #1E1E1E;");
-        VBox.setVgrow(codeArea, javafx.scene.layout.Priority.ALWAYS);
-
         HBox buttonBox = new HBox(10, backButton, languageSelector, runButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
-        secondaryRoot.setCenter(codeBox);
+        // Ajouter une boîte pour organiser les composants
+        VBox codeBox = new VBox(10, codeArea);
+        codeBox.setStyle("-fx-background-color: #1E1E1E;");
+        VBox.setVgrow(codeArea, javafx.scene.layout.Priority.ALWAYS);
+
+        // Créer un SplitPane pour diviser la zone de code et la zone de sortie
+        javafx.scene.control.SplitPane splitPane = new javafx.scene.control.SplitPane();
+        splitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        splitPane.getItems().addAll(codeBox, outputArea);
+        splitPane.setDividerPositions(0.7);
+
+        // Ajouter le SplitPane et les autres éléments dans le BorderPane
+        secondaryRoot.setCenter(splitPane);
         secondaryRoot.setBottom(buttonBox);
+        secondaryRoot.setTop(new HBox(10, attemptsLabel));
 
        // Créer une scène pour la fenêtre secondaire
         Scene secondaryScene = new Scene(secondaryRoot, 1280, 720, backgroundColorSecondary);
@@ -534,7 +555,7 @@ public class Main extends Application {
             Label exerciseNumberLabel = (Label) selectedItem.getChildren().get(0);
             String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
             int id = Integer.parseInt(exerciseNumberText); 
-            IDEExecuteCode executor = LanguageChoice.choice(language);
+            IDEExecuteCode executor = LanguageChoice.choice(language, outputArea);
             executor.executeCode(code, id);
 
             // Incrémenter le nombre d'essais dans la base de données

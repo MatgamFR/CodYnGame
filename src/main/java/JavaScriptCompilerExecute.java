@@ -1,8 +1,13 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javafx.scene.control.TextArea;
 
 public class JavaScriptCompilerExecute extends IDEExecuteCode {
+
+    public JavaScriptCompilerExecute(TextArea textArea) {
+        super(textArea);
+    }
 
     @Override
     public void executeCode(String code, int id) {
@@ -39,19 +44,19 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
                 
                 if (!completed) {
-                    System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                    this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                     process3.destroy();
                     process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                     if (process3.isAlive()) {
                         process3.destroyForcibly();
                     }
-                    System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                    this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                 } 
                 else {
                     exitCode = process3.exitValue();
 
                     if (exitCode != 0) {
-                        System.out.println(new String(process3.getErrorStream().readAllBytes()));
+                        this.printOutput(new String(process3.getErrorStream().readAllBytes()));
                         return;
                     }
                     else {
@@ -79,17 +84,17 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 }
             }
             
-            System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(valide) {
                 if (output.length < output2.length) {
-                    System.out.println("Warning : Le code a produit plus de sorties que prévu.");
+                    this.printOutput("Warning : Le code a produit plus de sorties que prévu.");
                 }
-                System.out.println("Le code est correct");
+                this.printOutput("Le code est correct");
             } 
             else {
-                System.out.println("Le code est incorrect");
-                System.out.println("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
-                System.out.println("Attendu : '" + output[compt] + "' valeur " + (compt+1));
+                this.printOutput("Le code est incorrect");
+                this.printOutput("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
+                this.printOutput("Attendu : '" + output[compt] + "' valeur " + (compt+1));
             }
             
             // Nettoyer les fichiers temporaires

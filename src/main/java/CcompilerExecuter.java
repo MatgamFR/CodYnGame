@@ -1,9 +1,14 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javafx.scene.control.TextArea;
 
 public class CcompilerExecuter extends IDEExecuteCode {
     private Path compiledExecutable = null;
+
+    public CcompilerExecuter(TextArea textArea) {
+        super(textArea);
+    }
 
     @Override
     public void compileCode(String code) {
@@ -19,33 +24,33 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
             if(!compileProcess.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
                 compileProcess.destroyForcibly();
-                System.out.println("Timeout de compilation dépassé (10s)");
+                this.printOutput("Timeout de compilation dépassé (10s)");
             }
 
             if (compileProcess.exitValue() != 0) {
                 String errorOutputC = new String(compileProcess.getErrorStream().readAllBytes());
                 if (errorOutputC.contains("error:")) {
-                    System.out.println("[ERREUR SYNTAXE]");
+                    this.printOutput("[ERREUR SYNTAXE]");
                 } 
                 if (errorOutputC.contains("warning:")) {
-                    System.out.println("[AVERTISSEMENT]");
+                    this.printOutput("[AVERTISSEMENT]");
                 }
                 
-                System.out.println(errorOutputC);
+                this.printOutput(errorOutputC);
             }
             else {
-                System.out.println("Compilation C reussie.");
+                this.printOutput("Compilation C reussie.");
                 this.compiledExecutable = tempDir.resolve("exe");  // Sauvegarde le chemin de l'exécutable
                 String warningC = new String(compileProcess.getErrorStream().readAllBytes());
                 if (warningC.contains("warning")) {
-                    System.out.println("Avertissement de compilation:");
-                    System.out.println(warningC);
+                    this.printOutput("Avertissement de compilation:");
+                    this.printOutput(warningC);
                 }
             }
             
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la compilation : " + e.getMessage());
+            this.printOutput("Erreur lors de la compilation : " + e.getMessage());
         } 
     }
 
@@ -87,13 +92,13 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
                 
                 if (!completed) {
-                    System.out.println("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                    this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                     process3.destroy();
                     process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                     if (process3.isAlive()) {
                         process3.destroyForcibly();
                     }
-                    System.out.println("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                    this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                     valide = false;
                     break;
                 } 
@@ -101,7 +106,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
                     exitCode = process3.exitValue();
 
                     if (exitCode != 0) {
-                        System.out.println(new String(process3.getErrorStream().readAllBytes()));
+                        this.printOutput(new String(process3.getErrorStream().readAllBytes()));
                         return;
                     }
                     else {
@@ -129,17 +134,17 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 }
             }
             
-            System.out.println("Programme terminé avec le code de sortie: " + exitCode);
+            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(valide) {
                 if (output.length < output2.length) {
-                    System.out.println("Warning : Le code a produit plus de sorties que prévu.");
+                    this.printOutput("Warning : Le code a produit plus de sorties que prévu.");
                 }
-                System.out.println("Le code est correct");
+                this.printOutput("Le code est correct");
             } 
             else {
-                System.out.println("Le code est incorrect");
-                System.out.println("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
-                System.out.println("Attendu : '" + output[compt] + "' valeur " + (compt+1));
+                this.printOutput("Le code est incorrect");
+                this.printOutput("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
+                this.printOutput("Attendu : '" + output[compt] + "' valeur " + (compt+1));
             }
 
             // Nettoyer les fichiers temporaires
