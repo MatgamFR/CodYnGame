@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-      
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -535,7 +535,27 @@ public class Main extends Application {
                         break;
                     }
                 }
-                codeArea.insertText(caretPosition, tab);   
+                codeArea.insertText(caretPosition, tab);
+                int verif = text.lastIndexOf("\n", caretPosition-1)-1;
+                if (text.lastIndexOf("{", caretPosition-1) == verif){
+                    codeArea.insertText(caretPosition, "\t");
+                    codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab+"}");
+                    codeArea.positionCaret(caretPosition+1+tab.length());
+                }
+                else if (text.lastIndexOf(":", caretPosition-1) == verif){
+                    codeArea.insertText(caretPosition, "\t");
+                    codeArea.positionCaret(caretPosition+1+tab.length());
+                }
+            }
+            if (event.getCode().toString().equals("LEFT_PARENTHESIS")) {
+                int position = codeArea.getCaretPosition();
+                codeArea.insertText(position, ")");
+                codeArea.positionCaret(position);
+            }
+            if (event.getCode().toString().equals("QUOTEDBL")) {
+                int position = codeArea.getCaretPosition();
+                codeArea.insertText(position, "\"");
+                codeArea.positionCaret(position);
             }
         });
 
