@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-
+import javafx.scene.input.KeyEvent;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,44 +22,42 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 public class Main extends Application {
 
-    public int tabulationNumber(String codeArea, int caretPosition) {
-        int lineStart = caretPosition;
-        String currentLine = "";
-        int tabulationCount = 0;
-    
-        // Remonter jusqu'à trouver une ligne non vide ou atteindre le début du texte
-        while (lineStart != 0) {
-            // Trouver le début de la ligne actuelle
-            lineStart = codeArea.lastIndexOf("\n", lineStart - 1) + 1;
-    
-            // Trouver la fin de la ligne actuelle
-            int lineEnd = codeArea.indexOf("\n", lineStart);
-            if (lineEnd == -1) {
-                lineEnd = codeArea.length(); // Si c'est la dernière ligne
-            }   
-    
-            // Extraire la ligne actuelle
-            currentLine = codeArea.substring(lineStart, lineEnd).trim();
-    
-            // Si la ligne n'est pas vide, on arrête la recherche
-            if (!currentLine.isEmpty()) {
-                break;
+    public void tabulationNumber(TextArea codeArea, KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            int caretPosition = codeArea.getCaretPosition();
+            String text = codeArea.getText();
+            String tab = "";
+            int start = text.lastIndexOf("\n", caretPosition-2) + 1;
+            for (int i=start; i < text.length(); i++){
+                char c = text.charAt(i);
+                if (c == '\t' || c == ' '){
+                    tab += c;
+                } else {
+                    break;
+                }
+            }
+            codeArea.insertText(caretPosition, tab);
+            int verif = text.lastIndexOf("\n", caretPosition-1)-1;
+            if (text.lastIndexOf("{", caretPosition-1) == verif){
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab+"}");
+                codeArea.positionCaret(caretPosition+1+tab.length());
+            }
+            else if (text.lastIndexOf(":", caretPosition-1) == verif){
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.positionCaret(caretPosition+1+tab.length());
             }
         }
-    
-        // Si aucune ligne pleine n'est trouvée, retourner 0
-        if (!currentLine.isEmpty()) {
-            return tabulationCount;
+        if (event.getCode().toString().equals("LEFT_PARENTHESIS")) {
+            int position = codeArea.getCaretPosition();
+            codeArea.insertText(position, ")");
+            codeArea.positionCaret(position);
         }
-    
-        // Compter les tabulations dans la ligne trouvée
-        for (char c : currentLine.toCharArray()) {
-            if (c == '\t') {
-                tabulationCount++;
-            }
+        if (event.getCode().toString().equals("QUOTEDBL")) {
+            int position = codeArea.getCaretPosition();
+            codeArea.insertText(position, "\"");
+            codeArea.positionCaret(position);
         }
-    
-        return tabulationCount;
     }
 
     @Override
@@ -522,41 +520,11 @@ public class Main extends Application {
         });
 
         codeArea.setOnKeyPressed(event -> {
-            if (event.getCode().toString().equals("ENTER")) {
-                int caretPosition = codeArea.getCaretPosition();
-                String text = codeArea.getText();
-                String tab = "";
-                int start = text.lastIndexOf("\n", caretPosition-2) + 1;
-                for (int i=start; i < text.length(); i++){
-                    char c = text.charAt(i);
-                    if (c == '\t' || c == ' '){
-                        tab += c;
-                    } else {
-                        break;
-                    }
-                }
-                codeArea.insertText(caretPosition, tab);
-                int verif = text.lastIndexOf("\n", caretPosition-1)-1;
-                if (text.lastIndexOf("{", caretPosition-1) == verif){
-                    codeArea.insertText(caretPosition, "\t");
-                    codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab+"}");
-                    codeArea.positionCaret(caretPosition+1+tab.length());
-                }
-                else if (text.lastIndexOf(":", caretPosition-1) == verif){
-                    codeArea.insertText(caretPosition, "\t");
-                    codeArea.positionCaret(caretPosition+1+tab.length());
-                }
-            }
-            if (event.getCode().toString().equals("LEFT_PARENTHESIS")) {
-                int position = codeArea.getCaretPosition();
-                codeArea.insertText(position, ")");
-                codeArea.positionCaret(position);
-            }
-            if (event.getCode().toString().equals("QUOTEDBL")) {
-                int position = codeArea.getCaretPosition();
-                codeArea.insertText(position, "\"");
-                codeArea.positionCaret(position);
-            }
+            tabulationNumber(codeArea, event);
+        });
+
+        correctionInput.setOnKeyPressed(event -> {
+            tabulationNumber(correctionInput, event);
         });
 
         runButton.setOnAction(event -> {
