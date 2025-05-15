@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -41,15 +40,28 @@ public class Main extends Application {
             }
             codeArea.insertText(caretPosition, tab);
             int verif = text.lastIndexOf("\n", caretPosition-1)-1;
-            if (text.lastIndexOf("{", caretPosition-1) == verif){
+            if (text.lastIndexOf("{", caretPosition-1) == verif && text.lastIndexOf("}", caretPosition+1) == verif+2){
+                codeArea.deleteText(verif+1, verif+1);
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab);
+                codeArea.positionCaret(caretPosition+1+tab.length());
+            }
+            if (text.lastIndexOf(":", caretPosition-1) == verif){
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.positionCaret(caretPosition+1+tab.length());
+            }
+            
+        }
+        if (event.getText().equals("{")) {
+            int position = codeArea.getCaretPosition();
+            codeArea.insertText(position, "}");
+            codeArea.positionCaret(position);
+            
+            /*if (text.lastIndexOf("{", caretPosition-1) == verif){
                 codeArea.insertText(caretPosition, "\t");
                 codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab+"}");
                 codeArea.positionCaret(caretPosition+1+tab.length());
-            }
-            else if (text.lastIndexOf(":", caretPosition-1) == verif){
-                codeArea.insertText(caretPosition, "\t");
-                codeArea.positionCaret(caretPosition+1+tab.length());
-            }
+            }*/
         }
         if (event.getCode().toString().equals("LEFT_PARENTHESIS")) {
             int position = codeArea.getCaretPosition();
