@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -255,17 +256,7 @@ public class Main extends Application {
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
         addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
 
-        TextArea outputArea = new TextArea();
-        outputArea.setEditable(false);
-        outputArea.setWrapText(true);
-        outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
-                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
-                            "-fx-font-family: 'Monospace'; " +
-                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                            "-fx-border-radius: 15px; " +
-                            "-fx-background-radius: 15px; " +
-                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        outputArea.setPrefHeight(200); // Hauteur préférée
+
 
         TextArea titleInput = new TextArea();
         titleInput.setPromptText("Titre de l'exercice");
@@ -319,6 +310,21 @@ public class Main extends Application {
         Button cancelButton = new Button("Annuler");
         cancelButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
+
+
+        // Ajouter une zone de sortie (console)
+        // Déclarer et configurer outputArea une seule fois
+        TextArea outputArea = new TextArea();
+        outputArea.setEditable(false);
+        outputArea.setWrapText(true);
+        outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
+                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
+                            "-fx-font-family: 'Monospace'; " +
+                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                            "-fx-border-radius: 15px; " +
+                            "-fx-background-radius: 15px; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        outputArea.setPrefHeight(200); // Hauteur préférée
 
         // Créer un BorderPane pour la scène de correction
         BorderPane correctionRoot = new BorderPane();
@@ -403,7 +409,6 @@ public class Main extends Application {
                                 FileWriter fileWriter = new FileWriter(exerciceFile);
                                 fileWriter.write(correction);
                                 fileWriter.close();
-
                                 // Mettre à jour la liste des exercices
                                 exerciseList.getItems().clear();
                                 for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
@@ -460,7 +465,7 @@ public class Main extends Application {
         removeButton.setOnMouseEntered(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff3333, #ff6666); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.8), 8, 0.5, 0, 2);"));
         removeButton.setOnMouseExited(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);"));
 
-// Nouvelle scène pour supprimer un exercice
+        // Nouvelle scène pour supprimer un exercice
         BorderPane removeExerciseRoot = new BorderPane();
         VBox removeExerciseBox = new VBox(10);
         removeExerciseBox.setAlignment(Pos.CENTER);
@@ -521,10 +526,33 @@ public class Main extends Application {
         BorderPane secondaryRoot = new BorderPane();
         Color backgroundColorSecondary = Color.web("#1E1E1E");
 
+        // Ajouter une zone de texte pour afficher la consigne
+        TextArea instructionArea = new TextArea();
+        instructionArea.setEditable(false);
+        instructionArea.setWrapText(true);
+        instructionArea.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        instructionArea.setPrefWidth(400); // Largeur préférée pour la consigne
+
         // Ajouter une zone de texte pour écrire du code
         TextArea codeArea = new TextArea();
         codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         codeArea.setWrapText(false);
+
+        
+        // Réutiliser outputArea sans reconfigurer
+        javafx.scene.control.SplitPane codeAndConsoleSplitPane = new javafx.scene.control.SplitPane();
+        codeAndConsoleSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        codeAndConsoleSplitPane.getItems().addAll(codeArea, outputArea);
+        codeAndConsoleSplitPane.setDividerPositions(0.7);
+
+        // Créer un SplitPane pour diviser la consigne et la zone de code/console
+        javafx.scene.control.SplitPane instructionAndCodeSplitPane = new javafx.scene.control.SplitPane();
+        instructionAndCodeSplitPane.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
+        instructionAndCodeSplitPane.getItems().addAll(instructionArea, codeAndConsoleSplitPane);
+        instructionAndCodeSplitPane.setDividerPositions(0.3);
+
+        // Ajouter le SplitPane au centre de la fenêtre secondaire
+        secondaryRoot.setCenter(instructionAndCodeSplitPane);
 
         // Ajouter un label pour afficher le nombre d'essais
         Text attemptsLabel = new Text();
@@ -541,27 +569,15 @@ public class Main extends Application {
 
         ComboBox<String> languageSelector = new ComboBox<>();
 
-        HBox buttonBox = new HBox(10, backButton, languageSelector, runButton);
+        // Réorganiser les composants dans le HBox
+        HBox buttonBox = new HBox(10, attemptsLabel, languageSelector, runButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
 
-        // Ajouter une boîte pour organiser les composants
-        VBox codeBox = new VBox(10, codeArea);
-        codeBox.setStyle("-fx-background-color: #1E1E1E;");
-        VBox.setVgrow(codeArea, javafx.scene.layout.Priority.ALWAYS);
-
-        // Créer un SplitPane pour diviser la zone de code et la zone de sortie
-        javafx.scene.control.SplitPane splitPane = new javafx.scene.control.SplitPane();
-        splitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        splitPane.getItems().addAll(codeBox, outputArea);
-        splitPane.setDividerPositions(0.7);
-
-        // Ajouter le SplitPane et les autres éléments dans le BorderPane
-        secondaryRoot.setCenter(splitPane);
+        // Ajouter le bouton et le label en bas
         secondaryRoot.setBottom(buttonBox);
-        secondaryRoot.setTop(new HBox(10, attemptsLabel));
 
-       // Créer une scène pour la fenêtre secondaire
+        // Créer une scène pour la fenêtre secondaire
         Scene secondaryScene = new Scene(secondaryRoot, 1280, 720, backgroundColorSecondary);
 
         // Gestion de l'événement de clic sur un exercice
@@ -582,6 +598,7 @@ public class Main extends Application {
 
                 // Récupérer et afficher la consigne
                 String consigne = Connexionbdd.showConsigne(selectedExo);
+                instructionArea.setText(consigne);
 
                 // Récupérer les langages disponibles pour l'exercice sélectionné
                 languageSelector.getItems().clear();
@@ -595,11 +612,10 @@ public class Main extends Application {
                 // Mettre à jour la zone de code en fonction du langage sélectionné
                 String language = languageSelector.getValue();
                 if (language.equals("Python")) {
-                    codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
+                    codeArea.setText("word = input()\n\nprint(word)");
                 } 
                 else if (language.equals("Java")) {
                     codeArea.setText(
-                        "/* " + consigne + " */\n\n" +
                         "import java.util.Scanner;\n\n" +
                         "public class Main {\n" +
                         "    public static void main(String[] args) {\n" +
@@ -612,7 +628,6 @@ public class Main extends Application {
                 }
                 else if (language.equals("C")) {
                     codeArea.setText(
-                        "/* " + consigne + " */\n\n" +
                         "#include <stdio.h>\n\n" +
                         "int main() {\n" +
                         "    char word[100];\n" +
@@ -623,26 +638,25 @@ public class Main extends Application {
                     );
                 }
                 else if (language.equals("JavaScript")) {
-                    codeArea.setText("// " + consigne + "\n\nconst readline = require('readline');\n" + //
-                                                "const rl = readline.createInterface({\n" + //
-                                                "  input: process.stdin,\n" + //
-                                                "  output: process.stdout\n" + //
-                                                "});\n" + //
-                                                "\n" + //
-                                                "// Lire une ligne d'entrée\n" + //
-                                                "rl.question('', (word) => {\n" + //
-                                                "  // Afficher la saisie\n" + //
-                                                "  console.log(word);\n" + //
-                                                "  \n" + //
-                                                "  // Fermer l'interface readline\n" + //
-                                                "  rl.close();\n" + //
-                                                "});");
+                    codeArea.setText(
+                        "const readline = require('readline');\n" +
+                        "const rl = readline.createInterface({\n" +
+                        "  input: process.stdin,\n" +
+                        "  output: process.stdout\n" +
+                        "});\n" +
+                        "\n" +
+                        "rl.question('', (word) => {\n" +
+                        "  console.log(word);\n" +
+                        "  rl.close();\n" +
+                        "});"
+                    );
                 }
                 else if (language.equals("PHP")) {
-                    codeArea.setText("<?php\n" +
-                                     "// " + consigne + "\n\n" +
-                                     "$word = trim(fgets(STDIN));\n" +
-                                     "echo $word;\n");
+                    codeArea.setText(
+                        "<?php\n" +
+                        "$word = trim(fgets(STDIN));\n" +
+                        "echo $word;\n"
+                    );
                 }
 
                 // Récupérer et afficher le nombre d'essais
@@ -688,11 +702,10 @@ public class Main extends Application {
                 return; // Ne rien faire si aucun langage n'est sélectionné
             }
             if (selectedLanguage.equals("Python")) {
-                codeArea.setText("# " + consigne + "\n\nword = input()\n\nprint(word)");
+                codeArea.setText("word = input()\n\nprint(word)");
             } 
             else if (selectedLanguage.equals("Java")) {
                 codeArea.setText(
-                    "/* " + consigne + " */\n\n" +
                     "import java.util.Scanner;\n\n" +
                     "public class Main {\n" +
                     "    public static void main(String[] args) {\n" +
@@ -705,7 +718,6 @@ public class Main extends Application {
             }
             else if (selectedLanguage.equals("C")) {
                 codeArea.setText(
-                    "/* " + consigne + " */\n\n" +
                     "#include <stdio.h>\n\n" +
                     "int main() {\n" +
                     "    char word[100];\n" +
@@ -716,26 +728,25 @@ public class Main extends Application {
                 );
             }
             else if (selectedLanguage.equals("JavaScript")) {
-                codeArea.setText("// " + consigne + "\n\nconst readline = require('readline');\n" + //
-                                        "const rl = readline.createInterface({\n" + //
-                                        "  input: process.stdin,\n" + //
-                                        "  output: process.stdout\n" + //
-                                        "});\n" + //
-                                        "\n" + //
-                                        "// Lire une ligne d'entrée\n" + //
-                                        "rl.question('', (word) => {\n" + //
-                                        "  // Afficher la saisie\n" + //
-                                        "  console.log(word);\n" + //
-                                        "  \n" + //
-                                        "  // Fermer l'interface readline\n" + //
-                                        "  rl.close();\n" + //
-                                        "});");
+                codeArea.setText(
+                    "const readline = require('readline');\n" +
+                    "const rl = readline.createInterface({\n" +
+                    "  input: process.stdin,\n" +
+                    "  output: process.stdout\n" +
+                    "});\n" +
+                    "\n" +
+                    "rl.question('', (word) => {\n" +
+                    "  console.log(word);\n" +
+                    "  rl.close();\n" +
+                    "});"
+                );
             }
             else if (selectedLanguage.equals("PHP")) {
-                codeArea.setText("<?php\n" +
-                                 "// " + consigne + "\n\n" +
-                                 "$word = trim(fgets(STDIN));\n" +
-                                 "echo $word;\n");
+                codeArea.setText(
+                    "<?php\n" +
+                    "$word = trim(fgets(STDIN));\n" +
+                    "echo $word;\n"
+                );
             }
         });
 
