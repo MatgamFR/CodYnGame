@@ -60,19 +60,13 @@ public class Main extends Application {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "}");
             codeArea.positionCaret(position);
-            
-            /*if (text.lastIndexOf("{", caretPosition-1) == verif){
-                codeArea.insertText(caretPosition, "\t");
-                codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab+"}");
-                codeArea.positionCaret(caretPosition+1+tab.length());
-            }*/
         }
-        if (event.getCode().toString().equals("LEFT_PARENTHESIS")) {
+        if (event.getText().equals("(")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, ")");
             codeArea.positionCaret(position);
         }
-        if (event.getCode().toString().equals("QUOTEDBL")) {
+        if (event.getText().equals("\"")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "\"");
             codeArea.positionCaret(position);
@@ -110,8 +104,6 @@ public class Main extends Application {
             return;
         }
 
-        int maxExo = Connexionbdd.maxexo();
-
         // Fenêtre principale (liste des exercices)
         BorderPane mainRoot = new BorderPane();
         Color backgroundColorMain = Color.web("#1E1E1E");
@@ -128,7 +120,7 @@ public class Main extends Application {
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        for (int i = 1; i <= maxExo; i++) {
+        for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
             String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
             Label exerciseNumber = new Label("Exercice " + i);
             exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -480,7 +472,7 @@ public class Main extends Application {
         // Liste déroulante pour sélectionner l'exercice à supprimer
         ComboBox<String> exerciseSelector = new ComboBox<>();
         exerciseSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
-        for (int i = 1; i <= maxExo; i++) {
+        for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
             String titre = Connexionbdd.getExerciceTitle(i);
             exerciseSelector.getItems().add("Exercice " + i + ": " + titre);
         }
@@ -502,6 +494,7 @@ public class Main extends Application {
                     Label label = (Label) item.getChildren().get(0);
                     return label.getText().equals("Exercice " + exerciseId);
                 });
+                exerciseSelector.getItems().remove(selectedExercise); // Suppression de l'exercice de la liste déroulante
                 primaryStage.setScene(mainScene); // Retour à la scène principale
             } else {
                 System.err.println("Veuillez sélectionner un exercice à supprimer.");
