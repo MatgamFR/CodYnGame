@@ -12,9 +12,16 @@ CREATE Table Exercice(
 );
 
 Create table LanguageCode(
-	Id INT AUTO_INCREMENT PRIMARY KEY,
 	Exerciceid INT,
 	NomLanguage VARCHAR(100),
+	PRIMARY KEY (Exerciceid, NomLanguage),
+	FOREIGN KEY (Exerciceid) REFERENCES Exercice(Id)
+);
+
+CREATE TABLE TypeExo(
+	Exerciceid INT,	
+	TypeExo VARCHAR(50),
+	PRIMARY KEY (Exerciceid, TypeExo),
 	FOREIGN KEY (Exerciceid) REFERENCES Exercice(Id)
 );
 
