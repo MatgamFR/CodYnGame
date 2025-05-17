@@ -24,6 +24,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 public class Main extends Application {
     ListView<HBox> exerciseList;
@@ -607,12 +608,10 @@ public class Main extends Application {
         Color backgroundColorSecondary = Color.web("#1E1E1E");
 
         // Ajouter une zone de texte pour afficher la consigne
-        TextArea instructionArea = new TextArea();
-        instructionArea.setEditable(false);
-        instructionArea.setWrapText(true);
-        instructionArea.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        TextFlow instructionArea = new TextFlow();
+        instructionArea.setStyle("-fx-background-color: rgba(20, 20, 20, 0.95); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         instructionArea.setPrefWidth(400); // Largeur préférée pour la consigne
-
+        
         // Ajouter une zone de texte pour écrire du code
         TextArea codeArea = new TextArea();
         codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -717,7 +716,19 @@ public class Main extends Application {
 
                 // Récupérer et afficher la consigne
                 String consigne = Connexionbdd.showConsigne(selectedExo);
-                instructionArea.setText(consigne);
+                // Effacer le contenu précédent du TextFlow
+                instructionArea.getChildren().clear();
+
+                // Ajouter le texte "Consigne :" en grand
+                Text consigneLabel = new Text("Consigne : \n");
+                consigneLabel.setStyle("-fx-font-size: 32px; -fx-fill: white;");
+
+                // Ajouter le texte de la consigne
+                Text consigneText = new Text(consigne);
+                consigneText.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+
+                // Ajouter les textes au TextFlow
+                instructionArea.getChildren().addAll(consigneLabel, new Text("\n"), consigneText);
 
                 // Récupérer les langages disponibles pour l'exercice sélectionné
                 languageSelector.getItems().clear();
