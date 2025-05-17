@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 public class Main extends Application {
     ListView<HBox> exerciseList;
     CheckBox filterPythonCheckBox;
@@ -138,9 +137,9 @@ public class Main extends Application {
                 exerciseList.getItems().clear();
                 int maxExobis = Connexionbdd.maxexo();
                 for (int i = 1; i <= maxExobis; i++) {
-                    String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
-                    int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
-                    int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+                    String titre = Connexionbdd.getExerciceTitle(i);
+                    int attempts = Connexionbdd.getExerciseAttempts(i);
+                    int successfulTries = Connexionbdd.getSuccessfulTries(i);
 
                     Label exerciseNumber = new Label("Exercice " + i);
                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -161,16 +160,21 @@ public class Main extends Application {
                     );
                     exerciseList.getItems().add(exerciseItem);
                 }
-            }
-            else {
+            } else {
                 exerciseList.getItems().clear();
                 for (int id : filteredExerciseIds) {
                     String titre = Connexionbdd.getExerciceTitle(id);
+                    int attempts = Connexionbdd.getExerciseAttempts(id);
+                    int successfulTries = Connexionbdd.getSuccessfulTries(id);
+
                     Label exerciseNumber = new Label("Exercice " + id);
                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
                     Label exerciseTitle = new Label(titre);
                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                    Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
                     exerciseItem.setSpacing(10);
                     exerciseItem.setStyle(
                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -619,7 +623,35 @@ public class Main extends Application {
         // Ajouter un bouton pour revenir à la liste des exercices
         Button backButton = new Button("Retour à la liste des exercices");
         backButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        backButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Revenir à la scène principale
+        backButton.setOnAction(event -> {
+            // Mettre à jour la liste des exercices
+            exerciseList.getItems().clear();
+            for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+                String titre = Connexionbdd.getExerciceTitle(i);
+                int attempts = Connexionbdd.getExerciseAttempts(i);
+                int successfulTries = Connexionbdd.getSuccessfulTries(i);
+
+                Label exerciseNumber = new Label("Exercice " + i);
+                exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                Label exerciseTitle = new Label(titre);
+                exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+
+                HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+                exerciseItem.setSpacing(10);
+                exerciseItem.setStyle(
+                    "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                    "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                    "-fx-border-radius: 15px; " +
+                    "-fx-background-radius: 15px; " +
+                    "-fx-padding: 10px; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                );
+                exerciseList.getItems().add(exerciseItem);
+            }
+            primaryStage.setScene(mainScene); // Revenir à la scène principale
+        });
 
         ComboBox<String> languageSelector = new ComboBox<>();
 
