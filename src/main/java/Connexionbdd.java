@@ -324,4 +324,20 @@ public class Connexionbdd {
         }
         return exerciseIds;
     }
+
+    public static String getTypeExo(int id) {
+        String query = "SELECT TypeExo FROM Exercice WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("TypeExo");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération du type d'exercice : " + e.getMessage());
+        }
+        return null; // Retourne null si le type d'exercice n'est pas trouvé ou en cas d'erreur
+    }
 }
+

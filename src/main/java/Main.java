@@ -19,6 +19,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -140,6 +142,7 @@ public class Main extends Application {
                     String titre = Connexionbdd.getExerciceTitle(i);
                     int attempts = Connexionbdd.getExerciseAttempts(i);
                     int successfulTries = Connexionbdd.getSuccessfulTries(i);
+                    String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
 
                     Label exerciseNumber = new Label("Exercice " + i);
                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -147,8 +150,13 @@ public class Main extends Application {
                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
                     statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    Label typeLabel = new Label(typeExo);
+                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+                    Region spacer = new Region();
+                    HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
                     exerciseItem.setSpacing(10);
                     exerciseItem.setStyle(
                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -166,6 +174,7 @@ public class Main extends Application {
                     String titre = Connexionbdd.getExerciceTitle(id);
                     int attempts = Connexionbdd.getExerciseAttempts(id);
                     int successfulTries = Connexionbdd.getSuccessfulTries(id);
+                    String typeExo = Connexionbdd.getTypeExo(id); // Récupérer le type de l'exercice
 
                     Label exerciseNumber = new Label("Exercice " + id);
                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -173,8 +182,13 @@ public class Main extends Application {
                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
                     statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    Label typeLabel = new Label(typeExo);
+                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+                    Region spacer = new Region();
+                    HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
                     exerciseItem.setSpacing(10);
                     exerciseItem.setStyle(
                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -207,6 +221,7 @@ public class Main extends Application {
             String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
             int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
             int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+            String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
 
             Label exerciseNumber = new Label("Exercice " + i);
             exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -214,8 +229,13 @@ public class Main extends Application {
             exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
             Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
             statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+            Label typeLabel = new Label(typeExo);
+            typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
             exerciseItem.setSpacing(10);
             exerciseItem.setStyle(
                 "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -468,10 +488,16 @@ public class Main extends Application {
                                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                                     int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
                                     int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+                                    String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
                                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
                                     statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                                    Label typeLabel = new Label(typeExo);
+                                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+                                    Region spacer = new Region();
+                                    HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
                                     exerciseItem.setSpacing(10);
                                     exerciseItem.setStyle(
                                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -630,6 +656,7 @@ public class Main extends Application {
                 String titre = Connexionbdd.getExerciceTitle(i);
                 int attempts = Connexionbdd.getExerciseAttempts(i);
                 int successfulTries = Connexionbdd.getSuccessfulTries(i);
+                String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
 
                 Label exerciseNumber = new Label("Exercice " + i);
                 exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -637,8 +664,13 @@ public class Main extends Application {
                 exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                 Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
                 statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                Label typeLabel = new Label(typeExo);
+                typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-                HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
                 exerciseItem.setSpacing(10);
                 exerciseItem.setStyle(
                     "-fx-background-color: rgba(30, 30, 30, 0.9); " +
