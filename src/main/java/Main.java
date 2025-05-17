@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +23,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 public class Main extends Application {
+    ListView<HBox> exerciseList;
+    CheckBox filterPythonCheckBox;
+    CheckBox filterCCheckBox;
+    CheckBox filterJavaCheckBox;
+    CheckBox filterJSCheckBox;
+    CheckBox filterPHPCheckBox;
 
     public void tabulationNumber(TextArea codeArea, KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
@@ -74,8 +79,7 @@ public class Main extends Application {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) {
+    public void setupBDD(){
         try {
             // Lire les valeurs de configuration depuis configue.txt
             Path configPath = Path.of("configue.txt");
@@ -104,64 +108,9 @@ public class Main extends Application {
             System.err.println("Erreur lors de la lecture de la configuration : " + e.getMessage());
             return;
         }
+    }
 
-        // Fenêtre principale (liste des exercices)
-        BorderPane mainRoot = new BorderPane();
-        Color backgroundColorMain = Color.web("#1E1E1E");
-
-        // Titre de la page
-        Label titleLabel = new Label("Le codyngame de la javadocance");
-        titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
-
-        // Description
-        Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
-        descriptionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
-
-
-        // Créer une liste d'exercices
-        ListView<HBox> exerciseList = new ListView<>();
-        exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
-            String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
-            Label exerciseNumber = new Label("Exercice " + i);
-            exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
-            Label exerciseTitle = new Label(titre);
-            exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-
-            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
-            exerciseItem.setSpacing(10);
-            exerciseItem.setStyle(
-                "-fx-background-color: rgba(30, 30, 30, 0.9); " +
-                "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                "-fx-border-radius: 15px; " +
-                "-fx-background-radius: 15px; " +
-                "-fx-padding: 10px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
-            );
-        
-            exerciseList.getItems().add(exerciseItem);
-        }
-
-        // Ajouter des cases à cocher pour filtrer par langage
-        CheckBox filterPythonCheckBox = new CheckBox("Python");
-        filterPythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterJavaCheckBox = new CheckBox("Java");
-        filterJavaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterCCheckBox = new CheckBox("C");
-        filterCCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterJSCheckBox = new CheckBox("JavaScript");
-        filterJSCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterPHPCheckBox = new CheckBox("PHP");
-        filterPHPCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        
-        Button searchButton = new Button("Rechercher");
-        searchButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-
-        // Ajouter les cases à cocher et le bouton de recherche dans une HBox
-        HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
-        filterBox.setAlignment(Pos.CENTER);
-        filterBox.setStyle("-fx-padding: 10px;");
-                
+    public void setupSearchButton(Button searchButton){
         searchButton.setOnAction(event -> {
             // Récupérer les langages sélectionnés
             List<String> selectedLanguages = new ArrayList<>();
@@ -227,11 +176,91 @@ public class Main extends Application {
                 }
             }
         });
+    }
+
+    public VBox mainScene() {
+        // Titre de la page
+        Label titleLabel = new Label("Le codyngame de la javadocance");
+        titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+
+        // Description
+        Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
+        descriptionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+
+
+        // Créer une liste d'exercices
+        ListView<HBox> exerciseList = new ListView<>();
+        exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+            String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+            Label exerciseNumber = new Label("Exercice " + i);
+            exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+            Label exerciseTitle = new Label(titre);
+            exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+
+            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+            exerciseItem.setSpacing(10);
+            exerciseItem.setStyle(
+                "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                "-fx-border-radius: 15px; " +
+                "-fx-background-radius: 15px; " +
+                "-fx-padding: 10px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+            );
         
+            exerciseList.getItems().add(exerciseItem);
+        }
+
+        this.exerciseList = exerciseList;
+
+        // Ajouter des cases à cocher pour filtrer par langage
+        CheckBox filterPythonCheckBox = new CheckBox("Python");
+        filterPythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterJavaCheckBox = new CheckBox("Java");
+        filterJavaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterCCheckBox = new CheckBox("C");
+        filterCCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterJSCheckBox = new CheckBox("JavaScript");
+        filterJSCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+        CheckBox filterPHPCheckBox = new CheckBox("PHP");
+        filterPHPCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
+
+        this.filterCCheckBox = filterCCheckBox;
+        this.filterJSCheckBox = filterJSCheckBox;
+        this.filterJavaCheckBox = filterJavaCheckBox;
+        this.filterPHPCheckBox = filterPHPCheckBox;
+        this.filterPythonCheckBox = filterPythonCheckBox;
+        
+        Button searchButton = new Button("Rechercher");
+        searchButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+
+        // Ajouter les cases à cocher et le bouton de recherche dans une HBox
+        HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
+        filterBox.setAlignment(Pos.CENTER);
+        filterBox.setStyle("-fx-padding: 10px;");
+
         // Organiser les composants dans un VBox
         VBox contentBox = new VBox(10, titleLabel, descriptionLabel, filterBox, exerciseList);
         contentBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         contentBox.setAlignment(Pos.CENTER);
+
+        setupSearchButton(searchButton);
+
+        return contentBox;
+
+        
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        setupBDD();
+
+        // Fenêtre principale (liste des exercices)
+        BorderPane mainRoot = new BorderPane();
+        Color backgroundColorMain = Color.web("#1E1E1E");
+
+        VBox contentBox = mainScene();
 
         // Ajouter le contenu au centre de la fenêtre principale
         mainRoot.setCenter(contentBox);
@@ -352,7 +381,9 @@ public class Main extends Application {
         correctionBox.getChildren().addAll(correctionLabel, correctionInput, correctionButtonBox);
         correctionRoot.setCenter(correctionBox);
 
-        Scene correctionStage = new Scene(correctionRoot, 600, 400);
+        VBox yes = new VBox(10, correctionRoot, outputArea);
+
+        Scene correctionStage = new Scene(yes, 600, 400);
 
         // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
@@ -375,6 +406,7 @@ public class Main extends Application {
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
+                        outputArea.setText("");
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
@@ -684,6 +716,7 @@ public class Main extends Application {
             String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
             int id = Integer.parseInt(exerciseNumberText); 
             IDEExecuteCode executor = LanguageChoice.choice(language, outputArea);
+            outputArea.setText("");
             executor.executeCode(code, id);
 
             // Incrémenter le nombre d'essais dans la base de données

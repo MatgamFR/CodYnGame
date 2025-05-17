@@ -1,3 +1,4 @@
+Drop table if exists TypeExo;
 Drop table if exists LanguageCode;
 Drop table if exists Exercice;
 
