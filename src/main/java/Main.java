@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 public class Main extends Application {
     ListView<HBox> exerciseList;
     CheckBox filterPythonCheckBox;
