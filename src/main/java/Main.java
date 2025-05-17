@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -137,11 +138,17 @@ public class Main extends Application {
                 int maxExobis = Connexionbdd.maxexo();
                 for (int i = 1; i <= maxExobis; i++) {
                     String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                    int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                    int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+
                     Label exerciseNumber = new Label("Exercice " + i);
                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
                     Label exerciseTitle = new Label(titre);
                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                    Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+
+                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
                     exerciseItem.setSpacing(10);
                     exerciseItem.setStyle(
                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -193,12 +200,17 @@ public class Main extends Application {
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
             String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+            int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+            int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+
             Label exerciseNumber = new Label("Exercice " + i);
             exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
             Label exerciseTitle = new Label(titre);
             exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+            Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+            statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
 
-            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+            HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
             exerciseItem.setSpacing(10);
             exerciseItem.setStyle(
                 "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -449,7 +461,12 @@ public class Main extends Application {
                                     exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
                                     Label exerciseTitle = new Label(titre);
                                     exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle);
+                                    int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                                    int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+                                    Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+
+                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel);
                                     exerciseItem.setSpacing(10);
                                     exerciseItem.setStyle(
                                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -590,6 +607,10 @@ public class Main extends Application {
         Text attemptsLabel = new Text();
         attemptsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
 
+        // Ajouter un label pour afficher le nombre d'essais réussis
+        Text successfulTriesLabel = new Text();
+        successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+
         // Ajouter un bouton pour exécuter le code
         Button runButton = new Button("Exécuter");
         runButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -602,10 +623,11 @@ public class Main extends Application {
         ComboBox<String> languageSelector = new ComboBox<>();
 
         // Réorganiser les composants dans le HBox
-        HBox buttonBox = new HBox(10, attemptsLabel, languageSelector, runButton, backButton);
+        HBox buttonBox = new HBox(10, attemptsLabel, successfulTriesLabel, languageSelector, runButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
-
+        
+        
         // Ajouter le bouton et le label en bas
         secondaryRoot.setBottom(buttonBox);
 
@@ -696,6 +718,11 @@ public class Main extends Application {
                 attemptsLabel.setText("Nombre d'essais : " + attempts);
                 attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
 
+                // Récupérer et afficher le nombre d'essais réussis
+                int successfulTries = Connexionbdd.getSuccessfulTries(selectedExo);
+                successfulTriesLabel.setText("Nombre d'essais réussis : " + successfulTries);
+                successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
             }
         });
@@ -722,10 +749,20 @@ public class Main extends Application {
             // Incrémenter le nombre d'essais dans la base de données
             Connexionbdd.incrementExerciseAttempts(id);
 
+            // Vérification de l'exactitude de la réponse
+            if(outputArea.getText().contains("Le code est correct")){
+                Connexionbdd.incrementSuccessfulTries(id);
+            }
+
             // Mettre à jour l'affichage du nombre d'essais
             int updatedAttempts = Connexionbdd.getExerciseAttempts(id);
             attemptsLabel.setText("Nombre d'essais : " + updatedAttempts);
             attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+
+            // Mettre à jour la liste des exercices
+           int updatedSuccessfulTries = Connexionbdd.getSuccessfulTries(id);
+            successfulTriesLabel.setText("Nombre d'essais réussis : " + updatedSuccessfulTries);
+            successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
         });
 
         languageSelector.setOnAction(event -> {

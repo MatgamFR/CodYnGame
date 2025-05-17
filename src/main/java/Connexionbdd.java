@@ -237,6 +237,21 @@ public class Connexionbdd {
         return 0; // Retourne 0 en cas d'erreur
     }
 
+    public static int getSuccessfulTries(int exerciseId) {
+        String query = "SELECT Successfulltry FROM Exercice WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("Successfulltry");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des essais réussis : " + e.getMessage());
+        }
+        return 0; // Retourne 0 en cas d'erreur
+    }
+
     public static void incrementExerciseAttempts(int exerciseId) {
         String query = "UPDATE Exercice SET Try = Try + 1 WHERE Id = ?";
         try (Connection conn = getConnection();
@@ -245,6 +260,17 @@ public class Connexionbdd {
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'incrémentation du nombre d'essais : " + e.getMessage());
+        }
+    }
+
+    public static void incrementSuccessfulTries(int exerciseId) {
+        String query = "UPDATE Exercice SET Successfulltry = Successfulltry + 1 WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'incrémentation des réussites : " + e.getMessage());
         }
     }
 
