@@ -9,7 +9,7 @@ public abstract class IDEExecuteCode {
     public abstract void executeCode(String code, int id);
     public abstract void compileCode(String code);
 
-    public IDEExecuteCode(TextArea textArea) {
+    public IDEExecuteCode(CodeArea textArea) {
         this.textArea = textArea;
     }
 
