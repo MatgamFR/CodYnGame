@@ -1,12 +1,12 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javafx.scene.control.TextArea;
+import org.fxmisc.richtext.CodeArea;
 
 public class CcompilerExecuter extends IDEExecuteCode {
     private Path compiledExecutable = null;
 
-    public CcompilerExecuter(TextArea textArea) {
+    public CcompilerExecuter(CodeArea textArea) {
         super(textArea);
     }
 
