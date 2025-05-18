@@ -1,14 +1,14 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.fxmisc.richtext.CodeArea;
+import javafx.scene.control.TextArea;
 
 public class PythonExecuteCode extends IDEExecuteCode {
         /**
      * Méthode qui exécute le code saisi par l'utilisateur
      * @param code Le code à exécuter
      */
-    public PythonExecuteCode(CodeArea textArea) {
+    public PythonExecuteCode(TextArea textArea) {
         super(textArea); // Appel du constructeur de la classe parente
     }
     @Override

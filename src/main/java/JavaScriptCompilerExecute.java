@@ -1,11 +1,11 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.fxmisc.richtext.CodeArea;
+import javafx.scene.control.TextArea;
 
 public class JavaScriptCompilerExecute extends IDEExecuteCode {
 
-    public JavaScriptCompilerExecute(CodeArea textArea) {
+    public JavaScriptCompilerExecute(TextArea textArea) {
         super(textArea);
     }
 

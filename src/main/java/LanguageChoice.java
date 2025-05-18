@@ -1,7 +1,7 @@
-import org.fxmisc.richtext.CodeArea;
+import javafx.scene.control.TextArea;
 
 public class LanguageChoice {
-    public static IDEExecuteCode choice(String langage, CodeArea textArea) {
+    public static IDEExecuteCode choice(String langage, TextArea textArea) {
         if (langage.equals("Python")) {
             return new PythonExecuteCode(textArea);
         }

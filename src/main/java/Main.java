@@ -385,7 +385,7 @@ public class Main extends Application {
 
         // Ajouter une zone de sortie (console)
         // Déclarer et configurer outputArea une seule fois
-        CodeArea outputArea = new CodeArea();
+        TextArea outputArea = new TextArea();
         outputArea.setEditable(false);
         outputArea.setWrapText(true);
         outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
@@ -449,7 +449,7 @@ public class Main extends Application {
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
-                        outputArea.replaceText("");
+                        outputArea.setText("");
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
@@ -850,7 +850,7 @@ public class Main extends Application {
             String exerciseNumberText = exerciseNumberLabel.getText().replace("Exercice ", "").trim();
             int id = Integer.parseInt(exerciseNumberText); 
             IDEExecuteCode executor = LanguageChoice.choice(language, outputArea);
-            outputArea.replaceText("");
+            outputArea.setText("");
             executor.executeCode(code, id);
 
             // Incrémenter le nombre d'essais dans la base de données

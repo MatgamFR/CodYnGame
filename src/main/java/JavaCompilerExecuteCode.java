@@ -1,12 +1,12 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.fxmisc.richtext.CodeArea;
+import javafx.scene.control.TextArea;
 
 public class JavaCompilerExecuteCode extends IDEExecuteCode {
     private Path tempClassDir; // Attribut pour stocker le chemin du répertoire des classes compilées
 
-    public JavaCompilerExecuteCode(CodeArea textArea) {
+    public JavaCompilerExecuteCode(TextArea textArea) {
         super(textArea);
     }
 
