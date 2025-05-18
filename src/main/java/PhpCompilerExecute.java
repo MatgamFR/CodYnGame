@@ -1,11 +1,11 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javafx.scene.control.TextArea;
+import org.fxmisc.richtext.CodeArea;
 
 public class PhpCompilerExecute extends IDEExecuteCode {
    
-    public PhpCompilerExecute(TextArea textArea) {
+    public PhpCompilerExecute(CodeArea textArea) {
         super(textArea);
     }
    
