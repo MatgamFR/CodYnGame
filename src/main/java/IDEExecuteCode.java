@@ -1,11 +1,11 @@
-import javafx.scene.control.TextArea;
+import org.fxmisc.richtext.CodeArea;
 
 public abstract class IDEExecuteCode {
     /**
      * Exécute le code Python donné en paramètre.
      * @param code Le code à exécuter
      */
-    private TextArea textArea;
+    private CodeArea textArea;
     public abstract void executeCode(String code, int id);
     public abstract void compileCode(String code);
 
