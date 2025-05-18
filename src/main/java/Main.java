@@ -809,33 +809,7 @@ public class Main extends Application {
         });
 
         codeArea.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.TAB) {
-                codeArea.replaceSelection("    "); // 4 espaces pour la tabulation
-                event.consume();
-            } else if (event.getCode() == KeyCode.ENTER) {
-                // Gestion de l'indentation automatique
-                int caretPosition = codeArea.getCaretPosition();
-                String text = codeArea.getText();
-                String previousLine = text.substring(0, caretPosition).replaceAll(".*\\n", "");
-                String indentation = previousLine.replaceAll("[^\\s].*", "");
-                codeArea.insertText(caretPosition, "\n" + indentation);
-                event.consume();
-            } else if (event.getText().equals("{")) {
-                int position = codeArea.getCaretPosition();
-                codeArea.insertText(position, "}");
-                codeArea.moveTo(position);
-                event.consume();
-            } else if (event.getText().equals("(")) {
-                int position = codeArea.getCaretPosition();
-                codeArea.insertText(position, ")");
-                codeArea.moveTo(position);
-                event.consume();
-            } else if (event.getText().equals("\"")) {
-                int position = codeArea.getCaretPosition();
-                codeArea.insertText(position, "\"");
-                codeArea.moveTo(position);
-                event.consume();
-            }
+            tabulationNumber(codeArea, event);
         });
 
         correctionInput.setOnKeyPressed(event -> {
