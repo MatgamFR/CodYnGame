@@ -68,6 +68,11 @@ public class SyntaxicalColor {
         CodeArea codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         
+        // Set a default language before applying highlighting
+        if (currentLanguage == null || currentLanguage.isEmpty()) {
+            setLanguage("Java"); // Default to Java syntax highlighting
+        }
+        
         codeArea.richChanges()
             .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
             .subscribe(change -> {

@@ -927,7 +927,7 @@ public class Main extends Application {
             }
         });
         //Colorisation syntaxique
-        codeArea.getStylesheets().add(getClass().getResource("/syntax-highlighting.css").toExternalForm());
+        codeArea.getStylesheets().add(getClass().getResource("/SyntaxicalColor.css").toExternalForm());
         // Configurer et afficher la fenêtre principale
         primaryStage.setTitle("Liste des Exercices");
         primaryStage.setScene(mainScene);
