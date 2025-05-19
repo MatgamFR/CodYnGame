@@ -789,6 +789,7 @@ public class Main extends Application {
             if (selectedLanguage == null) {
                 return; // Ne rien faire si aucun langage n'est sélectionné
             }
+            SyntaxicalColor.setLanguage(selectedLanguage);
             if (selectedLanguage.equals("Python")) {
                 codeArea.setText("word = input()\n\nprint(word)");
             } 
