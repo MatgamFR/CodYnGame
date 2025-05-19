@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+
 public class Main extends Application {
     ListView<HBox> exerciseList;
     CheckBox filterPythonCheckBox;
@@ -34,8 +39,8 @@ public class Main extends Application {
     CheckBox filterJSCheckBox;
     CheckBox filterPHPCheckBox;
 
-    public void tabulationNumber(TextArea codeArea, KeyEvent event) {
-        if (event.getCode().toString().equals("ENTER")) {
+    public void tabulationNumber(CodeArea codeArea, KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
             int caretPosition = codeArea.getCaretPosition();
             String text = codeArea.getText();
             String tab = "";
@@ -54,32 +59,31 @@ public class Main extends Application {
                 codeArea.deleteText(verif+1, verif+1);
                 codeArea.insertText(caretPosition, "\t");
                 codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab);
-                codeArea.positionCaret(caretPosition+1+tab.length());
+                codeArea.moveTo(caretPosition+1+tab.length());
             }
             else if (text.lastIndexOf("{", caretPosition-1) == verif){
                 codeArea.insertText(caretPosition, "\t");
-                codeArea.positionCaret(caretPosition+1+tab.length());
+                codeArea.moveTo(caretPosition+1+tab.length());
             }
             if (text.lastIndexOf(":", caretPosition-1) == verif){
                 codeArea.insertText(caretPosition, "\t");
-                codeArea.positionCaret(caretPosition+1+tab.length());
+                codeArea.moveTo(caretPosition+1+tab.length());
             }
-            
         }
         if (event.getText().equals("{")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "}");
-            codeArea.positionCaret(position);
+            codeArea.moveTo(position);
         }
         if (event.getText().equals("(")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, ")");
-            codeArea.positionCaret(position);
+            codeArea.moveTo(position);
         }
         if (event.getText().equals("\"")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "\"");
-            codeArea.positionCaret(position);
+            codeArea.moveTo(position);
         }
     }
 
@@ -402,8 +406,9 @@ public class Main extends Application {
         Label correctionLabel = new Label("Correction en Python :");
         correctionLabel.setStyle("-fx-text-fill: white;");
 
-        TextArea correctionInput = new TextArea();
-        correctionInput.setPromptText("Entrez la correction en Python pour cet exercice");
+        CodeArea correctionInput = SyntaxicalColor.createCodeArea();
+        correctionInput.setParagraphGraphicFactory(LineNumberFactory.get(correctionInput));
+        correctionInput.setPlaceholder(new Label("Entrez la correction en Python pour cet exercice"));
         correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         Button saveCorrectionButton = new Button("Enregistrer la correction");
@@ -539,8 +544,66 @@ public class Main extends Application {
         addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, languageSelectionBox, buttonBoxAdd);
         addExerciseRoot.setCenter(addExerciseBox);
 
+
+        // Ajouter un bouton "-" pour supprimer des exercices
+        Button removeButton = new Button("-");
+        removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);");
+        removeButton.setOnMouseEntered(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff3333, #ff6666); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.8), 8, 0.5, 0, 2);"));
+        removeButton.setOnMouseExited(e -> removeButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);"));
+
+        // Nouvelle scène pour supprimer un exercice
+        BorderPane removeExerciseRoot = new BorderPane();
+        VBox removeExerciseBox = new VBox(10);
+        removeExerciseBox.setAlignment(Pos.CENTER);
+        removeExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
+
+        Label removeExerciseLabel = new Label("Supprimer un exercice");
+        removeExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+
+        // Liste déroulante pour sélectionner l'exercice à supprimer
+        ComboBox<String> exerciseSelector = new ComboBox<>();
+        exerciseSelector.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+            String titre = Connexionbdd.getExerciceTitle(i);
+            exerciseSelector.getItems().add("Exercice " + i + ": " + titre);
+        }
+
+        // Boutons pour confirmer ou annuler la suppression
+        Button confirmRemoveButton = new Button("Confirmer");
+        confirmRemoveButton.setStyle("-fx-background-color: linear-gradient(to right, #ff6666, #ff3333); -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.5), 6, 0.5, 0, 2);");
+
+        Button cancelRemoveButton = new Button("Annuler");
+        cancelRemoveButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        cancelRemoveButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
+
+        confirmRemoveButton.setOnAction(event -> {
+            String selectedExercise = exerciseSelector.getValue();
+            if (selectedExercise != null) {
+                int exerciseId = Integer.parseInt(selectedExercise.split(" ")[1].replace(":", ""));
+                Connexionbdd.deleteExercise(exerciseId); // Suppression de l'exercice dans la base de données
+                exerciseList.getItems().removeIf(item -> {
+                    Label label = (Label) item.getChildren().get(0);
+                    return label.getText().equals("Exercice " + exerciseId);
+                });
+                exerciseSelector.getItems().remove(selectedExercise); // Suppression de l'exercice de la liste déroulante
+                primaryStage.setScene(mainScene); // Retour à la scène principale
+            } else {
+                System.err.println("Veuillez sélectionner un exercice à supprimer.");
+            }
+        });
+
+        HBox buttonBoxRemove = new HBox(10, cancelRemoveButton, confirmRemoveButton);
+        buttonBoxRemove.setAlignment(Pos.CENTER);
+
+        removeExerciseBox.getChildren().addAll(removeExerciseLabel, exerciseSelector, buttonBoxRemove);
+        removeExerciseRoot.setCenter(removeExerciseBox);
+
+        Scene removeExerciseScene = new Scene(removeExerciseRoot, 600, 400);
+
+        removeButton.setOnAction(event -> primaryStage.setScene(removeExerciseScene));
+
         // Ajouter le bouton "-" à gauche du bouton "+"
-        HBox topBar = new HBox(10, addButton);
+        HBox topBar = new HBox(10, removeButton, addButton);
         topBar.setAlignment(Pos.CENTER_RIGHT);
         topBar.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         mainRoot.setTop(topBar);
@@ -555,7 +618,7 @@ public class Main extends Application {
         instructionArea.setPrefWidth(400); // Largeur préférée pour la consigne
         
         // Ajouter une zone de texte pour écrire du code
-        TextArea codeArea = new TextArea();
+        CodeArea codeArea = SyntaxicalColor.createCodeArea();
         codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         codeArea.setWrapText(false);
 
@@ -684,10 +747,10 @@ public class Main extends Application {
                 // Mettre à jour la zone de code en fonction du langage sélectionné
                 String language = languageSelector.getValue();
                 if (language.equals("Python")) {
-                    codeArea.setText("word = input()\n\nprint(word)");
+                    codeArea.replaceText("word = input()\n\nprint(word)");
                 } 
                 else if (language.equals("Java")) {
-                    codeArea.setText(
+                    codeArea.replaceText(
                         "import java.util.Scanner;\n\n" +
                         "public class Main {\n" +
                         "    public static void main(String[] args) {\n" +
@@ -699,7 +762,7 @@ public class Main extends Application {
                     );
                 }
                 else if (language.equals("C")) {
-                    codeArea.setText(
+                    codeArea.replaceText(
                         "#include <stdio.h>\n\n" +
                         "int main() {\n" +
                         "    char word[100];\n" +
@@ -710,7 +773,7 @@ public class Main extends Application {
                     );
                 }
                 else if (language.equals("JavaScript")) {
-                    codeArea.setText(
+                    codeArea.replaceText(
                         "const readline = require('readline');\n" +
                         "const rl = readline.createInterface({\n" +
                         "  input: process.stdin,\n" +
@@ -724,7 +787,7 @@ public class Main extends Application {
                     );
                 }
                 else if (language.equals("PHP")) {
-                    codeArea.setText(
+                    codeArea.replaceText(
                         "<?php\n" +
                         "$word = trim(fgets(STDIN));\n" +
                         "echo $word;\n"
@@ -791,10 +854,10 @@ public class Main extends Application {
             }
             SyntaxicalColor.setLanguage(selectedLanguage);
             if (selectedLanguage.equals("Python")) {
-                codeArea.setText("word = input()\n\nprint(word)");
+                codeArea.replaceText("word = input()\n\nprint(word)");
             } 
             else if (selectedLanguage.equals("Java")) {
-                codeArea.setText(
+                codeArea.replaceText(
                     "import java.util.Scanner;\n\n" +
                     "public class Main {\n" +
                     "    public static void main(String[] args) {\n" +
@@ -806,7 +869,7 @@ public class Main extends Application {
                 );
             }
             else if (selectedLanguage.equals("C")) {
-                codeArea.setText(
+                codeArea.replaceText(
                     "#include <stdio.h>\n\n" +
                     "int main() {\n" +
                     "    char word[100];\n" +
@@ -817,7 +880,7 @@ public class Main extends Application {
                 );
             }
             else if (selectedLanguage.equals("JavaScript")) {
-                codeArea.setText(
+                codeArea.replaceText(
                     "const readline = require('readline');\n" +
                     "const rl = readline.createInterface({\n" +
                     "  input: process.stdin,\n" +
@@ -831,14 +894,15 @@ public class Main extends Application {
                 );
             }
             else if (selectedLanguage.equals("PHP")) {
-                codeArea.setText(
+                codeArea.replaceText(
                     "<?php\n" +
                     "$word = trim(fgets(STDIN));\n" +
                     "echo $word;\n"
                 );
             }
         });
-
+        //Colorisation syntaxique
+        codeArea.getStylesheets().add(getClass().getResource("/SyntaxicalColor.css").toExternalForm());
         // Configurer et afficher la fenêtre principale
         primaryStage.setTitle("Liste des Exercices");
         primaryStage.setScene(mainScene);
