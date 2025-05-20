@@ -41,48 +41,53 @@ public class Main extends Application {
     CheckBox filterJavaCheckBox;
     CheckBox filterJSCheckBox;
     CheckBox filterPHPCheckBox;
-
     public void tabulationNumber(CodeArea codeArea, KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             int caretPosition = codeArea.getCaretPosition();
             String text = codeArea.getText();
             String tab = "";
-            int start = text.lastIndexOf("\n", caretPosition-2) + 1;
-            for (int i=start; i < text.length(); i++){
+            int start = text.lastIndexOf("\n", caretPosition - 2) + 1;
+    
+            for (int i = start; i < text.length(); i++) {
                 char c = text.charAt(i);
-                if (c == '\t' || c == ' '){
+                if (c == '\t' || c == ' ') {
                     tab += c;
                 } else {
                     break;
                 }
             }
+    
             codeArea.insertText(caretPosition, tab);
-            int verif = text.lastIndexOf("\n", caretPosition-1)-1;
-            if (text.lastIndexOf("{", caretPosition-1) == verif && text.lastIndexOf("}", caretPosition+1) == verif+2){
-                codeArea.deleteText(verif+1, verif+1);
+            int verif = text.lastIndexOf("\n", caretPosition - 1) - 1;
+    
+            if (text.lastIndexOf("{", caretPosition - 1) == verif && text.lastIndexOf("}", caretPosition + 1) == verif + 2) {
+                codeArea.deleteText(verif + 1, verif + 1);
                 codeArea.insertText(caretPosition, "\t");
-                codeArea.insertText(caretPosition+1+tab.length(), "\n"+tab);
-                codeArea.moveTo(caretPosition+1+tab.length());
+                codeArea.insertText(caretPosition + 1 + tab.length(), "\n" + tab);
+                codeArea.moveTo(caretPosition + 1 + tab.length());
+            } else if (text.lastIndexOf("{", caretPosition - 1) == verif) {
+                codeArea.insertText(caretPosition, "\t");
+                codeArea.moveTo(caretPosition + 1 + tab.length());
             }
-            else if (text.lastIndexOf("{", caretPosition-1) == verif){
+    
+            if (text.lastIndexOf(":", caretPosition - 1) == verif) {
                 codeArea.insertText(caretPosition, "\t");
-                codeArea.moveTo(caretPosition+1+tab.length());
-            }
-            if (text.lastIndexOf(":", caretPosition-1) == verif){
-                codeArea.insertText(caretPosition, "\t");
-                codeArea.moveTo(caretPosition+1+tab.length());
+                codeArea.moveTo(caretPosition + 1 + tab.length());
             }
         }
+    
         if (event.getText().equals("{")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "}");
             codeArea.moveTo(position);
         }
+    
         if (event.getText().equals("(")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, ")");
             codeArea.moveTo(position);
         }
+    
         if (event.getText().equals("\"")) {
             int position = codeArea.getCaretPosition();
             codeArea.insertText(position, "\"");
@@ -850,11 +855,11 @@ public class Main extends Application {
                     codeArea.replaceText(
                         "import java.util.Scanner;\n\n" +
                         "public class Main {\n" +
-                        "    public static void main(String[] args) {\n" +
-                        "        Scanner sc = new Scanner(System.in);\n" +
-                        "        String word = sc.nextLine();\n" +
-                        "        System.out.println(word);\n" +
-                        "    }\n" +
+                        "        public static void main(String[] args) {\n" +
+                        "                Scanner sc = new Scanner(System.in);\n" +
+                        "                String word = sc.nextLine();\n" +
+                        "                System.out.println(word);\n" +
+                        "        }\n" +
                         "}"
                     );
                 }
@@ -862,10 +867,10 @@ public class Main extends Application {
                     codeArea.replaceText(
                         "#include <stdio.h>\n\n" +
                         "int main() {\n" +
-                        "    char word[100];\n" +
-                        "    scanf(\"%s\", word);\n" +
-                        "    printf(\"%s\", word);\n" +
-                        "    return 0;\n" +
+                        "        char word[100];\n" +
+                        "        scanf(\"%s\", word);\n" +
+                        "        printf(\"%s\", word);\n" +
+                        "        return 0;\n" +
                         "}"
                     );
                 }
@@ -873,13 +878,13 @@ public class Main extends Application {
                     codeArea.replaceText(
                         "const readline = require('readline');\n" +
                         "const rl = readline.createInterface({\n" +
-                        "  input: process.stdin,\n" +
-                        "  output: process.stdout\n" +
+                        "        input: process.stdin,\n" +
+                        "        output: process.stdout\n" +
                         "});\n" +
                         "\n" +
                         "rl.question('', (word) => {\n" +
-                        "  console.log(word);\n" +
-                        "  rl.close();\n" +
+                        "        console.log(word);\n" +
+                        "        rl.close();\n" +
                         "});"
                     );
                 }
@@ -957,11 +962,11 @@ public class Main extends Application {
                 codeArea.replaceText(
                     "import java.util.Scanner;\n\n" +
                     "public class Main {\n" +
-                    "    public static void main(String[] args) {\n" +
-                    "        Scanner sc = new Scanner(System.in);\n" +
-                    "        String word = sc.nextLine();\n" +
-                    "        System.out.println(word);\n" +
-                    "    }\n" +
+                    "        public static void main(String[] args) {\n" +
+                    "                Scanner sc = new Scanner(System.in);\n" +
+                    "                String word = sc.nextLine();\n" +
+                    "                System.out.println(word);\n" +
+                    "        }\n" +
                     "}"
                 );
             }
@@ -969,10 +974,10 @@ public class Main extends Application {
                 codeArea.replaceText(
                     "#include <stdio.h>\n\n" +
                     "int main() {\n" +
-                    "    char word[100];\n" +
-                    "    scanf(\"%s\", word);\n" +
-                    "    printf(\"%s\", word);\n" +
-                    "    return 0;\n" +
+                    "        char word[100];\n" +
+                    "        scanf(\"%s\", word);\n" +
+                    "        printf(\"%s\", word);\n" +
+                    "        return 0;\n" +
                     "}"
                 );
             }
@@ -980,13 +985,13 @@ public class Main extends Application {
                 codeArea.replaceText(
                     "const readline = require('readline');\n" +
                     "const rl = readline.createInterface({\n" +
-                    "  input: process.stdin,\n" +
-                    "  output: process.stdout\n" +
+                    "        input: process.stdin,\n" +
+                    "        output: process.stdout\n" +
                     "});\n" +
                     "\n" +
                     "rl.question('', (word) => {\n" +
-                    "  console.log(word);\n" +
-                    "  rl.close();\n" +
+                    "        console.log(word);\n" +
+                    "        rl.close();\n" +
                     "});"
                 );
             }
