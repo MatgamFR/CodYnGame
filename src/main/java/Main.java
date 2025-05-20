@@ -11,6 +11,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -212,15 +213,26 @@ public class Main extends Application {
     }
 
     public VBox mainScene() {
+        // Charger les polices personnalisées
+        String cherryBombFontPath = getClass().getResource("/RessourceFonts/CherryBombOne-Regular.ttf").toExternalForm();
+        String dreamingOutloudFontPath = getClass().getResource("/RessourceFonts/DreamingOutloudSans-Regular.ttf").toExternalForm();
+        // Charger et enregistrer les polices
+        Font.loadFont(cherryBombFontPath, 32); // Charger Cherry Bomb One
+        Font.loadFont(dreamingOutloudFontPath, 18); // Charger Dreaming Outloud Sans
+
         // Titre de la page
-        Label titleLabel = new Label("Le codyngame de la javadocance");
-        titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        Label titleLabel = new Label("Liste d'exercices");
+        titleLabel.setStyle("-fx-font-size: 70px;-fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Cherry Bomb One';");
 
         // Description
-        Label descriptionLabel = new Label("Bienvenue sur notre codyngame, veuillez choisir un exercice. Bon codage!");
-        descriptionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
+        Label descriptionLabel = new Label("Veuillez choisir un exercice. Bon codage!");
+        descriptionLabel.setStyle("-fx-font-size: 39px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
 
-
+        VBox titleBox = new VBox(0, titleLabel, descriptionLabel); // Espacement vertical à 0
+        titleBox.setAlignment(Pos.CENTER); // Centrer les labels
+        VBox.setMargin(titleLabel, new Insets(0, 0, -15, 0)); // Réduire l'espace en bas de titleLabel
+        VBox.setMargin(descriptionLabel, new Insets(-10, 0, 0, 0)); // Réduire l'espace en haut de descriptionLabel
+        
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -285,7 +297,7 @@ public class Main extends Application {
         filterBox.setStyle("-fx-padding: 10px;");
 
         // Organiser les composants dans un VBox
-        VBox contentBox = new VBox(10, titleLabel, descriptionLabel, filterBox, exerciseList);
+        VBox contentBox = new VBox(10, titleBox, filterBox, exerciseList);
         contentBox.setAlignment(Pos.CENTER);
 
         setupSearchButton(searchButton);
@@ -327,6 +339,9 @@ public class Main extends Application {
         File imageFile = new File(imagePath);
         File backgroundFile = new File(backgroundPath);
         File logoFile = new File(logoPath);
+        File addFile = new File(addPath);
+        File filterFile = new File(filterPath);
+        File homeFile = new File(homePath);
 
         if (!imageFile.exists()) {
             System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
@@ -335,6 +350,15 @@ public class Main extends Application {
         } 
         else if(!logoFile.exists()){
             System.err.println("Image introuvable : " + logoFile.getAbsolutePath());
+        }
+        else if(!addFile.exists()){
+            System.err.println("Image introuvable : " + addFile.getAbsolutePath());
+        }
+        else if(!filterFile.exists()){
+            System.err.println("Image introuvable : " + filterFile.getAbsolutePath());
+        }
+        else if(!homeFile.exists()){
+            System.err.println("Image introuvable : " + homeFile.getAbsolutePath());
         }
         else {
         // Appliquer l'image de fond au conteneur principal
@@ -405,10 +429,25 @@ public class Main extends Application {
             primaryStage.setScene(mainScene);
         });
         // Ajouter un bouton "+" pour ajouter des exercices
-        Button addButton = new Button("+");
-        addButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #ffffff); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 8, 0.5, 0, 2);"));
-        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);"));
+        Image addImage = new Image(addFile.toURI().toString());
+        ImageView addImageView = new ImageView(addImage);
+        Button addButton = new Button();
+        addButton.setGraphic(addImageView); // Ajouter l'image au bouton
+        addButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+        
+        //Bouton filtrer
+        Image filterImage = new Image(filterFile.toURI().toString());
+        ImageView filterImageView = new ImageView(filterImage);
+        Button filterButton = new Button();
+        filterButton.setGraphic(filterImageView); // Ajouter l'image au bouton
+        filterButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+        
+        //Bouton acceuil
+        Image homeImage = new Image(homeFile.toURI().toString());
+        ImageView homeImageView = new ImageView(homeImage);
+        Button homeButton = new Button();
+        homeButton.setGraphic(homeImageView); // Ajouter l'image au bouton
+        homeButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
 
         // Nouvelle scène pour ajouter des exercices
         BorderPane addExerciseRoot = new BorderPane();
@@ -420,6 +459,7 @@ public class Main extends Application {
             );
         Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
+        homeButton.setOnAction(event -> primaryStage.setScene(homePageScene));
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
         
@@ -646,10 +686,17 @@ public class Main extends Application {
 
 
 
-        // Ajouter le bouton "-" à gauche du bouton "+"
-        HBox topBar = new HBox(10, addButton);
-        topBar.setAlignment(Pos.CENTER_RIGHT);
-        topBar.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
+        // Ajouter dans une barre les boutons "Accueil", "Filtrer" et "Ajouter"
+        // Créer un Region pour séparer les boutons
+        Region space = new Region();
+        HBox.setHgrow(space, Priority.ALWAYS); // Permet au spacer de prendre tout l'espace disponible
+        
+        // Ajouter les boutons et le spacer dans le HBox
+        HBox topBar = new HBox(10, homeButton, space, filterButton, addButton);
+        topBar.setAlignment(Pos.CENTER); // Centrer verticalement les éléments
+        topBar.setStyle("-fx-background-color: rgba(88, 69, 102, 0.83); -fx-padding: 15px;");
+
+        // Ajouter la barre au haut du BorderPane
         mainRoot.setTop(topBar);
 
         // Fenêtre secondaire (zone de code)
