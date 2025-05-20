@@ -221,6 +221,7 @@ public class Main extends Application {
     }
 
     public VBox mainScene() {
+
         // Charger les polices personnalisées
         String cherryBombFontPath = getClass().getResource("/RessourceFonts/CherryBombOne-Regular.ttf").toExternalForm();
         String dreamingOutloudFontPath = getClass().getResource("/RessourceFonts/DreamingOutloudSans-Regular.ttf").toExternalForm();
@@ -243,7 +244,14 @@ public class Main extends Application {
         
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
-        exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
+        
+        // Fixer la taille de exerciseList
+        exerciseList.setPrefWidth(1000); // Largeur préférée
+        exerciseList.setMinWidth(1000);  // Largeur minimale
+        exerciseList.setMaxWidth(1000);  // Largeur maximale
+
+        
         for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
             String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
             int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
@@ -267,17 +275,13 @@ public class Main extends Application {
             exerciseItem.setStyle(
                 "-fx-background-color: rgba(30, 30, 30, 0.9); " +
                 "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                "-fx-border-radius: 15px; " +
-                "-fx-background-radius: 15px; " +
-                "-fx-padding: 10px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                "-fx-padding: 10px; " 
             );
-        
             exerciseList.getItems().add(exerciseItem);
+
         }
 
         this.exerciseList = exerciseList;
-
 
         // Organiser les composants dans un VBox
         VBox contentBox = new VBox(10, titleBox, exerciseList);
@@ -754,7 +758,7 @@ public class Main extends Application {
         // Ajouter les boutons et le spacer dans le HBox
         HBox topBar = new HBox(10, homeButton, space, filterButton, addButton);
         topBar.setAlignment(Pos.CENTER); // Centrer verticalement les éléments
-        topBar.setStyle("-fx-background-color: rgba(88, 69, 102, 0.83); -fx-padding: 15px;");
+        topBar.setStyle("-fx-background-color: rgba(88, 69, 102, 0.95); -fx-padding: 15px;");
 
         // Ajouter la barre au haut du BorderPane
         mainRoot.setTop(topBar);
