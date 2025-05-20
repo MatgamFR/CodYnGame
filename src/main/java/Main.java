@@ -28,6 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -126,26 +127,28 @@ public class Main extends Application {
         }
     }
 
-    public void setupSearchButton(Button searchButton){
+    public void setupSearchButton(Button searchButton, VBox overlay, StackPane rootPane) {
         searchButton.setOnAction(event -> {
+            rootPane.getChildren().remove(overlay);
+    
             // Récupérer les langages sélectionnés
             List<String> selectedLanguages = new ArrayList<>();
-            if (filterPythonCheckBox.isSelected()){
+            if (filterPythonCheckBox.isSelected()) {
                 selectedLanguages.add("Python");
             }
-            if (filterJavaCheckBox.isSelected()){
+            if (filterJavaCheckBox.isSelected()) {
                 selectedLanguages.add("Java");
             }
-            if (filterCCheckBox.isSelected()){ 
+            if (filterCCheckBox.isSelected()) {
                 selectedLanguages.add("C");
             }
-            if (filterJSCheckBox.isSelected()){
+            if (filterJSCheckBox.isSelected()) {
                 selectedLanguages.add("JavaScript");
             }
-            if (filterPHPCheckBox.isSelected()){
+            if (filterPHPCheckBox.isSelected()) {
                 selectedLanguages.add("PHP");
             }
-        
+    
             // Filtrer les exercices
             List<Integer> filteredExerciseIds = Connexionbdd.getExercisesByLanguages(selectedLanguages);
             if (filteredExerciseIds.isEmpty()) {
@@ -275,37 +278,10 @@ public class Main extends Application {
 
         this.exerciseList = exerciseList;
 
-        // Ajouter des cases à cocher pour filtrer par langage
-        CheckBox filterPythonCheckBox = new CheckBox("Python");
-        filterPythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterJavaCheckBox = new CheckBox("Java");
-        filterJavaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterCCheckBox = new CheckBox("C");
-        filterCCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterJSCheckBox = new CheckBox("JavaScript");
-        filterJSCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-        CheckBox filterPHPCheckBox = new CheckBox("PHP");
-        filterPHPCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);");
-
-        this.filterCCheckBox = filterCCheckBox;
-        this.filterJSCheckBox = filterJSCheckBox;
-        this.filterJavaCheckBox = filterJavaCheckBox;
-        this.filterPHPCheckBox = filterPHPCheckBox;
-        this.filterPythonCheckBox = filterPythonCheckBox;
-        
-        Button searchButton = new Button("Rechercher");
-        searchButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-
-        // Ajouter les cases à cocher et le bouton de recherche dans une HBox
-        HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
-        filterBox.setAlignment(Pos.CENTER);
-        filterBox.setStyle("-fx-padding: 10px;");
 
         // Organiser les composants dans un VBox
-        VBox contentBox = new VBox(10, titleBox, filterBox, exerciseList);
+        VBox contentBox = new VBox(10, titleBox, exerciseList);
         contentBox.setAlignment(Pos.CENTER);
-
-        setupSearchButton(searchButton);
 
         return contentBox;
 
@@ -315,6 +291,20 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         setupBDD();
+        filterPythonCheckBox = new CheckBox("Python");
+        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+
+        filterJavaCheckBox = new CheckBox("Java");
+        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+
+        filterCCheckBox = new CheckBox("C");
+        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+
+        filterJSCheckBox = new CheckBox("JavaScript");
+        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+
+        filterPHPCheckBox = new CheckBox("PHP");
+        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
 
         // Créer la scène de la page d'accueil
         BorderPane homePageRoot = new BorderPane();
@@ -339,6 +329,8 @@ public class Main extends Application {
         String addPath = basePath + "/src/main/resources/RessourceImage/add.png"; // Chemin relatif à partir du projet
         String filterPath = basePath + "/src/main/resources/RessourceImage/filter.png"; // Chemin relatif à partir du projet
         String homePath = basePath + "/src/main/resources/RessourceImage/home.png"; // Chemin relatif à partir du projet
+        String searchPath = basePath + "/src/main/resources/RessourceImage/search.png"; // Chemin relatif à partir du projet
+        String fermerPath = basePath + "/src/main/resources/RessourceImage/fermer.png"; // Chemin relatif à partir du projet
 
         // Charger l'image en utilisant le chemin absolu
         File imageFile = new File(imagePath);
@@ -347,6 +339,8 @@ public class Main extends Application {
         File addFile = new File(addPath);
         File filterFile = new File(filterPath);
         File homeFile = new File(homePath);
+        File searchFile = new File(searchPath);
+        File fermerFile = new File(fermerPath);
 
         if (!imageFile.exists()) {
             System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
@@ -365,6 +359,9 @@ public class Main extends Application {
         else if(!homeFile.exists()){
             System.err.println("Image introuvable : " + homeFile.getAbsolutePath());
         }
+        else if(!searchFile.exists()){
+            System.err.println("Image introuvable : " + searchFile.getAbsolutePath());
+        }
         else {
         // Appliquer l'image de fond au conteneur principal
         homePageRoot.setStyle(
@@ -377,8 +374,12 @@ public class Main extends Application {
 
         Image image = new Image(imageFile.toURI().toString());
         Image logoImage = new Image(logoFile.toURI().toString());
+        Image searchImage = new Image(searchFile.toURI().toString());
+        Image fermerImage = new Image(fermerFile.toURI().toString());
         ImageView imageView = new ImageView(image);
         ImageView logoImageView = new ImageView(logoImage);
+        ImageView searchImageView = new ImageView(searchImage);
+        ImageView fermerImageView = new ImageView(fermerImage);
 
         // Configurer l'ImageView
         logoImageView.setFitWidth(200); // Largeur du logo
@@ -425,9 +426,10 @@ public class Main extends Application {
         
         // Ajouter le contenu au centre de la fenêtre principale
         mainRoot.setCenter(contentBox);
-
+        // Ajouter mainRoot dans un StackPane
+        StackPane rootPane = new StackPane(mainRoot);
         // Créer une scène pour la fenêtre principale
-        Scene mainScene = new Scene(mainRoot, 1600, 900);
+        Scene mainScene = new Scene(rootPane, 1600, 900);
 
         goToExercisesButton.setOnAction(event -> {
             // Basculer vers la scène principale (liste des exercices)
@@ -464,6 +466,46 @@ public class Main extends Application {
             );
         Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
+        filterButton.setOnAction(event -> {
+            Label titleFilter = new Label("Filtrer: Choisissez les langages");
+            titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+            Button searchButton = new Button();
+            searchButton.setGraphic(searchImageView); // Ajouter l'image au bouton
+            searchButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+            searchImageView.setFitWidth(150); // Largeur de l'image
+            searchImageView.setFitHeight(150); // Hauteur de l'image
+            searchImageView.setPreserveRatio(true); // Préserver les proportions
+            // Ajouter les cases à cocher et le bouton de recherche dans une HBox
+            HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
+            filterBox.setAlignment(Pos.CENTER);
+            filterBox.setStyle("-fx-padding: 10px;");
+
+            // Créer un fond semi-transparent
+            VBox overlay = new VBox();
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.83);");
+            overlay.setPrefSize(rootPane.getWidth(), rootPane.getHeight());
+            overlay.setAlignment(Pos.CENTER);
+            
+            setupSearchButton(searchButton,overlay,rootPane);
+            // Ajouter le filterBox au centre
+            VBox popupContent = new VBox(5,titleFilter, filterBox);
+            popupContent.setAlignment(Pos.CENTER);
+            popupContent.setStyle("-fx-padding: 20px; -fx-background-color: rgba(30, 30, 30, 0.9);");
+        
+            // Ajouter un bouton pour fermer le pop-up
+            fermerImageView.setFitWidth(100); // Largeur de l'image
+            fermerImageView.setFitHeight(100); // Hauteur de l'image
+            Button closeButton = new Button();
+            closeButton.setGraphic(new ImageView(fermerImage));
+            closeButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+            closeButton.setOnAction(e -> rootPane.getChildren().remove(overlay));
+        
+            popupContent.getChildren().add(closeButton);
+            overlay.getChildren().add(popupContent);
+        
+            // Ajouter l'overlay au StackPane
+            rootPane.getChildren().add(overlay);
+        });
         homeButton.setOnAction(event -> primaryStage.setScene(homePageScene));
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
@@ -528,7 +570,7 @@ public class Main extends Application {
         cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
 
 
-        // Ajouter une zone de sortie (console)
+       // Ajouter une zone de sortie (console)
         // Déclarer et configurer outputArea une seule fois
         TextArea outputArea = new TextArea();
         outputArea.setEditable(false);
@@ -566,7 +608,6 @@ public class Main extends Application {
         CodeArea correctionInput = SyntaxicalColor.createCodeArea();
         correctionInput.setParagraphGraphicFactory(LineNumberFactory.get(correctionInput));
         correctionInput.setPlaceholder(new Label("Entrez la correction en Python pour cet exercice"));
-        correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         Button saveCorrectionButton = new Button("Enregistrer la correction");
         saveCorrectionButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -599,14 +640,16 @@ public class Main extends Application {
             if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
-                } else {
+                } 
+                else {
+                    correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
                     // Transition vers la scène de correction
                     primaryStage.setScene(correctionStage);
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
-                        outputArea.setText("");
+                        correctionArea.setText("");
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
