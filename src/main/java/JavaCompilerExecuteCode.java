@@ -73,7 +73,8 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 
                 // Étape 2: Exécuter le code de correction
                 Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
-                process2.getOutputStream().write(result.getBytes());
+                process2.getOutputStream().write((result+"\n").getBytes());
+                process2.getOutputStream().write(resultat);
                 process2.getOutputStream().close();
                 
                 // Définir un timeout global de 15 secondes
