@@ -19,6 +19,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -284,7 +286,6 @@ public class Main extends Application {
 
         // Organiser les composants dans un VBox
         VBox contentBox = new VBox(10, titleLabel, descriptionLabel, filterBox, exerciseList);
-        contentBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
         contentBox.setAlignment(Pos.CENTER);
 
         setupSearchButton(searchButton);
@@ -298,18 +299,111 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         setupBDD();
 
+        // Créer la scène de la page d'accueil
+        BorderPane homePageRoot = new BorderPane();
+        // Charger les polices personnalisées
+        String cherryBombFontPath = getClass().getResource("/RessourceFonts/CherryBombOne-Regular.ttf").toExternalForm();
+        String dreamingOutloudFontPath = getClass().getResource("/RessourceFonts/DreamingOutloudSans-Regular.ttf").toExternalForm();
+        // Charger et enregistrer les polices
+        Font.loadFont(cherryBombFontPath, 32); // Charger Cherry Bomb One
+        Font.loadFont(dreamingOutloudFontPath, 18); // Charger Dreaming Outloud Sans
+
+        Label welcomeLabel = new Label("Le codyngame \n       de la \n  javadocance");
+        welcomeLabel.setStyle("-fx-font-size: 96px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Cherry Bomb One';");
+
+        Label descriptionLabel = new Label("Tentez de braver \n   nos farouches \n exercices si vous \n\t l'osez!");
+        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+
+        // Obtenir le chemin absolu du répertoire de base du projet
+        String basePath = new File("").getAbsolutePath(); // Chemin absolu du projet
+        String imagePath = basePath + "/src/main/resources/RessourceImage/play.png"; // Chemin relatif à partir du projet
+        String backgroundPath = basePath + "/src/main/resources/RessourceImage/background.png"; // Chemin relatif à partir du projet
+        String logoPath = basePath + "/src/main/resources/RessourceImage/CYTech.png"; // Chemin relatif à partir du projet
+        String addPath = basePath + "/src/main/resources/RessourceImage/add.png"; // Chemin relatif à partir du projet
+        String filterPath = basePath + "/src/main/resources/RessourceImage/filter.png"; // Chemin relatif à partir du projet
+        String homePath = basePath + "/src/main/resources/RessourceImage/home.png"; // Chemin relatif à partir du projet
+
+        // Charger l'image en utilisant le chemin absolu
+        File imageFile = new File(imagePath);
+        File backgroundFile = new File(backgroundPath);
+        File logoFile = new File(logoPath);
+
+        if (!imageFile.exists()) {
+            System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
+        else if(!backgroundFile.exists()){
+            System.err.println("Image introuvable : " + backgroundFile.getAbsolutePath());
+        } 
+        else if(!logoFile.exists()){
+            System.err.println("Image introuvable : " + logoFile.getAbsolutePath());
+        }
+        else {
+        // Appliquer l'image de fond au conteneur principal
+        homePageRoot.setStyle(
+        "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
+        "-fx-background-size: cover; " + // Ajuster l'image pour couvrir tout le conteneur
+        "-fx-background-position: center center; " + // Centrer l'image
+        "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
+        );
+
+
+        Image image = new Image(imageFile.toURI().toString());
+        Image logoImage = new Image(logoFile.toURI().toString());
+        ImageView imageView = new ImageView(image);
+        ImageView logoImageView = new ImageView(logoImage);
+
+        // Configurer l'ImageView
+        logoImageView.setFitWidth(200); // Largeur du logo
+        logoImageView.setFitHeight(200); // Hauteur du logo
+        logoImageView.setPreserveRatio(true); // Préserver les proportions
+
+        // Créer un HBox pour positionner le logo en haut à gauche
+        HBox logoBox = new HBox(logoImageView);
+        logoBox.setAlignment(Pos.TOP_LEFT); // Aligner en haut à gauche
+        logoBox.setStyle("-fx-padding: 10px;"); // Ajouter un peu de marge
+
+        // Ajouter le logo dans la zone supérieure du BorderPane
+        homePageRoot.setTop(logoBox);
+        
+        // Configurer l'ImageView
+        imageView.setFitWidth(200); // Largeur de l'image
+        imageView.setFitHeight(200); // Hauteur de l'image
+        imageView.setPreserveRatio(true); // Préserver les proportions
+
+        // Créer un bouton avec l'image
+        Button goToExercisesButton = new Button();
+        goToExercisesButton.setGraphic(imageView); // Ajouter l'image au bouton
+        goToExercisesButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+        // Ajouter les autres éléments au centre du BorderPane
+        VBox centerContent = new VBox(20, welcomeLabel, descriptionLabel, goToExercisesButton);
+        centerContent.setAlignment(Pos.CENTER);
+        homePageRoot.setCenter(centerContent);
+        Scene homePageScene = new Scene(homePageRoot, 1600, 900);
+        primaryStage.setTitle("Accueil");
+        primaryStage.setScene(homePageScene);
+        primaryStage.show();
+        
+
         // Fenêtre principale (liste des exercices)
         BorderPane mainRoot = new BorderPane();
-        Color backgroundColorMain = Color.web("#1E1E1E");
+        mainRoot.setStyle(
+            "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
+            "-fx-background-size: cover; " + // Ajuster l'image pour couvrir tout le conteneur
+            "-fx-background-position: center center; " + // Centrer l'image
+            "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
+            );
 
         VBox contentBox = mainScene();
-
+        
         // Ajouter le contenu au centre de la fenêtre principale
         mainRoot.setCenter(contentBox);
 
         // Créer une scène pour la fenêtre principale
-        Scene mainScene = new Scene(mainRoot, 1600, 900, backgroundColorMain);
+        Scene mainScene = new Scene(mainRoot, 1600, 900);
 
+        goToExercisesButton.setOnAction(event -> {
+            // Basculer vers la scène principale (liste des exercices)
+            primaryStage.setScene(mainScene);
+        });
         // Ajouter un bouton "+" pour ajouter des exercices
         Button addButton = new Button("+");
         addButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -318,11 +412,17 @@ public class Main extends Application {
 
         // Nouvelle scène pour ajouter des exercices
         BorderPane addExerciseRoot = new BorderPane();
+        addExerciseRoot.setStyle(
+            "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
+            "-fx-background-size: cover; " + // Ajuster l'image pour couvrir tout le conteneur
+            "-fx-background-position: center center; " + // Centrer l'image
+            "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
+            );
         Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
-        addExerciseBox.setStyle("-fx-background-color: rgba(10, 10, 10, 0.95); -fx-padding: 25px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
+        
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
         addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
@@ -554,7 +654,13 @@ public class Main extends Application {
 
         // Fenêtre secondaire (zone de code)
         BorderPane secondaryRoot = new BorderPane();
-        Color backgroundColorSecondary = Color.web("#1E1E1E");
+        secondaryRoot.setStyle(
+            "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
+            "-fx-background-size: cover; " + // Ajuster l'image pour couvrir tout le conteneur
+            "-fx-background-position: center center; " + // Centrer l'image
+            "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
+        );
+
 
         // Ajouter une zone de texte pour afficher la consigne
         TextFlow instructionArea = new TextFlow();
@@ -645,7 +751,7 @@ public class Main extends Application {
         secondaryRoot.setBottom(buttonBox);
 
         // Créer une scène pour la fenêtre secondaire
-        Scene secondaryScene = new Scene(secondaryRoot, 1280, 720, backgroundColorSecondary);
+        Scene secondaryScene = new Scene(secondaryRoot, 1280, 720);
 
         // Gestion de l'événement de clic sur un exercice
         exerciseList.setOnMouseClicked(event -> {
@@ -848,9 +954,7 @@ public class Main extends Application {
         //Colorisation syntaxique
         codeArea.getStylesheets().add(getClass().getResource("/SyntaxicalColor.css").toExternalForm());
         // Configurer et afficher la fenêtre principale
-        primaryStage.setTitle("Liste des Exercices");
-        primaryStage.setScene(mainScene);
-        primaryStage.show();
+    }
     }
 
     public static void main(String[] args) {
