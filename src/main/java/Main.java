@@ -600,7 +600,7 @@ public class Main extends Application {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } 
                 else {
-                    correctionInput.replaceText("input().replace('\\n', '\n').split('\n')");
+                    correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
                     // Transition vers la scène de correction
                     primaryStage.setScene(correctionStage);
 
