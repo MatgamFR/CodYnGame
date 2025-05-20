@@ -34,7 +34,7 @@ public class SyntaxicalColor {
                 "insteadof","instanceof","interface","isset()","list()","match","namespace","new","or","print","private","protected","public",
                 "require","readonly","require_once","return","static","switch","throw","trait","try","unset()","use","var","while","xor","yield","yield from",
             });
-            LANGUAGE_KEYWORDS.put("Javascript", new String[] {
+            LANGUAGE_KEYWORDS.put("JavaScript", new String[] {
                 "while","case","class","void" ,"function","instanceof","throw","export","delete","catch ","private","package","true","debugger","extends","default",
                 "interface","super","with","enum","if","return","switch","try","let","yield","typeof","public","for","static","new","else","finally","false",
                 "import","var","do","protected","null","in","implements","this","await","const","continue","break",

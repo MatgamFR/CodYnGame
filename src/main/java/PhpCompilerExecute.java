@@ -23,10 +23,9 @@ public class PhpCompilerExecute extends IDEExecuteCode {
             Files.writeString(tempFile, code);
 
             boolean valide = true;
-            int compt = 0;
 
             String[] output = {""};
-            String[] output2 = {""};
+            String resultat2 = "";
 
             int exitCode = 1;
 
@@ -36,13 +35,15 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
-                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
-                process2.getOutputStream().write(resultat);
-                process2.getOutputStream().close();
-
                 Process process3 = Runtime.getRuntime().exec(new String[]{"php", tempFile.toAbsolutePath().toString()});
                 process3.getOutputStream().write(resultat);
                 process3.getOutputStream().close();
+                resultat2 = new String(process3.getInputStream().readAllBytes());
+                String result = resultat2.replace("\n", "\\n");
+
+                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
+                process2.getOutputStream().write(result.getBytes());
+                process2.getOutputStream().close();
                 
                 // Définir un timeout global de 15 secondes
                 boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
@@ -58,7 +59,7 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                 } 
                 else {
                     exitCode = process3.exitValue();
-
+                    
                     if (exitCode != 0) {
                         this.printOutput(new String(process3.getErrorStream().readAllBytes()));
                         return;
@@ -66,39 +67,23 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                     else {
                         // Lire le contenu du fichier de sortie
                         output = new String(process2.getInputStream().readAllBytes()).split("\n");
-                        output2 = new String(process3.getInputStream().readAllBytes()).split("\n");
-                    }
 
-                    for (int j = 0; j < output.length; j++) {
-                        if (j >= output2.length) {
+                        if(output[0].equals("0")){
                             valide = false;
-                            compt = j-1;
-                            break;
-                        }
-                        if(!output[j].equals(output2[j])) {
-                            valide = false;
-                            compt = j;
                             break;
                         }
                     }
-
-                    if(!valide) {
-                        break;
-                    } 
                 }
             }
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(valide) {
-                if (output.length < output2.length) {
-                    this.printOutput("Warning : Le code a produit plus de sorties que prévu.");
-                }
                 this.printOutput("Le code est correct");
             } 
             else {
                 this.printOutput("Le code est incorrect");
-                this.printOutput("Reçu : '" + output2[compt] + "' valeur " + (compt+1));
-                this.printOutput("Attendu : '" + output[compt] + "' valeur " + (compt+1));
+                this.printOutput("Reçu : '" + resultat2.split("\n")[Integer.parseInt(output[2])-1] + "' valeur " + output[2]);
+                this.printOutput("Attendu : '" + output[1] + "' valeur " + output[2]);
             }
             
             // Nettoyer les fichiers temporaires
