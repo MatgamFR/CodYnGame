@@ -223,19 +223,19 @@ public class Main extends Application {
     public VBox mainScene() {
 
         // Charger les polices personnalisées
-        String cherryBombFontPath = getClass().getResource("/RessourceFonts/CherryBombOne-Regular.ttf").toExternalForm();
-        String dreamingOutloudFontPath = getClass().getResource("/RessourceFonts/DreamingOutloudSans-Regular.ttf").toExternalForm();
+        String berkShireFontPath = getClass().getResource("/RessourceFonts/BerkshireSwash.ttf").toExternalForm();
+        
         // Charger et enregistrer les polices
-        Font.loadFont(cherryBombFontPath, 32); // Charger Cherry Bomb One
-        Font.loadFont(dreamingOutloudFontPath, 18); // Charger Dreaming Outloud Sans
+        Font.loadFont(berkShireFontPath, 32); // Charger Berkshire Swash Regular
+
 
         // Titre de la page
         Label titleLabel = new Label("Liste d'exercices");
-        titleLabel.setStyle("-fx-font-size: 70px;-fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Cherry Bomb One';");
+        titleLabel.setStyle("-fx-font-size: 70px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         // Description
         Label descriptionLabel = new Label("Veuillez choisir un exercice. Bon codage!");
-        descriptionLabel.setStyle("-fx-font-size: 39px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        descriptionLabel.setStyle("-fx-font-size: 39px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         VBox titleBox = new VBox(0, titleLabel, descriptionLabel); // Espacement vertical à 0
         titleBox.setAlignment(Pos.CENTER); // Centrer les labels
@@ -296,40 +296,37 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         setupBDD();
         filterPythonCheckBox = new CheckBox("Python");
-        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         filterJavaCheckBox = new CheckBox("Java");
-        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         filterCCheckBox = new CheckBox("C");
-        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         filterJSCheckBox = new CheckBox("JavaScript");
-        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         filterPHPCheckBox = new CheckBox("PHP");
-        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         // Créer la scène de la page d'accueil
         BorderPane homePageRoot = new BorderPane();
         // Charger les polices personnalisées
-        String cherryBombFontPath = getClass().getResource("/RessourceFonts/CherryBombOne-Regular.ttf").toExternalForm();
-        String dreamingOutloudFontPath = getClass().getResource("/RessourceFonts/DreamingOutloudSans-Regular.ttf").toExternalForm();
+        String berkshireSwashPath = getClass().getResource("/RessourceFonts/BerkshireSwash.ttf").toExternalForm();
         // Charger et enregistrer les polices
-        Font.loadFont(cherryBombFontPath, 32); // Charger Cherry Bomb One
-        Font.loadFont(dreamingOutloudFontPath, 18); // Charger Dreaming Outloud Sans
+        Font.loadFont(berkshireSwashPath, 32); // Charger Berkshire Swash Regular
 
-        Label welcomeLabel = new Label("Le codyngame \n       de la \n  javadocance");
-        welcomeLabel.setStyle("-fx-font-size: 96px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Cherry Bomb One';");
+        Label welcomeLabel = new Label("Le codyngame \n         de la \n  javadocance");
+        welcomeLabel.setStyle("-fx-font-size: 93px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
-        Label descriptionLabel = new Label("Tentez de braver \n   nos farouches \n exercices si vous \n\t l'osez!");
-        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+        Label descriptionLabel = new Label("Tentez de braver \n   nos farouches \n exercices si vous \n\t  l'osez!");
+        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
         // Obtenir le chemin absolu du répertoire de base du projet
         String basePath = new File("").getAbsolutePath(); // Chemin absolu du projet
         String imagePath = basePath + "/src/main/resources/RessourceImage/play.png"; // Chemin relatif à partir du projet
         String backgroundPath = basePath + "/src/main/resources/RessourceImage/background.png"; // Chemin relatif à partir du projet
-        String logoPath = basePath + "/src/main/resources/RessourceImage/CYTech.png"; // Chemin relatif à partir du projet
         String addPath = basePath + "/src/main/resources/RessourceImage/add.png"; // Chemin relatif à partir du projet
         String filterPath = basePath + "/src/main/resources/RessourceImage/filter.png"; // Chemin relatif à partir du projet
         String homePath = basePath + "/src/main/resources/RessourceImage/home.png"; // Chemin relatif à partir du projet
@@ -339,7 +336,6 @@ public class Main extends Application {
         // Charger l'image en utilisant le chemin absolu
         File imageFile = new File(imagePath);
         File backgroundFile = new File(backgroundPath);
-        File logoFile = new File(logoPath);
         File addFile = new File(addPath);
         File filterFile = new File(filterPath);
         File homeFile = new File(homePath);
@@ -351,9 +347,7 @@ public class Main extends Application {
         else if(!backgroundFile.exists()){
             System.err.println("Image introuvable : " + backgroundFile.getAbsolutePath());
         } 
-        else if(!logoFile.exists()){
-            System.err.println("Image introuvable : " + logoFile.getAbsolutePath());
-        }
+        
         else if(!addFile.exists()){
             System.err.println("Image introuvable : " + addFile.getAbsolutePath());
         }
@@ -377,30 +371,16 @@ public class Main extends Application {
 
 
         Image image = new Image(imageFile.toURI().toString());
-        Image logoImage = new Image(logoFile.toURI().toString());
         Image searchImage = new Image(searchFile.toURI().toString());
         Image fermerImage = new Image(fermerFile.toURI().toString());
         ImageView imageView = new ImageView(image);
-        ImageView logoImageView = new ImageView(logoImage);
         ImageView searchImageView = new ImageView(searchImage);
         ImageView fermerImageView = new ImageView(fermerImage);
 
-        // Configurer l'ImageView
-        logoImageView.setFitWidth(200); // Largeur du logo
-        logoImageView.setFitHeight(200); // Hauteur du logo
-        logoImageView.setPreserveRatio(true); // Préserver les proportions
-
-        // Créer un HBox pour positionner le logo en haut à gauche
-        HBox logoBox = new HBox(logoImageView);
-        logoBox.setAlignment(Pos.TOP_LEFT); // Aligner en haut à gauche
-        logoBox.setStyle("-fx-padding: 10px;"); // Ajouter un peu de marge
-
-        // Ajouter le logo dans la zone supérieure du BorderPane
-        homePageRoot.setTop(logoBox);
         
         // Configurer l'ImageView
-        imageView.setFitWidth(200); // Largeur de l'image
-        imageView.setFitHeight(200); // Hauteur de l'image
+        imageView.setFitWidth(270); // Largeur de l'image
+        imageView.setFitHeight(270); // Hauteur de l'image
         imageView.setPreserveRatio(true); // Préserver les proportions
 
         // Créer un bouton avec l'image
@@ -468,19 +448,19 @@ public class Main extends Application {
             "-fx-background-position: center center; " + // Centrer l'image
             "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
             );
-        Scene addExerciseScene = new Scene(addExerciseRoot, 600, 400);
+        Scene addExerciseScene = new Scene(addExerciseRoot, 1600, 900);
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
         filterButton.setOnAction(event -> {
             Label titleFilter = new Label("Filtrer: Choisissez les langages");
-            titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Dreaming Outloud Regular';");
+            titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
             Button searchButton = new Button();
             searchButton.setGraphic(searchImageView); // Ajouter l'image au bouton
             searchButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
-            searchImageView.setFitWidth(150); // Largeur de l'image
-            searchImageView.setFitHeight(150); // Hauteur de l'image
+            searchImageView.setFitWidth(180); // Largeur de l'image
+            searchImageView.setFitHeight(180); // Hauteur de l'image
             searchImageView.setPreserveRatio(true); // Préserver les proportions
             // Ajouter les cases à cocher et le bouton de recherche dans une HBox
-            HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox, searchButton);
+            HBox filterBox = new HBox(10, filterPythonCheckBox, filterJavaCheckBox, filterCCheckBox, filterJSCheckBox, filterPHPCheckBox);
             filterBox.setAlignment(Pos.CENTER);
             filterBox.setStyle("-fx-padding: 10px;");
 
@@ -504,7 +484,10 @@ public class Main extends Application {
             closeButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
             closeButton.setOnAction(e -> rootPane.getChildren().remove(overlay));
         
-            popupContent.getChildren().add(closeButton);
+            HBox closesearchButton = new HBox(10, searchButton, closeButton);
+            closesearchButton.setAlignment(Pos.CENTER);
+
+            popupContent.getChildren().add(closesearchButton);
             overlay.getChildren().add(popupContent);
         
             // Ajouter l'overlay au StackPane
@@ -628,7 +611,7 @@ public class Main extends Application {
 
         VBox yes = new VBox(10, correctionRoot, correctionArea);
 
-        Scene correctionStage = new Scene(yes, 600, 400);
+        Scene correctionStage = new Scene(yes, 1600, 900);
 
         // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
@@ -862,7 +845,7 @@ public class Main extends Application {
         secondaryRoot.setBottom(buttonBox);
 
         // Créer une scène pour la fenêtre secondaire
-        Scene secondaryScene = new Scene(secondaryRoot, 1280, 720);
+        Scene secondaryScene = new Scene(secondaryRoot, 1600, 900);
 
         // Gestion de l'événement de clic sur un exercice
         exerciseList.setOnMouseClicked(event -> {
