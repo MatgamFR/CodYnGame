@@ -32,7 +32,7 @@ Insert Into Exercice Values(10,"Recherche binaire", "difficile","écrivez un pro
 
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C'),(1,'JavaScript'),(1,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Java');
-INSERT INTO LanguageCode (Exerciceid, NomLanguage), Values(3,'C');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (3,'C');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (4,'Java');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (5,'Python'),(5,'Java'),(5,'C'),(5,'JavaScript'),(5,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (6,'Python'),(6,'Java'),(6,'C'),(6,'JavaScript'),(6,'PHP');
