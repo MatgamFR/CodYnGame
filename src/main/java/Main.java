@@ -566,7 +566,6 @@ public class Main extends Application {
         CodeArea correctionInput = SyntaxicalColor.createCodeArea();
         correctionInput.setParagraphGraphicFactory(LineNumberFactory.get(correctionInput));
         correctionInput.setPlaceholder(new Label("Entrez la correction en Python pour cet exercice"));
-        correctionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #BBBBBB; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);");
 
         Button saveCorrectionButton = new Button("Enregistrer la correction");
         saveCorrectionButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
@@ -599,14 +598,16 @@ public class Main extends Application {
             if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
-                } else {
+                } 
+                else {
+                    correctionInput.replaceText("input().replace('\\n', '\n').split('\n')");
                     // Transition vers la scène de correction
                     primaryStage.setScene(correctionStage);
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
-                        outputArea.setText("");
+                        correctionArea.setText("");
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données

@@ -1,5 +1,4 @@
-from Modification import modification
-word = modification(input())
+word = input().replace("\\n", "\n").split("\n")
 
 if word[0] == "hello world":
     print(1)
