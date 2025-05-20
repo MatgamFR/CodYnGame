@@ -542,6 +542,18 @@ public class Main extends Application {
                             "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
         outputArea.setPrefHeight(200); // Hauteur préférée
 
+        TextArea correctionArea = new TextArea();
+        correctionArea.setEditable(false);
+        correctionArea.setWrapText(true);
+        correctionArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
+                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
+                            "-fx-font-family: 'Monospace'; " +
+                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                            "-fx-border-radius: 15px; " +
+                            "-fx-background-radius: 15px; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        correctionArea.setPrefHeight(200); // Hauteur préférée
+
         // Créer un BorderPane pour la scène de correction
         BorderPane correctionRoot = new BorderPane();
         VBox correctionBox = new VBox(10);
@@ -569,7 +581,7 @@ public class Main extends Application {
         correctionBox.getChildren().addAll(correctionLabel, correctionInput, correctionButtonBox);
         correctionRoot.setCenter(correctionBox);
 
-        VBox yes = new VBox(10, correctionRoot, outputArea);
+        VBox yes = new VBox(10, correctionRoot, correctionArea);
 
         Scene correctionStage = new Scene(yes, 600, 400);
 
@@ -593,7 +605,7 @@ public class Main extends Application {
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
+                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
                         outputArea.setText("");
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
