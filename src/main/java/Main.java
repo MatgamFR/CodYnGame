@@ -167,15 +167,15 @@ public class Main extends Application {
                     String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
         
                     Label exerciseNumber = new Label("Exercice " + i);
-                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label exerciseTitle = new Label(titre);
-                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label difficultyLabel = new Label("Difficulté : " + difficulty);
-                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label typeLabel = new Label("Mode: " + typeExo);
-                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
 
@@ -200,13 +200,13 @@ public class Main extends Application {
                     String typeExo = Connexionbdd.getTypeExo(id); // Récupérer le type de l'exercice
 
                     Label exerciseNumber = new Label("Exercice " + id);
-                    exerciseNumber.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    exerciseNumber.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label exerciseTitle = new Label(titre);
-                    exerciseTitle.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    exerciseTitle.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                    statsLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    statsLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     Label typeLabel = new Label(typeExo);
-                    typeLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    typeLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -230,19 +230,19 @@ public class Main extends Application {
     public VBox mainScene() {
 
         // Charger les polices personnalisées
-        String berkShireFontPath = getClass().getResource("/RessourceFonts/BerkshireSwash.ttf").toExternalForm();
+        String pixelGamePath = getClass().getResource("/RessourceFonts/Pixel.otf").toExternalForm();
         
         // Charger et enregistrer les polices
-        Font.loadFont(berkShireFontPath, 32); // Charger Berkshire Swash Regular
+        Font.loadFont(pixelGamePath, 32); // Charger Pixel Game
 
 
         // Titre de la page
         Label titleLabel = new Label("Liste d'exercices");
-        titleLabel.setStyle("-fx-font-size: 70px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Berkshire Swash Regular';");
+        titleLabel.setStyle("-fx-font-size: 70px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
         // Description
         Label descriptionLabel = new Label("Veuillez choisir un exercice. Bon codage!");
-        descriptionLabel.setStyle("-fx-font-size: 39px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        descriptionLabel.setStyle("-fx-font-size: 39px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         VBox titleBox = new VBox(0, titleLabel, descriptionLabel); // Espacement vertical à 0
         titleBox.setAlignment(Pos.CENTER); // Centrer les labels
@@ -267,15 +267,15 @@ public class Main extends Application {
             String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
 
             Label exerciseNumber = new Label("Exercice " + i);
-            exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
             Label exerciseTitle = new Label(titre);
-            exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
             Label difficultyLabel = new Label("Difficulté : " + difficulty);
-            difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
             Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-            statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
             Label typeLabel = new Label("Mode: " + typeExo);
-            typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -306,32 +306,32 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         setupBDD();
         filterPythonCheckBox = new CheckBox("Python");
-        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterJavaCheckBox = new CheckBox("Java");
-        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterCCheckBox = new CheckBox("C");
-        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterJSCheckBox = new CheckBox("JavaScript");
-        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterPHPCheckBox = new CheckBox("PHP");
-        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         // Créer la scène de la page d'accueil
         BorderPane homePageRoot = new BorderPane();
         // Charger les polices personnalisées
-        String berkshireSwashPath = getClass().getResource("/RessourceFonts/BerkshireSwash.ttf").toExternalForm();
+        String PixelPath = getClass().getResource("/RessourceFonts/Pixel.otf").toExternalForm();
         // Charger et enregistrer les polices
-        Font.loadFont(berkshireSwashPath, 32); // Charger Berkshire Swash Regular
+        Font.loadFont(PixelPath, 32); // Charger Pixel Game
 
         Label welcomeLabel = new Label("Le codyngame \n         de la \n  javadocance");
-        welcomeLabel.setStyle("-fx-font-size: 93px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        welcomeLabel.setStyle("-fx-font-size: 93px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         Label descriptionLabel = new Label("Tentez de braver \n   nos farouches \n exercices si vous \n\t  l'osez!");
-        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         // Obtenir le chemin absolu du répertoire de base du projet
         String basePath = new File("").getAbsolutePath(); // Chemin absolu du projet
@@ -462,7 +462,7 @@ public class Main extends Application {
         addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
         filterButton.setOnAction(event -> {
             Label titleFilter = new Label("Filtrer: Choisissez les langages");
-            titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
             Button searchButton = new Button();
             searchButton.setGraphic(searchImageView); // Ajouter l'image au bouton
             searchButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
@@ -767,15 +767,15 @@ public class Main extends Application {
                                     String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
                         
                                     Label exerciseNumber = new Label("Exercice " + i);
-                                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                                     Label exerciseTitle = new Label(titre);
-                                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                                     Label difficultyLabel = new Label("Difficulté : " + difficulty2);
-                                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                                     Label typeLabel = new Label("Mode: " + typeExo);
-                                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
                                     Region spacer = new Region();
                                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -898,15 +898,15 @@ public class Main extends Application {
                 String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
     
                 Label exerciseNumber = new Label("Exercice " + i);
-                exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                 Label exerciseTitle = new Label(titre);
-                exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                 Label difficultyLabel = new Label("Difficulté : " + difficulty);
-                difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                 Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                 Label typeLabel = new Label("Mode: " + typeExo);
-                typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
