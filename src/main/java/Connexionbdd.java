@@ -222,6 +222,21 @@ public class Connexionbdd {
         return false; // Retourne false en cas d'erreur ou si le titre n'existe pas
     }
 
+    public static String getExerciceDifficulty(int exerciseId) {
+        String query = "SELECT difficulty FROM Exercice WHERE Id = ?";
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, exerciseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("difficulty");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de la difficulté : " + e.getMessage());
+        }
+        return null; // Retourne null si la difficulté n'est pas trouvée ou en cas d'erreur
+    }
+
     public static int getExerciseAttempts(int exerciseId) {
         String query = "SELECT Try FROM Exercice WHERE Id = ?";
         try (Connection conn = getConnection();
