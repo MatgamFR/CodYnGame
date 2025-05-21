@@ -38,24 +38,23 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
                 byte[] resultat = process.getInputStream().readAllBytes();
+
                 Process process2;
                 Process process3;
-                System.out.println("Salut");
-                if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                System.out.println("STDIN/STDOUT");
-                process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
-                process3.getOutputStream().write(resultat);
-                process3.getOutputStream().close();
-                resultat2 = new String(process3.getInputStream().readAllBytes());
-                String result = resultat2.replace("\n", "\\n");
 
-                process2 = Runtime.getRuntime().exec(new String[]{"node", "src/main/resources/Correction/Exercice" + id +".js" });
-                process2.getOutputStream().write((result+"\n").getBytes());
-                process2.getOutputStream().write(resultat);
-                process2.getOutputStream().close();
+                if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                    process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
+                    process3.getOutputStream().write(resultat);
+                    process3.getOutputStream().close();
+                    resultat2 = new String(process3.getInputStream().readAllBytes());
+                    String result = resultat2.replace("\n", "\\n");
+
+                    process2 = Runtime.getRuntime().exec(new String[]{"node", "src/main/resources/Correction/Exercice" + id +".js" });
+                    process2.getOutputStream().write((result+"\n").getBytes());
+                    process2.getOutputStream().write(resultat);
+                    process2.getOutputStream().close();
                 }
                 else{
-                System.out.println("INCLUDE");
                 process2 = Runtime.getRuntime().exec(new String[]{"node", tempFile.toPath().toString()});
 
                 process3 = Runtime.getRuntime().exec(new String[]{"node", "src/main/resources/Correction/Exercice" + id +".js" });
@@ -79,7 +78,6 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 } 
                 else {
                     exitCode = process3.exitValue();
-                    System.out.println("Au revoir");
                     if (exitCode != 0) {
                         this.printOutput(new String(process3.getErrorStream().readAllBytes()));
                         return;
