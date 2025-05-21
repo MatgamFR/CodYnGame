@@ -705,7 +705,7 @@ public class Main extends Application {
                                     Region spacer = new Region();
                                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
 
-                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
+                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, difficultyLabel, statsLabel, spacer, typeLabel);
                                     exerciseItem.setSpacing(10);
                                     exerciseItem.setStyle(
                                         "-fx-background-color: rgba(30, 30, 30, 0.9); " +
@@ -816,24 +816,28 @@ public class Main extends Application {
             // Mettre à jour la liste des exercices
             exerciseList.getItems().clear();
             for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
-                String titre = Connexionbdd.getExerciceTitle(i);
-                int attempts = Connexionbdd.getExerciseAttempts(i);
-                int successfulTries = Connexionbdd.getSuccessfulTries(i);
+                String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                String difficulty2 = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
+                int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
                 String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
-
+                        
                 Label exerciseNumber = new Label("Exercice " + i);
                 exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
                 Label exerciseTitle = new Label(titre);
                 exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                Label difficultyLabel = new Label("Difficulté : " + difficulty2);
+                difficultyLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                 Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
                 statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
                 Label typeLabel = new Label(typeExo);
                 typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                        
 
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
 
-                HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, statsLabel, spacer, typeLabel);
+                HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, difficultyLabel, statsLabel, spacer, typeLabel);
                 exerciseItem.setSpacing(10);
                 exerciseItem.setStyle(
                     "-fx-background-color: rgba(30, 30, 30, 0.9); " +

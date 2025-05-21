@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javafx.scene.control.TextArea;
+import java.io.File;
+import java.io.FileWriter;
 
 public class PythonExecuteCode extends IDEExecuteCode {
         /**
@@ -15,10 +17,12 @@ public class PythonExecuteCode extends IDEExecuteCode {
     public void executeCode(String code, int id) {
         try {
             // Créer un fichier temporaire avec extension .py
-            Path tempFile = Files.createTempFile("codyngame", ".py");
+            File tempFile = new File("codyngame.py");
             
             // Écrire le code dans le fichier temporaire
-            Files.writeString(tempFile, code);
+            FileWriter fileWriter = new FileWriter(tempFile);
+            fileWriter.write(code);
+            fileWriter.close();
 
             String[] output = {""};
             String resultat2 = "";
@@ -34,7 +38,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
-                Process process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toAbsolutePath().toString()});
+                Process process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
                 process3.getOutputStream().write(resultat);
                 process3.getOutputStream().close();
                 resultat2 = new String(process3.getInputStream().readAllBytes());
@@ -89,7 +93,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
             
             // Nettoyer les fichiers temporaires
             try {
-                Files.deleteIfExists(tempFile);
+                Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {
                 System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
