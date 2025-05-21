@@ -569,79 +569,65 @@ public class Main extends Application {
         // Ajouter un ComboBox pour choisir le type d'exercice
         ComboBox<String> typeComboBox = new ComboBox<>();
         typeComboBox.getItems().addAll("STDIN/STDOUT", "INCLUDE");
-        typeComboBox.setPromptText("Type de l'exercice");
+        typeComboBox.setValue("STDIN/STDOUT");
         typeComboBox.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF; " +
             "-fx-prompt-text-fill: #BBBBBB; " +
-            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " 
         );
+        typeComboBox.setOnAction(event -> {
+            // Décochez toutes les cases à cocher dans languageSelectionBox
+            pythonCheckBox.setSelected(false);
+            javaCheckBox.setSelected(false);
+            CCheckBox.setSelected(false);
+            jsCheckBox.setSelected(false);
+            phpCheckBox.setSelected(false);
+        });
 
-        // Ajouter un ChangeListener pour gérer la sélection des langages en fonction du type
-        typeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if ("INCLUDE".equals(newValue)) {
-                // Désactiver la sélection multiple
-                pythonCheckBox.setDisable(false);
-                javaCheckBox.setDisable(false);
-                CCheckBox.setDisable(false);
-                jsCheckBox.setDisable(false);
-                phpCheckBox.setDisable(false);
+        // Ajouter un gestionnaire d'événements pour chaque CheckBox
+        pythonCheckBox.setOnAction(event -> {
+            if (typeComboBox.getValue().equals("INCLUDE")) {
+                javaCheckBox.setSelected(false);
+                CCheckBox.setSelected(false);
+                jsCheckBox.setSelected(false);
+                phpCheckBox.setSelected(false);
+            }
+        });
 
-                pythonCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                    if (isSelected) {
-                        javaCheckBox.setSelected(false);
-                        CCheckBox.setSelected(false);
-                        jsCheckBox.setSelected(false);
-                        phpCheckBox.setSelected(false);
-                    }
-                });
-                javaCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                    if (isSelected) {
-                        pythonCheckBox.setSelected(false);
-                        CCheckBox.setSelected(false);
-                        jsCheckBox.setSelected(false);
-                        phpCheckBox.setSelected(false);
-                    }
-                });
-                CCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                    if (isSelected) {
-                        pythonCheckBox.setSelected(false);
-                        javaCheckBox.setSelected(false);
-                        jsCheckBox.setSelected(false);
-                        phpCheckBox.setSelected(false);
-                    }
-                });
-                jsCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                    if (isSelected) {
-                        pythonCheckBox.setSelected(false);
-                        javaCheckBox.setSelected(false);
-                        CCheckBox.setSelected(false);
-                        phpCheckBox.setSelected(false);
-                    }
-                });
-                phpCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                    if (isSelected) {
-                        pythonCheckBox.setSelected(false);
-                        javaCheckBox.setSelected(false);
-                        CCheckBox.setSelected(false);
-                        jsCheckBox.setSelected(false);
-                    }
-                });
-            } else if ("STDIN/STDOUT".equals(newValue)) {
-                // Activer la sélection multiple
-                pythonCheckBox.setDisable(false);
-                javaCheckBox.setDisable(false);
-                CCheckBox.setDisable(false);
-                jsCheckBox.setDisable(false);
-                phpCheckBox.setDisable(false);
+        javaCheckBox.setOnAction(event -> {
+            if (typeComboBox.getValue().equals("INCLUDE")) {
+                pythonCheckBox.setSelected(false);
+                CCheckBox.setSelected(false);
+                jsCheckBox.setSelected(false);
+                phpCheckBox.setSelected(false);
+            }
+        });
 
-                // Supprimer les restrictions de sélection unique
-                pythonCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
-                javaCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
-                CCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
-                jsCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
-                phpCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+        CCheckBox.setOnAction(event -> {
+            if (typeComboBox.getValue().equals("INCLUDE")) {
+                pythonCheckBox.setSelected(false);
+                javaCheckBox.setSelected(false);
+                jsCheckBox.setSelected(false);
+                phpCheckBox.setSelected(false);
+            }
+        });
+
+        jsCheckBox.setOnAction(event -> {
+            if (typeComboBox.getValue().equals("INCLUDE")) {
+                pythonCheckBox.setSelected(false);
+                javaCheckBox.setSelected(false);
+                CCheckBox.setSelected(false);
+                phpCheckBox.setSelected(false);
+            }
+        });
+
+        phpCheckBox.setOnAction(event -> {
+            if (typeComboBox.getValue().equals("INCLUDE")) {
+                pythonCheckBox.setSelected(false);
+                javaCheckBox.setSelected(false);
+                CCheckBox.setSelected(false);
+                jsCheckBox.setSelected(false);
             }
         });
 
