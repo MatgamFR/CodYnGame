@@ -2,7 +2,7 @@ word = input().replace('\\n', '\n').split('\n')
 
 a=input()
 b=input()
-if word[0] == int(a)+int(b):
+if int(word[0]) == int(a)+int(b):
     print(1)
 else:
     print(0)

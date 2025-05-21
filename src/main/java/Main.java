@@ -559,6 +559,85 @@ public class Main extends Application {
         languageSelectionBox.setAlignment(Pos.CENTER);
         languageSelectionBox.setStyle("-fx-padding: 10px;");
 
+        // Ajouter un ComboBox pour choisir le type d'exercice
+        ComboBox<String> typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("STDIN/STDOUT", "INCLUDE");
+        typeComboBox.setPromptText("Type de l'exercice");
+        typeComboBox.setStyle(
+            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
+            "-fx-text-fill: #FFFFFF; " +
+            "-fx-prompt-text-fill: #BBBBBB; " +
+            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+        );
+
+        // Ajouter un ChangeListener pour gérer la sélection des langages en fonction du type
+        typeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if ("INCLUDE".equals(newValue)) {
+                // Désactiver la sélection multiple
+                pythonCheckBox.setDisable(false);
+                javaCheckBox.setDisable(false);
+                CCheckBox.setDisable(false);
+                jsCheckBox.setDisable(false);
+                phpCheckBox.setDisable(false);
+
+                pythonCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    if (isSelected) {
+                        javaCheckBox.setSelected(false);
+                        CCheckBox.setSelected(false);
+                        jsCheckBox.setSelected(false);
+                        phpCheckBox.setSelected(false);
+                    }
+                });
+                javaCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    if (isSelected) {
+                        pythonCheckBox.setSelected(false);
+                        CCheckBox.setSelected(false);
+                        jsCheckBox.setSelected(false);
+                        phpCheckBox.setSelected(false);
+                    }
+                });
+                CCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    if (isSelected) {
+                        pythonCheckBox.setSelected(false);
+                        javaCheckBox.setSelected(false);
+                        jsCheckBox.setSelected(false);
+                        phpCheckBox.setSelected(false);
+                    }
+                });
+                jsCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    if (isSelected) {
+                        pythonCheckBox.setSelected(false);
+                        javaCheckBox.setSelected(false);
+                        CCheckBox.setSelected(false);
+                        phpCheckBox.setSelected(false);
+                    }
+                });
+                phpCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    if (isSelected) {
+                        pythonCheckBox.setSelected(false);
+                        javaCheckBox.setSelected(false);
+                        CCheckBox.setSelected(false);
+                        jsCheckBox.setSelected(false);
+                    }
+                });
+            } else if ("STDIN/STDOUT".equals(newValue)) {
+                // Activer la sélection multiple
+                pythonCheckBox.setDisable(false);
+                javaCheckBox.setDisable(false);
+                CCheckBox.setDisable(false);
+                jsCheckBox.setDisable(false);
+                phpCheckBox.setDisable(false);
+
+                // Supprimer les restrictions de sélection unique
+                pythonCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+                javaCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+                CCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+                jsCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+                phpCheckBox.selectedProperty().removeListener((obs, wasSelected, isSelected) -> {});
+            }
+        });
+
         Button saveButton = new Button("Enregistrer");
         saveButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
 
@@ -628,17 +707,18 @@ public class Main extends Application {
             String title = titleInput.getText();
             String question = questionInput.getText();
             String difficulty = difficultyInput.getText();
+            String type = typeComboBox.getValue(); // Récupérer le type sélectionné
             boolean isPythonSelected = pythonCheckBox.isSelected();
             boolean isJavaSelected = javaCheckBox.isSelected();
             boolean isCSelected = CCheckBox.isSelected();
             boolean isJSSelected = jsCheckBox.isSelected();
             boolean isPHPSelected = phpCheckBox.isSelected();
 
-            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
+            if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && type != null &&
+                (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
-                } 
-                else {
+                } else {
                     correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
                     // Transition vers la scène de correction
                     primaryStage.setScene(correctionStage);
@@ -650,7 +730,7 @@ public class Main extends Application {
                         if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                             try {
                                 // Ajouter l'exercice à la base de données
-                                int exerciseId = Connexionbdd.addExercise(title, question, difficulty);
+                                int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
 
                                 // Ajouter les langages sélectionnés à la base de données
                                 if (isPythonSelected) {
@@ -743,7 +823,7 @@ public class Main extends Application {
         HBox buttonBoxAdd = new HBox(10, cancelButton, saveButton);
         buttonBoxAdd.setAlignment(Pos.CENTER);
 
-        addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, languageSelectionBox, buttonBoxAdd);
+        addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, typeComboBox, languageSelectionBox, buttonBoxAdd);
         addExerciseRoot.setCenter(addExerciseBox);
 
 
