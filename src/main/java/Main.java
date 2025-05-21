@@ -130,6 +130,11 @@ public class Main extends Application {
     public void setupSearchButton(Button searchButton, VBox overlay, StackPane rootPane) {
         searchButton.setOnAction(event -> {
             rootPane.getChildren().remove(overlay);
+            filterPythonCheckBox.setSelected(false);
+            filterJavaCheckBox.setSelected(false);
+            filterCCheckBox.setSelected(false);
+            filterJSCheckBox.setSelected(false);
+            filterPHPCheckBox.setSelected(false);
     
             // Récupérer les langages sélectionnés
             List<String> selectedLanguages = new ArrayList<>();
@@ -155,20 +160,22 @@ public class Main extends Application {
                 exerciseList.getItems().clear();
                 int maxExobis = Connexionbdd.maxexo();
                 for (int i = 1; i <= maxExobis; i++) {
-                    String titre = Connexionbdd.getExerciceTitle(i);
-                    int attempts = Connexionbdd.getExerciseAttempts(i);
-                    int successfulTries = Connexionbdd.getSuccessfulTries(i);
+                    String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                    String difficulty = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
+                    int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                    int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
                     String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
-
+        
                     Label exerciseNumber = new Label("Exercice " + i);
-                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Label exerciseTitle = new Label(titre);
-                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    Label difficultyLabel = new Label("Difficulté : " + difficulty);
+                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                    Label typeLabel = new Label(typeExo);
-                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-
+                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                    Label typeLabel = new Label("Mode: " + typeExo);
+                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
 
@@ -193,13 +200,13 @@ public class Main extends Application {
                     String typeExo = Connexionbdd.getTypeExo(id); // Récupérer le type de l'exercice
 
                     Label exerciseNumber = new Label("Exercice " + id);
-                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                    exerciseNumber.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Label exerciseTitle = new Label(titre);
-                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    exerciseTitle.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    statsLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                     Label typeLabel = new Label(typeExo);
-                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                    typeLabel.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -231,7 +238,7 @@ public class Main extends Application {
 
         // Titre de la page
         Label titleLabel = new Label("Liste d'exercices");
-        titleLabel.setStyle("-fx-font-size: 70px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+        titleLabel.setStyle("-fx-font-size: 70px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Berkshire Swash Regular';");
 
         // Description
         Label descriptionLabel = new Label("Veuillez choisir un exercice. Bon codage!");
@@ -247,9 +254,9 @@ public class Main extends Application {
         exerciseList.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
         
         // Fixer la taille de exerciseList
-        exerciseList.setPrefWidth(1000); // Largeur préférée
-        exerciseList.setMinWidth(1000);  // Largeur minimale
-        exerciseList.setMaxWidth(1000);  // Largeur maximale
+        exerciseList.setPrefWidth(1300); // Largeur préférée
+        exerciseList.setMinWidth(1300);  // Largeur minimale
+        exerciseList.setMaxWidth(1300);  // Largeur maximale
 
         
         for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
@@ -260,15 +267,15 @@ public class Main extends Application {
             String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
 
             Label exerciseNumber = new Label("Exercice " + i);
-            exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+            exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
             Label exerciseTitle = new Label(titre);
-            exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+            exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
             Label difficultyLabel = new Label("Difficulté : " + difficulty);
-            difficultyLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+            difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
             Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-            statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-            Label typeLabel = new Label(typeExo);
-            typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+            statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+            Label typeLabel = new Label("Mode: " + typeExo);
+            typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -771,16 +778,15 @@ public class Main extends Application {
                                     String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
                         
                                     Label exerciseNumber = new Label("Exercice " + i);
-                                    exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                                     Label exerciseTitle = new Label(titre);
-                                    exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                                     Label difficultyLabel = new Label("Difficulté : " + difficulty2);
-                                    difficultyLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                                     Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                                    statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                                    Label typeLabel = new Label(typeExo);
-                                    typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                        
+                                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                                    Label typeLabel = new Label("Mode: " + typeExo);
+                                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
                                     Region spacer = new Region();
                                     HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
@@ -897,22 +903,21 @@ public class Main extends Application {
             exerciseList.getItems().clear();
             for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
                 String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
-                String difficulty2 = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
+                String difficulty = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
                 int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
                 int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
                 String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
-                        
+    
                 Label exerciseNumber = new Label("Exercice " + i);
-                exerciseNumber.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                 Label exerciseTitle = new Label(titre);
-                exerciseTitle.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                Label difficultyLabel = new Label("Difficulté : " + difficulty2);
-                difficultyLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
+                exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                Label difficultyLabel = new Label("Difficulté : " + difficulty);
+                difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
                 Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                statsLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                Label typeLabel = new Label(typeExo);
-                typeLabel.setStyle("-fx-text-fill: white; -fx-padding: 0 0 0 10px;");
-                        
+                statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
+                Label typeLabel = new Label("Mode: " + typeExo);
+                typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Berkshire Swash Regular';");
 
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
