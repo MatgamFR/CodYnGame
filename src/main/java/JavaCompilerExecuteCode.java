@@ -16,7 +16,8 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
     public void compileCode(String code, int id) {
         try {
             if (!code.contains("public class Codyngame")) {
-                throw new IllegalArgumentException("Le code Java doit contenir une classe publique nommée 'Codyngame'.");
+                this.printOutput("Le code Java doit contenir une classe publique nommée 'Codyngame'.");
+                return;
             }
 
             if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){     
@@ -27,8 +28,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    System.err.println("Erreur de compilation :");
-                    process.getErrorStream().transferTo(System.err);
+                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
                     this.printOutput("Compilation réussie.");
                 }
@@ -43,8 +43,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile2.toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    System.err.println("Erreur de compilation :");
-                    process.getErrorStream().transferTo(System.err);
+                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
                     this.printOutput("Compilation réussie.");
                 }
@@ -64,7 +63,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             
             // Vérifier que la compilation a bien fonctionné 
             if (tempClassDir == null || !Files.exists(tempClassDir.resolve("Codyngame.class"))) {
-                System.err.println("Erreur: Le fichier compilé Codyngame.class n'a pas été trouvé");
+                this.printOutput("Erreur: Le fichier compilé Codyngame.class n'a pas été trouvé");
                 return;
             }
             
