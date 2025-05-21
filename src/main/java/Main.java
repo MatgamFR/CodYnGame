@@ -340,7 +340,9 @@ public class Main extends Application {
         String homePath = basePath + "/src/main/resources/RessourceImage/home.png"; // Chemin relatif à partir du projet
         String searchPath = basePath + "/src/main/resources/RessourceImage/search.png"; // Chemin relatif à partir du projet
         String fermerPath = basePath + "/src/main/resources/RessourceImage/fermer.png"; // Chemin relatif à partir du projet
-
+        String returnPath = basePath + "/src/main/resources/RessourceImage/return.png"; // Chemin relatif à partir du projet
+        String executePath = basePath + "/src/main/resources/RessourceImage/execute.png"; // Chemin relatif à partir du projet
+        
         // Charger l'image en utilisant le chemin absolu
         File imageFile = new File(imagePath);
         File backgroundFile = new File(backgroundPath);
@@ -349,6 +351,8 @@ public class Main extends Application {
         File homeFile = new File(homePath);
         File searchFile = new File(searchPath);
         File fermerFile = new File(fermerPath);
+        File returnFile = new File(returnPath);
+        File executeFile = new File(executePath);
 
         if (!imageFile.exists()) {
             System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
@@ -873,12 +877,17 @@ public class Main extends Application {
         successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
 
         // Ajouter un bouton pour exécuter le code
-        Button runButton = new Button("Exécuter");
-        runButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-
+        Image runImage = new Image(executeFile.toURI().toString());
+        ImageView runImageView = new ImageView(runImage);
+        Button runButton = new Button();
+        runButton.setGraphic(runImageView); // Ajouter l'image au bouton
+        runButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
         // Ajouter un bouton pour revenir à la liste des exercices
-        Button backButton = new Button("Retour à la liste des exercices");
-        backButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        Image returnImage = new Image(returnFile.toURI().toString());
+        ImageView returnImageView = new ImageView(returnImage);
+        Button backButton = new Button();
+        backButton.setGraphic(returnImageView);
+        backButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
         backButton.setOnAction(event -> {
             // Mettre à jour la liste des exercices
             exerciseList.getItems().clear();
@@ -921,7 +930,9 @@ public class Main extends Application {
         ComboBox<String> languageSelector = new ComboBox<>();
 
         // Réorganiser les composants dans le HBox
-        HBox buttonBox = new HBox(10, attemptsLabel, successfulTriesLabel, languageSelector, runButton, backButton);
+        Region space2 = new Region();
+        HBox.setHgrow(space2, Priority.ALWAYS); // Permet au spacer de prendre tout l'espace disponible
+        HBox buttonBox = new HBox(10, backButton, space2, attemptsLabel, successfulTriesLabel, languageSelector, runButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle(("-fx-background-color: rgba(20, 20, 20, 0.6); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);"));
         
