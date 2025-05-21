@@ -176,13 +176,14 @@ public class Connexionbdd {
         return titre;
     }
 
-    public static int addExercise(String title, String question, String difficulty) {
-        String query = "INSERT INTO Exercice (Titre, Question, difficulty, Try, Successfulltry) VALUES (?, ?, ?, 0, 0)";
+    public static int addExercise(String title, String question, String difficulty, String type) {
+        String query = "INSERT INTO Exercice (Titre, Question, difficulty, TypeExo, Try, Successfulltry) VALUES (?, ?, ?, ?, 0, 0)";
         try (Connection conn = getConnection();
              java.sql.PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, title);
             stmt.setString(2, question);
             stmt.setString(3, difficulty);
+            stmt.setString(4, type);
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
