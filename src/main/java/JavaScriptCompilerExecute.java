@@ -171,7 +171,7 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
     }
 
     @Override
-    public void compileCode(String code) {
+    public void compileCode(String code, int id) {
 
     }
 

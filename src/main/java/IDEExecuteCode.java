@@ -7,7 +7,7 @@ public abstract class IDEExecuteCode {
      */
     private TextArea textArea;
     public abstract void executeCode(String code, int id);
-    public abstract void compileCode(String code);
+    public abstract void compileCode(String code, int id);
 
     public IDEExecuteCode(TextArea textArea) {
         this.textArea = textArea;

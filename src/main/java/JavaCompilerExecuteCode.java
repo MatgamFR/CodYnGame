@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,23 +13,42 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
     }
 
     @Override
-    public void compileCode(String code) {
+    public void compileCode(String code, int id) {
         try {
-            if (!code.contains("public class Main")) {
-                throw new IllegalArgumentException("Le code Java doit contenir une classe publique nommée 'Main'.");
+            if (!code.contains("public class Codyngame")) {
+                throw new IllegalArgumentException("Le code Java doit contenir une classe publique nommée 'Codyngame'.");
             }
-            
-            // Créer un répertoire temporaire qui sera conservé jusqu'à l'exécution
-            tempClassDir = Files.createTempDirectory("codyngame_classes");
-            Path tempFile = tempClassDir.resolve("Main.java");
-            Files.writeString(tempFile, code);
 
-            Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
-            if (process.waitFor() != 0) {
-                System.err.println("Erreur de compilation :");
-                process.getErrorStream().transferTo(System.err);
-            } else {
-                this.printOutput("Compilation réussie.");
+            if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){     
+                // Créer un répertoire temporaire qui sera conservé jusqu'à l'exécution
+                tempClassDir = Files.createTempDirectory("codyngame_classes");
+                Path tempFile = tempClassDir.resolve("Codyngame.java");
+                Files.writeString(tempFile, code);
+
+                Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
+                if (process.waitFor() != 0) {
+                    System.err.println("Erreur de compilation :");
+                    process.getErrorStream().transferTo(System.err);
+                } else {
+                    this.printOutput("Compilation réussie.");
+                }
+            } 
+            else {
+                tempClassDir = Files.createTempDirectory("codyngame_classes");
+                Path tempFile = tempClassDir.resolve("Codyngame.java");
+                Files.writeString(tempFile, code);
+                Path tempFile2 = tempClassDir.resolve("Exercice" + id + ".java");
+                File tempFile3 = new File("src/main/resources/Correction/Exercice" + id +".java");
+                Files.writeString(tempFile2, Files.readString(tempFile3.toPath()));
+
+                Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile2.toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()});
+                if (process.waitFor() != 0) {
+                    System.err.println("Erreur de compilation :");
+                    process.getErrorStream().transferTo(System.err);
+                } else {
+                    this.printOutput("Compilation réussie.");
+                }
+                
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -40,11 +60,11 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
     public void executeCode(String code, int id) {
         try {
             // Compiler le code d'abord
-            this.compileCode(code);
+            this.compileCode(code, id);
             
             // Vérifier que la compilation a bien fonctionné 
-            if (tempClassDir == null || !Files.exists(tempClassDir.resolve("Main.class"))) {
-                System.err.println("Erreur: Le fichier compilé Main.class n'a pas été trouvé");
+            if (tempClassDir == null || !Files.exists(tempClassDir.resolve("Codyngame.class"))) {
+                System.err.println("Erreur: Le fichier compilé Codyngame.class n'a pas été trouvé");
                 return;
             }
             
@@ -54,6 +74,9 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             String resultat2 = "";
 
             int exitCode = 1;
+
+            Process process2;
+            Process process3;
 
             // Tester avec 10 seeds différentes
             for (int i = 0; i < 10; i++) {
@@ -66,17 +89,27 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 byte[] resultat = process.getInputStream().readAllBytes();
                 process.waitFor();
 
-                Process process3 = Runtime.getRuntime().exec(new String[]{"java", "-cp", tempClassDir.toAbsolutePath().toString(), "Main"});
-                process3.getOutputStream().write(resultat);
-                process3.getOutputStream().close();
-                resultat2 = new String(process3.getInputStream().readAllBytes());
-                String result = resultat2.replace("\n", "\\n");
-                
-                // Étape 2: Exécuter le code de correction
-                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
-                process2.getOutputStream().write((result+"\n").getBytes());
-                process2.getOutputStream().write(resultat);
-                process2.getOutputStream().close();
+
+                if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+
+                    process3 = Runtime.getRuntime().exec(new String[]{"java", "-cp", tempClassDir.toAbsolutePath().toString(), "Codyngame"});
+                    process3.getOutputStream().write(resultat);
+                    process3.getOutputStream().close();
+                    resultat2 = new String(process3.getInputStream().readAllBytes());
+                    String result = resultat2.replace("\n", "\\n");
+                    
+                    // Étape 2: Exécuter le code de correction
+                    process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
+                    process2.getOutputStream().write((result+"\n").getBytes());
+                    process2.getOutputStream().write(resultat);
+                    process2.getOutputStream().close();
+                }
+                else{
+                    process2 = Runtime.getRuntime().exec(new String[] {"ls"});
+                    process3 = Runtime.getRuntime().exec(new String[]{"java", "-cp", tempClassDir.toAbsolutePath().toString(), "Exercice" + id});
+                    process3.getOutputStream().write(resultat);
+                    process3.getOutputStream().close();
+                }
                 
                 // Définir un timeout global de 15 secondes
                 boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
@@ -99,7 +132,12 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     }
                     else {
                         // Lire le contenu du fichier de sortie
-                        output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                        if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                            output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                        }
+                        else{
+                            output = new String(process3.getInputStream().readAllBytes()).split("\n");
+                        }
 
                         if(output[0].equals("0")){
                             valide = false;
@@ -115,8 +153,8 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             } 
             else {
                 this.printOutput("Le code est incorrect");
-                this.printOutput("Reçu : '" + resultat2.split("\n")[Integer.parseInt(output[2])-1] + "' valeur " + output[2]);
-                this.printOutput("Attendu : '" + output[1] + "' valeur " + output[2]);
+                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
+                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
             }
 
         } 

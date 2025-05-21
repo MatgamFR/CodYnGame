@@ -989,7 +989,7 @@ public class Main extends Application {
                 else if (language.equals("Java")) {
                     codeArea.replaceText(
                         "import java.util.Scanner;\n\n" +
-                        "public class Main {\n" +
+                        "public class Codyngame {\n" +
                         "        public static void main(String[] args) {\n" +
                         "                Scanner sc = new Scanner(System.in);\n" +
                         "                String word = sc.nextLine();\n" +
@@ -1096,7 +1096,7 @@ public class Main extends Application {
             else if (selectedLanguage.equals("Java")) {
                 codeArea.replaceText(
                     "import java.util.Scanner;\n\n" +
-                    "public class Main {\n" +
+                    "public class Codyngame {\n" +
                     "        public static void main(String[] args) {\n" +
                     "                Scanner sc = new Scanner(System.in);\n" +
                     "                String word = sc.nextLine();\n" +

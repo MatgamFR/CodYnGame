@@ -11,7 +11,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
     }
 
     @Override
-    public void compileCode(String code) {
+    public void compileCode(String code, int id) {
         Path tempDir = null;
         try {
             tempDir = Files.createTempDirectory("codyngame");
@@ -56,7 +56,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
     @Override
     public void executeCode(String code, int id) {
-        this.compileCode(code);
+        this.compileCode(code, id);
 
         if (compiledExecutable == null || !Files.exists(compiledExecutable)) {
             System.err.println("Erreur: Aucun exécutable compilé trouvé. Compilez d'abord le code.");
