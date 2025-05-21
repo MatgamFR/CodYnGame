@@ -11,7 +11,6 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -246,8 +245,7 @@ public class Main extends Application {
 
         VBox titleBox = new VBox(0, titleLabel, descriptionLabel); // Espacement vertical à 0
         titleBox.setAlignment(Pos.CENTER); // Centrer les labels
-        VBox.setMargin(titleLabel, new Insets(0, 0, -15, 0)); // Réduire l'espace en bas de titleLabel
-        VBox.setMargin(descriptionLabel, new Insets(-10, 0, 0, 0)); // Réduire l'espace en haut de descriptionLabel
+
         
         // Créer une liste d'exercices
         ListView<HBox> exerciseList = new ListView<>();
@@ -306,19 +304,19 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         setupBDD();
         filterPythonCheckBox = new CheckBox("Python");
-        filterPythonCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        filterPythonCheckBox.setStyle("-fx-font-size: 25px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterJavaCheckBox = new CheckBox("Java");
-        filterJavaCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        filterJavaCheckBox.setStyle("-fx-font-size: 25px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterCCheckBox = new CheckBox("C");
-        filterCCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        filterCCheckBox.setStyle("-fx-font-size: 25px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterJSCheckBox = new CheckBox("JavaScript");
-        filterJSCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        filterJSCheckBox.setStyle("-fx-font-size: 25px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         filterPHPCheckBox = new CheckBox("PHP");
-        filterPHPCheckBox.setStyle("-fx-font-size: 20px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        filterPHPCheckBox.setStyle("-fx-font-size: 25px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         // Créer la scène de la page d'accueil
         BorderPane homePageRoot = new BorderPane();
@@ -327,11 +325,11 @@ public class Main extends Application {
         // Charger et enregistrer les polices
         Font.loadFont(PixelPath, 32); // Charger Pixel Game
 
-        Label welcomeLabel = new Label("Le codyngame \n         de la \n  javadocance");
+        Label welcomeLabel = new Label("Le codyngame \n         de la \njavadocance");
         welcomeLabel.setStyle("-fx-font-size: 93px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         Label descriptionLabel = new Label("Tentez de braver \n   nos farouches \n exercices si vous \n\t  l'osez!");
-        descriptionLabel.setStyle("-fx-font-size: 37px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+        descriptionLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         // Obtenir le chemin absolu du répertoire de base du projet
         String basePath = new File("").getAbsolutePath(); // Chemin absolu du projet
@@ -389,8 +387,8 @@ public class Main extends Application {
 
         
         // Configurer l'ImageView
-        imageView.setFitWidth(270); // Largeur de l'image
-        imageView.setFitHeight(270); // Hauteur de l'image
+        imageView.setFitWidth(240); // Largeur de l'image
+        imageView.setFitHeight(240); // Hauteur de l'image
         imageView.setPreserveRatio(true); // Préserver les proportions
 
         // Créer un bouton avec l'image
