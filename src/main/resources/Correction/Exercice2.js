@@ -12,6 +12,7 @@ const rl = readline.createInterface({
 let inputs = [];
 rl.on('line', (line) => {
     inputs.push(parseInt(line.trim()));
+    if (inputs.length >= 2) {
         const a = inputs[0];
         const b = inputs[1];
 
@@ -25,5 +26,5 @@ rl.on('line', (line) => {
         }
 
         rl.close();
-    
+    }
 });
