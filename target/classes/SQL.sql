@@ -29,6 +29,12 @@ Insert Into Exercice Values(7,"Palindrome", "difficile","écrivez un programme p
 Insert Into Exercice Values(8,"Table de multiplication", "difficile","écrivez un programme pour que le terminal renvoie la table de multiplication de n", '',0,0,'INCLUDE');
 Insert Into Exercice Values(9,"Tri ", "difficile","écrivez un programme pour que le terminal renvoie un tableau trié", '',0,0,'INCLUDE');
 Insert Into Exercice Values(10,"Recherche binaire", "difficile","écrivez un programme pour que le terminal renvoie l'index d'un nombre dans un tableau trié", '',0,0,'INCLUDE');
+Insert Into Exercice Values(11,"Paire", "facile","print un nombre paire", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(12,"Impair", "facile","print un nombre impair", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(13,"Addition", "facile","Addition de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(14,"Soustraction", "facile","Soustraction de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(15,"Multiplication", "facile","Multiplication de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(16,"Division", "facile","Division de 2 nombre", '',0,0,'STDIN/STDOUT');
 
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C'),(1,'JavaScript'),(1,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Java');

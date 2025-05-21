@@ -29,6 +29,12 @@ Insert Into Exercice Values(7,"Palindrome", "difficile","écrivez un programme p
 Insert Into Exercice Values(8,"Table de multiplication", "difficile","écrivez un programme pour que le terminal renvoie la table de multiplication de n", '',0,0,'INCLUDE');
 Insert Into Exercice Values(9,"Tri ", "difficile","écrivez un programme pour que le terminal renvoie un tableau trié", '',0,0,'INCLUDE');
 Insert Into Exercice Values(10,"Recherche binaire", "difficile","écrivez un programme pour que le terminal renvoie l'index d'un nombre dans un tableau trié", '',0,0,'INCLUDE');
+Insert Into Exercice Values(11,"Paire", "facile","print un nombre paire", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(12,"Impair", "facile","print un nombre impair", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(13,"Addition", "facile","Addition de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(14,"Soustraction", "facile","Soustraction de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(15,"Multiplication", "facile","Multiplication de 2 nombre", '',0,0,'STDIN/STDOUT');
+Insert Into Exercice Values(16,"Division", "facile","Division de 2 nombre", '',0,0,'STDIN/STDOUT');
 
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C'),(1,'JavaScript'),(1,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Java');
@@ -40,4 +46,10 @@ Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (7,'Python'),(7,'Java'
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (8,'Python'),(8,'Java'),(8,'C'),(8,'JavaScript'),(8,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (9,'Python'),(9,'Java'),(9,'C'),(9,'JavaScript'),(9,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (10,'Python'),(10,'Java'),(10,'C'),(10,'JavaScript'),(10,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (11,'Python'),(11,'Java'),(11,'C'),(11,'JavaScript'),(11,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (12,'Python'),(12,'Java'),(12,'C'),(12,'JavaScript'),(12,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (13,'Python'),(13,'Java'),(13,'C'),(13,'JavaScript'),(13,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (14,'Python'),(14,'Java'),(14,'C'),(14,'JavaScript'),(14,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (15,'Python'),(15,'Java'),(15,'C'),(15,'JavaScript'),(15,'PHP');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (16,'Python'),(16,'Java'),(16,'C'),(16,'JavaScript'),(16,'PHP');
 
