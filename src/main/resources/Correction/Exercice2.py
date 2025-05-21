@@ -1,10 +1,12 @@
-word = input().replace("\\n", "\n").split("\n")
+import codyngame
+
 a = int(input())
 b = int(input())
 
-if word[0] == str(a+b):
+if codyngame.somme(a,b) == a+b:
     print(1)
 else:
     print(0)
+    print(codyngame.somme(a,b))
     print(a+b)
     print(1)
