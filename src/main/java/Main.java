@@ -640,19 +640,15 @@ public class Main extends Application {
         cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
 
 
-       // Ajouter une zone de sortie (console)
+        // Ajouter une zone de sortie (console)
         // Déclarer et configurer outputArea une seule fois
         TextArea outputArea = new TextArea();
         outputArea.setEditable(false);
         outputArea.setWrapText(true);
-        outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
-                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
-                            "-fx-font-family: 'Monospace'; " +
-                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                            "-fx-border-radius: 15px; " +
-                            "-fx-background-radius: 15px; " +
-                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        outputArea.setPrefHeight(200); // Hauteur préférée
+        outputArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 1); " + 
+                            "-fx-text-fill: #00FF00; " + // Couleur verte comme un terminal 
+                            "-fx-font-family: 'Monospace'; " + 
+                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc);" ); 
 
         TextArea correctionArea = new TextArea();
         correctionArea.setEditable(false);
@@ -660,10 +656,7 @@ public class Main extends Application {
         correctionArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
                             "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
                             "-fx-font-family: 'Monospace'; " +
-                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                            "-fx-border-radius: 15px; " +
-                            "-fx-background-radius: 15px; " +
-                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); ");
         correctionArea.setPrefHeight(200); // Hauteur préférée
 
         // Créer un BorderPane pour la scène de correction
@@ -846,12 +839,12 @@ public class Main extends Application {
 
         // Ajouter une zone de texte pour afficher la consigne
         TextFlow instructionArea = new TextFlow();
-        instructionArea.setStyle("-fx-background-color: rgba(20, 20, 20, 0.95); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        instructionArea.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
         instructionArea.setPrefWidth(400); // Largeur préférée pour la consigne
         
         // Ajouter une zone de texte pour écrire du code
         CodeArea codeArea = SyntaxicalColor.createCodeArea();
-        codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10, 0.95); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc); -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
         codeArea.setWrapText(false);
 
         
@@ -860,13 +853,14 @@ public class Main extends Application {
         codeAndConsoleSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
         codeAndConsoleSplitPane.getItems().addAll(codeArea, outputArea);
         codeAndConsoleSplitPane.setDividerPositions(0.7);
+        codeAndConsoleSplitPane.setStyle("-fx-background-color: transparent;");
 
         // Créer un SplitPane pour diviser la consigne et la zone de code/console
         javafx.scene.control.SplitPane instructionAndCodeSplitPane = new javafx.scene.control.SplitPane();
         instructionAndCodeSplitPane.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
         instructionAndCodeSplitPane.getItems().addAll(instructionArea, codeAndConsoleSplitPane);
         instructionAndCodeSplitPane.setDividerPositions(0.3);
-
+        instructionAndCodeSplitPane.setStyle("-fx-background-color: transparent;");
         // Ajouter le SplitPane au centre de la fenêtre secondaire
         secondaryRoot.setCenter(instructionAndCodeSplitPane);
 
@@ -929,7 +923,7 @@ public class Main extends Application {
         // Réorganiser les composants dans le HBox
         HBox buttonBox = new HBox(10, attemptsLabel, successfulTriesLabel, languageSelector, runButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 15px; -fx-border-radius: 20px; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 2);");
+        buttonBox.setStyle(("-fx-background-color: rgba(20, 20, 20, 0.6); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);"));
         
         
         // Ajouter le bouton et le label en bas
