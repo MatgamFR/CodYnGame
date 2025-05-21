@@ -516,12 +516,13 @@ public class Main extends Application {
         
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
-        addExerciseLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
+        addExerciseLabel.setStyle("-fx-font-size: 50px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
 
 
 
         TextArea titleInput = new TextArea();
-        titleInput.setPromptText("Titre de l'exercice");
+        Label titleLabel = new Label("Titre de l'exercice");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
         titleInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF; " +
@@ -531,7 +532,8 @@ public class Main extends Application {
         );
 
         TextArea questionInput = new TextArea();
-        questionInput.setPromptText("Question de l'exercice");
+        Label questionLabel = new Label("Question de l'exercice");
+        questionLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
         questionInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF;  " +
@@ -541,7 +543,8 @@ public class Main extends Application {
         );
 
         TextArea difficultyInput = new TextArea();
-        difficultyInput.setPromptText("Difficulté de l'exercice (facile, moyen, difficile)");
+        Label difficultyLabel2 = new Label("Difficulté de l'exercice");
+        difficultyLabel2.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
         difficultyInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF;  " +
@@ -815,7 +818,7 @@ public class Main extends Application {
         HBox buttonBoxAdd = new HBox(10, cancelButton, saveButton);
         buttonBoxAdd.setAlignment(Pos.CENTER);
 
-        addExerciseBox.getChildren().addAll(addExerciseLabel, titleInput, questionInput, difficultyInput, typeComboBox, languageSelectionBox, buttonBoxAdd);
+        addExerciseBox.getChildren().addAll(addExerciseLabel,titleLabel, titleInput,questionLabel, questionInput,difficultyLabel2, difficultyInput, typeComboBox, languageSelectionBox, buttonBoxAdd);
         addExerciseRoot.setCenter(addExerciseBox);
 
 
