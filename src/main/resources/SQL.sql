@@ -38,8 +38,8 @@ Insert Into Exercice Values(16,"Division", "facile","Division de 2 nombre", '',0
 
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C'),(1,'JavaScript'),(1,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python'),(2,'Java'), (2,'C'),(2,'JavaScript'),(2,'PHP');
-INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (3,'C'), (3,'Java');
-INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (4,'Java');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (3,'Python'),(3,'Java'),(3,'C'),(3,'JavaScript'),(3,'PHP');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (4,'Java'),(4,'Python'),(4,'Javascript'),(4,'PHP'),(4,'C');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (5,'Python'),(5,'Java'),(5,'C'),(5,'JavaScript'),(5,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (6,'Python'),(6,'Java'),(6,'C'),(6,'JavaScript'),(6,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (7,'Python'),(7,'Java'),(7,'C'),(7,'JavaScript'),(7,'PHP');
