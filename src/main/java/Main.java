@@ -11,6 +11,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -846,16 +847,27 @@ public class Main extends Application {
         instructionArea.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
         instructionArea.setPrefWidth(400); // Largeur préférée pour la consigne
         
+        //Titre pour le code area et le language selector
+        ComboBox<String> languageSelector = new ComboBox<>();
+        languageSelector.setStyle(" -fx-font-family: 'Pixel Game';-fx-font-size: 25px;");
+        HBox.setMargin(languageSelector, new Insets(12, 0, 0, 10)); // 10px en haut et à gauche
+        Label codeAreaTitle = new Label("Zone de code");
+        codeAreaTitle.setStyle("-fx-font-size: 50px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        HBox codeAreaTitleBox = new HBox(10, codeAreaTitle, languageSelector);
+        HBox.setMargin(codeAreaTitle, new Insets(10, 0, 0, 20)); // 50px de marge à droite
         // Ajouter une zone de texte pour écrire du code
         CodeArea codeArea = SyntaxicalColor.createCodeArea();
-        codeArea.setStyle("-fx-control-inner-background: rgba(10, 10, 10); -fx-text-fill: white; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);");
         codeArea.setWrapText(false);
+        codeArea.setPrefHeight(400); // Hauteur préférée de 400 pixels
+        codeArea.setMinHeight(400);  // Hauteur minimale de 300 pixels
+        codeArea.setMaxHeight(400);  // Hauteur maximale de 600 pixels
+        VBox codeAreaBox = new VBox(10, codeAreaTitleBox, codeArea);
+        codeAreaBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);"); // Fond noir avec opacité 90%
 
-        
         // Réutiliser outputArea sans reconfigurer
         javafx.scene.control.SplitPane codeAndConsoleSplitPane = new javafx.scene.control.SplitPane();
         codeAndConsoleSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        codeAndConsoleSplitPane.getItems().addAll(codeArea, outputArea);
+        codeAndConsoleSplitPane.getItems().addAll(codeAreaBox, outputArea);
         codeAndConsoleSplitPane.setDividerPositions(0.7);
         codeAndConsoleSplitPane.setStyle("-fx-background-color: transparent;");
 
@@ -869,12 +881,12 @@ public class Main extends Application {
         secondaryRoot.setCenter(instructionAndCodeSplitPane);
 
         // Ajouter un label pour afficher le nombre d'essais
-        Text attemptsLabel = new Text();
-        attemptsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+        Label attemptsLabel = new Label();
 
         // Ajouter un label pour afficher le nombre d'essais réussis
-        Text successfulTriesLabel = new Text();
-        successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+        Label successfulTriesLabel = new Label();
+
+        VBox statsBox = new VBox(10, attemptsLabel, successfulTriesLabel);
 
         // Ajouter un bouton pour exécuter le code
         Image runImage = new Image(executeFile.toURI().toString());
@@ -927,12 +939,11 @@ public class Main extends Application {
             primaryStage.setScene(mainScene); // Revenir à la scène principale
         });
 
-        ComboBox<String> languageSelector = new ComboBox<>();
 
         // Réorganiser les composants dans le HBox
         Region space2 = new Region();
         HBox.setHgrow(space2, Priority.ALWAYS); // Permet au spacer de prendre tout l'espace disponible
-        HBox buttonBox = new HBox(10, backButton, space2, attemptsLabel, successfulTriesLabel, languageSelector, runButton);
+        HBox buttonBox = new HBox(20, backButton, space2, statsBox, runButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle(("-fx-background-color: rgba(20, 20, 20, 0.6); -fx-padding: 10px; -fx-border-color: linear-gradient(to right, #ffffff, #cccccc);"));
         
@@ -966,11 +977,11 @@ public class Main extends Application {
 
                 // Ajouter le texte "Consigne :" en grand
                 Text consigneLabel = new Text("Consigne : \n");
-                consigneLabel.setStyle("-fx-font-size: 32px; -fx-fill: white;");
+                consigneLabel.setStyle("-fx-font-size: 60px; -fx-fill: white;-fx-font-family: 'Pixel Game';");
 
                 // Ajouter le texte de la consigne
                 Text consigneText = new Text(consigne);
-                consigneText.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+                consigneText.setStyle("-fx-font-size: 35px; -fx-fill: white;-fx-font-family: 'Pixel Game';");
 
                 // Ajouter les textes au TextFlow
                 instructionArea.getChildren().addAll(consigneLabel, new Text("\n"), consigneText);
@@ -1037,13 +1048,12 @@ public class Main extends Application {
                 // Récupérer et afficher le nombre d'essais
                 int attempts = Connexionbdd.getExerciseAttempts(selectedExo);
                 attemptsLabel.setText("Nombre d'essais : " + attempts);
-                attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+                attemptsLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
                 // Récupérer et afficher le nombre d'essais réussis
                 int successfulTries = Connexionbdd.getSuccessfulTries(selectedExo);
                 successfulTriesLabel.setText("Nombre d'essais réussis : " + successfulTries);
-                successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
-
+                successfulTriesLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
             }
         });
