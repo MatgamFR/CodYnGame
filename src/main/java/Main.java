@@ -719,6 +719,8 @@ public class Main extends Application {
                         
                    }
 
+
+                    int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
@@ -727,7 +729,7 @@ public class Main extends Application {
                             if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
                                 try {
                                     // Ajouter l'exercice à la base de données
-                                    int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
+                                    
 
                                     // Ajouter les langages sélectionnés à la base de données
                                     if (isPythonSelected) {
@@ -812,7 +814,6 @@ public class Main extends Application {
                                 System.err.println("La correction ne peut pas être vide ou invalide.");
                             }
                         } else {
-                            int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
 
                             Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
 
