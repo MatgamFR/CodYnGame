@@ -857,6 +857,7 @@ public class Main extends Application {
         HBox.setMargin(codeAreaTitle, new Insets(10, 0, 0, 20)); // 50px de marge à droite
         // Ajouter une zone de texte pour écrire du code
         CodeArea codeArea = SyntaxicalColor.createCodeArea();
+
         codeArea.setWrapText(false);
         codeArea.setPrefHeight(400); // Hauteur préférée de 400 pixels
         codeArea.setMinHeight(400);  // Hauteur minimale de 300 pixels
@@ -1088,12 +1089,12 @@ public class Main extends Application {
             // Mettre à jour l'affichage du nombre d'essais
             int updatedAttempts = Connexionbdd.getExerciseAttempts(id);
             attemptsLabel.setText("Nombre d'essais : " + updatedAttempts);
-            attemptsLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+            attemptsLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
             // Mettre à jour la liste des exercices
            int updatedSuccessfulTries = Connexionbdd.getSuccessfulTries(id);
             successfulTriesLabel.setText("Nombre d'essais réussis : " + updatedSuccessfulTries);
-            successfulTriesLabel.setStyle("-fx-font-size: 16px; -fx-fill: white; -fx-text-fill: white;");
+            successfulTriesLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         });
 
         languageSelector.setOnAction(event -> {
