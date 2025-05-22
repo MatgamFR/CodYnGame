@@ -1,1 +1,1 @@
-word = input().replace('\\n', '\n').split('\n')
+print()
