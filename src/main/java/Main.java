@@ -15,7 +15,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -672,6 +671,8 @@ public class Main extends Application {
         VBox yes = new VBox(10, correctionRoot, correctionArea);
 
         Scene correctionStage = new Scene(yes, 1600, 900);
+
+        List<String> languageBoxSelected = new ArrayList<>();
         
         // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
@@ -689,11 +690,6 @@ public class Main extends Application {
                 (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
-                    alert.showAndWait();
                 } else {
                     if(typeComboBox.getValue().equals("STDIN/STDOUT")){
                         correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
@@ -701,12 +697,11 @@ public class Main extends Application {
                         correctionStage.setCursor(Cursor.DEFAULT);
                     }
                     else{
-                        List<String> languageBoxSelected = new ArrayList<>();
                         if (isPythonSelected) {
-                            languageBoxSelected.add( "Python");
+                            languageBoxSelected.add("Python");
                         }
                         if (isJavaSelected) {
-                            languageBoxSelected.add( "Java");
+                            languageBoxSelected.add("Java");
                         }
                         if (isCSelected) {
                             languageBoxSelected.add("C");
@@ -719,41 +714,129 @@ public class Main extends Application {
                         }
                         
                     correctionLabel.setText("Correction en "+ languageBoxSelected.get(0) + " :");
-                    String languageToExecute = languageBoxSelected.get(0);
-                    languageBoxSelected.remove(0);
                     primaryStage.setScene(correctionStage);
                     correctionStage.setCursor(Cursor.DEFAULT);
                         
                    }
 
+
+                    int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
+                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
                         correctionArea.setText("");
-                        if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
+                        if(typeComboBox.getValue().equals("STDIN/STDOUT")){
+                            if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
+                                try {
+                                    // Ajouter l'exercice à la base de données
+                                    
+
+                                    // Ajouter les langages sélectionnés à la base de données
+                                    if (isPythonSelected) {
+                                        Connexionbdd.addLanguageToExercise(exerciseId, "Python");
+                                    }
+                                    if (isJavaSelected) {
+                                        Connexionbdd.addLanguageToExercise(exerciseId, "Java");
+                                    }
+                                    if (isCSelected) {
+                                        Connexionbdd.addLanguageToExercise(exerciseId, "C");
+                                    }
+                                    if (isJSSelected) {
+                                        Connexionbdd.addLanguageToExercise(exerciseId, "JavaScript");
+                                    }
+                                    if (isPHPSelected) {
+                                        Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
+                                    }
+
+                                    // Sauvegarder la correction dans un fichier
+                                    File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                    if (exerciceFile.exists()) {
+                                        exerciceFile.delete();
+                                    }
+                                    if (!exerciceFile.createNewFile()) {
+                                        throw new IOException("Erreur lors de la création du fichier : " + exerciceFile.getAbsolutePath());
+                                    }
+
+                                    FileWriter fileWriter = new FileWriter(exerciceFile);
+                                    fileWriter.write(correction);
+                                    fileWriter.close();
+
+                                    // Mettre à jour la liste des exercices
+                                    exerciseList.getItems().clear();
+                                    for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+                                        String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                                        String difficulty2 = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
+                                        int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                                        int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+                                        String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
+                            
+                                        Label exerciseNumber = new Label("Exercice " + i);
+                                        exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label exerciseTitle = new Label(titre);
+                                        exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label difficultyLabel = new Label("Difficulté : " + difficulty2);
+                                        difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                                        statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label typeLabel = new Label("Mode: " + typeExo);
+                                        typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+
+                                        Region spacer = new Region();
+                                        HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                                        HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, difficultyLabel, statsLabel, spacer, typeLabel);
+                                        exerciseItem.setSpacing(10);
+                                        exerciseItem.setStyle(
+                                            "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                                            "-fx-border-radius: 15px; " +
+                                            "-fx-background-radius: 15px; " +
+                                            "-fx-padding: 10px; " +
+                                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                                        );
+                                        exerciseList.getItems().add(exerciseItem);
+                                    }
+
+                                    // Décocher toutes les cases de filtrage
+                                    filterPythonCheckBox.setSelected(false);
+                                    filterJavaCheckBox.setSelected(false);
+                                    filterCCheckBox.setSelected(false);
+                                    filterJSCheckBox.setSelected(false);
+                                    filterPHPCheckBox.setSelected(false);
+
+                                    // Retourner à la scène principale
+                                    primaryStage.setScene(mainScene);
+                                    mainScene.setCursor(Cursor.DEFAULT);
+                                } catch (IOException ex) {
+                                    System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
+                                }
+                            } else {
+                                System.err.println("La correction ne peut pas être vide ou invalide.");
+                            }
+                        } else {
+
+                            Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+
+                            // Sauvegarder la correction dans un fichier
                             try {
-                                // Ajouter l'exercice à la base de données
-                                int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
-
-                                // Ajouter les langages sélectionnés à la base de données
-                                if (isPythonSelected) {
-                                    Connexionbdd.addLanguageToExercise(exerciseId, "Python");
+                                String end = "";
+                                if (languageBoxSelected.get(0) == "Python") {
+                                    end = ".py";
                                 }
-                                if (isJavaSelected) {
-                                    Connexionbdd.addLanguageToExercise(exerciseId, "Java");
+                                else if (languageBoxSelected.get(0) == "Java") {
+                                    end = ".java";
                                 }
-                                if (isCSelected) {
-                                    Connexionbdd.addLanguageToExercise(exerciseId, "C");
+                                else if (languageBoxSelected.get(0) == "C") {
+                                    end = ".c";
                                 }
-                                if (isJSSelected) {
-                                    Connexionbdd.addLanguageToExercise(exerciseId, "JavaScript");
+                                else if (languageBoxSelected.get(0) == "JavaScript") {
+                                    end = ".js";
                                 }
-                                if (isPHPSelected) {
-                                    Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
+                                else if (languageBoxSelected.get(0) == "PHP") {
+                                    end = ".php";
                                 }
 
-                                // Sauvegarder la correction dans un fichier
-                                File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + end);
                                 if (exerciceFile.exists()) {
                                     exerciceFile.delete();
                                 }
@@ -764,6 +847,7 @@ public class Main extends Application {
                                 FileWriter fileWriter = new FileWriter(exerciceFile);
                                 fileWriter.write(correction);
                                 fileWriter.close();
+
                                 // Mettre à jour la liste des exercices
                                 exerciseList.getItems().clear();
                                 for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
@@ -807,14 +891,20 @@ public class Main extends Application {
                                 filterJSCheckBox.setSelected(false);
                                 filterPHPCheckBox.setSelected(false);
 
-                                // Retourner à la scène principale
-                                primaryStage.setScene(mainScene);
-                                mainScene.setCursor(Cursor.DEFAULT);
+                                languageBoxSelected.remove(0);
+
+                                if (languageBoxSelected.size() > 0) {
+                                    correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
+                                    correctionInput.replaceText("");
+                                } else {
+                                    primaryStage.setScene(mainScene);
+                                    mainScene.setCursor(Cursor.DEFAULT);
+                                }
+
+                                
                             } catch (IOException ex) {
                                 System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
-                        } else {
-                            System.err.println("La correction ne peut pas être vide ou invalide.");
                         }
                     });
                 }
