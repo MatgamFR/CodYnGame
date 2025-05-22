@@ -7,13 +7,13 @@ CodYnGame est une application JavaFX qui permet aux utilisateurs de résoudre de
 Avant de lancer l'application, assurez-vous que votre environnement est correctement configuré.
 
 ### Logiciels nécessaires
-Java Development Kit (JDK) : Version 17 ou supérieure.
-Apache Maven : Pour gérer les dépendances et exécuter l'application.
-GCC : Pour compiler les exercices en C.
-Node.js : Pour exécuter les exercices en JavaScript.
-PHP : Pour exécuter les exercices en PHP.
-Python 3 : Pour exécuter les exercices en Python.
-MySQL : Pour la base de données.
+- Java Development Kit (JDK) : Version 17 ou supérieure.
+- Apache Maven : Pour gérer les dépendances et exécuter l'application.
+- GCC : Pour compiler les exercices en C.
+- Node.js : Pour exécuter les exercices en JavaScript.
+- PHP : Pour exécuter les exercices en PHP.
+- Python 3 : Pour exécuter les exercices en Python.
+- MySQL : Pour la base de données.
 
 ## Configuration
 ### Fichier configue.txt
