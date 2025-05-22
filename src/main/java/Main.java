@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
+
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
@@ -523,45 +523,36 @@ public class Main extends Application {
             primaryStage.setScene(homePageScene);
             homePageScene.setCursor(Cursor.DEFAULT);
         });
-        VBox addExerciseBox = new VBox(10);
+        VBox addExerciseBox = new VBox(40);
         addExerciseBox.setAlignment(Pos.CENTER);
         
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
-        addExerciseLabel.setStyle("-fx-font-size: 60px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        addExerciseLabel.setStyle("-fx-font-size: 80px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
         TextArea titleInput = new TextArea();
         Label titleLabel = new Label("Titre de l'exercice");
-        titleLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
-        titleInput.setStyle(
-            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
-            "-fx-text-fill: #FFFFFF; " +
-            "-fx-prompt-text-fill: #BBBBBB; " +
-            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
-        );
+        titleLabel.setStyle("-fx-font-size: 45px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        titleInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-font-size: 30px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        titleInput.setWrapText(true);
+        titleInput.setPrefWidth(400); // Largeur préférée
+        titleInput.setPrefHeight(50); // Hauteur préférée
 
         TextArea questionInput = new TextArea();
         Label questionLabel = new Label("Question de l'exercice");
-        questionLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
-        questionInput.setStyle(
-            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
-            "-fx-text-fill: #FFFFFF;  " +
-            "-fx-prompt-text-fill: #BBBBBB; " +
-            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
-        );
+        questionLabel.setStyle("-fx-font-size: 45px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        questionInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-font-size: 30px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        questionInput.setWrapText(true);
+        questionInput.setPrefWidth(400);
+        questionInput.setPrefHeight(150);
 
         TextArea difficultyInput = new TextArea();
         Label difficultyLabel2 = new Label("Difficulté de l'exercice");
-        difficultyLabel2.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
-        difficultyInput.setStyle(
-            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
-            "-fx-text-fill: #FFFFFF;  " +
-            "-fx-prompt-text-fill: #BBBBBB; " +
-            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
-        );
+        difficultyLabel2.setStyle("-fx-font-size: 45px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        difficultyInput.setStyle("-fx-control-inner-background: rgba(20, 20, 20, 0.9); -fx-font-size: 30px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+        difficultyInput.setPrefWidth(400);
+        difficultyInput.setPrefHeight(50);
+        difficultyInput.setWrapText(true);
 
         // Ajouter des cases à cocher pour choisir les langages
         CheckBox pythonCheckBox = new CheckBox("Python");
@@ -583,8 +574,11 @@ public class Main extends Application {
         ComboBox<String> typeComboBox = new ComboBox<>();
         typeComboBox.getItems().addAll("STDIN/STDOUT", "INCLUDE");
         typeComboBox.setValue("STDIN/STDOUT");
+        Label comboBoxLabel = new Label("Mode :");
+        comboBoxLabel.setStyle("-fx-font-size: 40px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         typeComboBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
-       
+        HBox typeBox = new HBox(10, comboBoxLabel, typeComboBox);
+        typeBox.setAlignment(Pos.CENTER);
         typeComboBox.setOnAction(event -> {
             // Décochez toutes les cases à cocher dans languageSelectionBox
             pythonCheckBox.setSelected(false);
@@ -826,7 +820,29 @@ public class Main extends Application {
         HBox buttonBoxAdd = new HBox(10, cancelButton, saveButton);
         buttonBoxAdd.setAlignment(Pos.CENTER);
 
-        addExerciseBox.getChildren().addAll(addExerciseLabel,titleLabel, titleInput,questionLabel, questionInput,difficultyLabel2, difficultyInput, typeComboBox, languageSelectionBox, buttonBoxAdd);
+        // Ligne pour le titre
+        HBox titleRow = new HBox(30); // Espacement horizontal de 10px
+        titleRow.setAlignment(Pos.CENTER); // Aligner les éléments à gauche
+        titleRow.getChildren().addAll(titleLabel, titleInput);
+
+        // Ligne pour la question
+        HBox questionRow = new HBox(20);
+        questionRow.setAlignment(Pos.CENTER);
+        questionRow.getChildren().addAll(questionLabel, questionInput);
+        // Ligne pour la difficulté
+        HBox difficultyRow = new HBox(20);
+        difficultyRow.setAlignment(Pos.CENTER);
+        difficultyRow.getChildren().addAll(difficultyLabel2, difficultyInput);
+        
+        titleRow.setPadding(new Insets(0, 0, 0, 40)); // 20px de padding à gauche
+        questionRow.setPadding(new Insets(0, 10, 0, 0)); // 20px de padding à gauche
+        difficultyRow.setPadding(new Insets(0, 26, 0, 0)); // 10px de padding à gauche
+        // Regrouper toutes les lignes dans un VBox
+        VBox formBox = new VBox(15, titleRow, questionRow, difficultyRow);
+        formBox.setAlignment(Pos.CENTER);
+
+        
+        addExerciseBox.getChildren().addAll(addExerciseLabel,formBox, typeBox, languageSelectionBox, buttonBoxAdd);
         addExerciseRoot.setCenter(addExerciseBox);
 
 
