@@ -21,7 +21,7 @@ public abstract class IDEExecuteCode {
             "-fx-font-family: 'Monospace'; " + 
             "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc);" ); 
         }
-        else if(output.equals("Le code est incorrect")){
+        else {
             textArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 1); " + 
             "-fx-text-fill:rgb(255, 0, 0); " + // Couleur verte comme un terminal 
             "-fx-font-family: 'Monospace'; " + 

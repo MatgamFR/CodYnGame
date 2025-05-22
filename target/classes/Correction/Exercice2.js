@@ -18,11 +18,13 @@ rl.on('line', (line) => {
 
         if (codyngame.somme(a, b) === a + b) {
             console.log("1");
+            process.exit(0);
         } else {
             console.log("0");
             console.log(codyngame.somme(a, b));
             console.log(a + b);
             console.log("1");
+            process.exit(0);
         }
 
         rl.close();
