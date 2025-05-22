@@ -13,6 +13,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -343,6 +344,7 @@ public class Main extends Application {
         String fermerPath = basePath + "/src/main/resources/RessourceImage/fermer.png"; // Chemin relatif à partir du projet
         String returnPath = basePath + "/src/main/resources/RessourceImage/return.png"; // Chemin relatif à partir du projet
         String executePath = basePath + "/src/main/resources/RessourceImage/execute.png"; // Chemin relatif à partir du projet
+        String savePath = basePath + "/src/main/resources/RessourceImage/save.png"; // Chemin relatif à partir du projet    
         
         // Charger l'image en utilisant le chemin absolu
         File imageFile = new File(imagePath);
@@ -354,6 +356,7 @@ public class Main extends Application {
         File fermerFile = new File(fermerPath);
         File returnFile = new File(returnPath);
         File executeFile = new File(executePath);
+        File saveFile = new File(savePath);
 
         if (!imageFile.exists()) {
             System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
@@ -405,10 +408,9 @@ public class Main extends Application {
         centerContent.setAlignment(Pos.CENTER);
         homePageRoot.setCenter(centerContent);
         Scene homePageScene = new Scene(homePageRoot, 1600, 900);
-        primaryStage.setTitle("Accueil");
+        primaryStage.setTitle("Codyngame");
         primaryStage.setScene(homePageScene);
         primaryStage.show();
-        
 
         // Fenêtre principale (liste des exercices)
         BorderPane mainRoot = new BorderPane();
@@ -431,6 +433,7 @@ public class Main extends Application {
         goToExercisesButton.setOnAction(event -> {
             // Basculer vers la scène principale (liste des exercices)
             primaryStage.setScene(mainScene);
+            mainScene.setCursor(Cursor.DEFAULT);
         });
         // Ajouter un bouton "+" pour ajouter des exercices
         Image addImage = new Image(addFile.toURI().toString());
@@ -462,7 +465,10 @@ public class Main extends Application {
             "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
             );
         Scene addExerciseScene = new Scene(addExerciseRoot, 1600, 900);
-        addButton.setOnAction(event -> primaryStage.setScene(addExerciseScene));
+        addButton.setOnAction(event -> {
+            primaryStage.setScene(addExerciseScene);
+            addExerciseScene.setCursor(Cursor.DEFAULT);
+        });
         filterButton.setOnAction(event -> {
             Label titleFilter = new Label("Filtrer: Choisissez les langages");
             titleFilter.setStyle("-fx-font-size: 34px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
@@ -513,19 +519,20 @@ public class Main extends Application {
             // Ajouter l'overlay au StackPane
             rootPane.getChildren().add(overlay);
         });
-        homeButton.setOnAction(event -> primaryStage.setScene(homePageScene));
+        homeButton.setOnAction(event -> {
+            primaryStage.setScene(homePageScene);
+            homePageScene.setCursor(Cursor.DEFAULT);
+        });
         VBox addExerciseBox = new VBox(10);
         addExerciseBox.setAlignment(Pos.CENTER);
         
 
         Label addExerciseLabel = new Label("Ajouter un nouvel exercice");
-        addExerciseLabel.setStyle("-fx-font-size: 50px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
-
-
+        addExerciseLabel.setStyle("-fx-font-size: 60px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
         TextArea titleInput = new TextArea();
         Label titleLabel = new Label("Titre de l'exercice");
-        titleLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
+        titleLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         titleInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF; " +
@@ -536,7 +543,7 @@ public class Main extends Application {
 
         TextArea questionInput = new TextArea();
         Label questionLabel = new Label("Question de l'exercice");
-        questionLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
+        questionLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         questionInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF;  " +
@@ -547,7 +554,7 @@ public class Main extends Application {
 
         TextArea difficultyInput = new TextArea();
         Label difficultyLabel2 = new Label("Difficulté de l'exercice");
-        difficultyLabel2.setStyle("-fx-font-size: 24px; -fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.5), 4, 0.5, 0, 2);");
+        difficultyLabel2.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         difficultyInput.setStyle(
             "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
             "-fx-text-fill: #FFFFFF;  " +
@@ -558,15 +565,15 @@ public class Main extends Application {
 
         // Ajouter des cases à cocher pour choisir les langages
         CheckBox pythonCheckBox = new CheckBox("Python");
-        pythonCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+        pythonCheckBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         CheckBox javaCheckBox = new CheckBox("Java");
-        javaCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+        javaCheckBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         CheckBox CCheckBox = new CheckBox("C");
-        CCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+        CCheckBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         CheckBox jsCheckBox = new CheckBox("JavaScript");
-        jsCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+        jsCheckBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
         CheckBox phpCheckBox = new CheckBox("PHP");
-        phpCheckBox.setStyle("-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-effect: dropshadow(gaussian, rgba(100,100,100,0.5), 4, 0.5, 0, 2);");
+        phpCheckBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
 
         HBox languageSelectionBox = new HBox(10, pythonCheckBox, javaCheckBox, CCheckBox, jsCheckBox, phpCheckBox);
         languageSelectionBox.setAlignment(Pos.CENTER);
@@ -576,12 +583,8 @@ public class Main extends Application {
         ComboBox<String> typeComboBox = new ComboBox<>();
         typeComboBox.getItems().addAll("STDIN/STDOUT", "INCLUDE");
         typeComboBox.setValue("STDIN/STDOUT");
-        typeComboBox.setStyle(
-            "-fx-control-inner-background: rgba(20, 20, 20, 0.9); " +
-            "-fx-text-fill: #FFFFFF; " +
-            "-fx-prompt-text-fill: #BBBBBB; " +
-            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " 
-        );
+        typeComboBox.setStyle("-fx-font-size: 25px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
+       
         typeComboBox.setOnAction(event -> {
             // Décochez toutes les cases à cocher dans languageSelectionBox
             pythonCheckBox.setSelected(false);
@@ -636,13 +639,26 @@ public class Main extends Application {
                 jsCheckBox.setSelected(false);
             }
         });
+        Image saveImage = new Image(saveFile.toURI().toString());
+        ImageView saveImageView = new ImageView(saveImage);
+        saveImageView.setFitWidth(225); // Largeur de l'image
+        saveImageView.setFitHeight(225); // Hauteur de l'image
+        saveImageView.setPreserveRatio(true); // Préserver les proportions
+        Button saveButton = new Button();
+        saveButton.setGraphic(saveImageView);
+        saveButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
 
-        Button saveButton = new Button("Enregistrer");
-        saveButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-
-        Button cancelButton = new Button("Annuler");
-        cancelButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        cancelButton.setOnAction(event -> primaryStage.setScene(mainScene)); // Retour à la scène principale
+        ImageView fermerImageView2 = new ImageView(fermerImage);
+        fermerImageView2.setFitWidth(175); // Largeur de l'image
+        fermerImageView2.setFitHeight(175); // Hauteur de l'image
+        fermerImageView2.setPreserveRatio(true); // Préserver les proportions
+        Button cancelButton = new Button();
+        cancelButton.setGraphic(fermerImageView2);
+        cancelButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+        cancelButton.setOnAction(event ->{
+            primaryStage.setScene(mainScene);
+            mainScene.setCursor(Cursor.DEFAULT);
+        });// Retour à la scène principale
 
 
         // Ajouter une zone de sortie (console)
@@ -682,7 +698,10 @@ public class Main extends Application {
 
         Button backToAddExerciseButton = new Button("Retour");
         backToAddExerciseButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
-        backToAddExerciseButton.setOnAction(event -> primaryStage.setScene(addExerciseScene)); // Retour à la scène d'ajout d'exercice
+        backToAddExerciseButton.setOnAction(event -> {
+            primaryStage.setScene(addExerciseScene);
+            addExerciseScene.setCursor(Cursor.DEFAULT);
+        }); // Retour à la scène d'ajout d'exercice
 
         HBox correctionButtonBox = new HBox(10, backToAddExerciseButton, saveCorrectionButton);
         correctionButtonBox.setAlignment(Pos.CENTER);
@@ -714,7 +733,7 @@ public class Main extends Application {
                     correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
                     // Transition vers la scène de correction
                     primaryStage.setScene(correctionStage);
-
+                    correctionStage.setCursor(Cursor.DEFAULT);
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
@@ -798,6 +817,7 @@ public class Main extends Application {
 
                                 // Retourner à la scène principale
                                 primaryStage.setScene(mainScene);
+                                mainScene.setCursor(Cursor.DEFAULT);
                             } catch (IOException ex) {
                                 System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
@@ -938,6 +958,7 @@ public class Main extends Application {
                 exerciseList.getItems().add(exerciseItem);
             }
             primaryStage.setScene(mainScene); // Revenir à la scène principale
+            mainScene.setCursor(Cursor.DEFAULT);
         });
 
 
@@ -1056,6 +1077,7 @@ public class Main extends Application {
                 successfulTriesLabel.setText("Nombre d'essais réussis : " + successfulTries);
                 successfulTriesLabel.setStyle("-fx-font-size: 35px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc); -fx-font-family: 'Pixel Game';");
                 primaryStage.setScene(secondaryScene); // Basculer vers la scène secondaire
+                secondaryScene.setCursor(Cursor.DEFAULT);
             }
         });
 
@@ -1152,6 +1174,7 @@ public class Main extends Application {
                 );
             }
         });
+        
         //Colorisation syntaxique
         codeArea.getStylesheets().add(getClass().getResource("/SyntaxicalColor.css").toExternalForm());
         // Configurer et afficher la fenêtre principale
