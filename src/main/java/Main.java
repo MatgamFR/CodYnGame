@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Collections;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
@@ -604,41 +604,6 @@ public class Main extends Application {
             }
         });
 
-        javaCheckBox.setOnAction(event -> {
-            if (typeComboBox.getValue().equals("INCLUDE")) {
-                pythonCheckBox.setSelected(false);
-                CCheckBox.setSelected(false);
-                jsCheckBox.setSelected(false);
-                phpCheckBox.setSelected(false);
-            }
-        });
-
-        CCheckBox.setOnAction(event -> {
-            if (typeComboBox.getValue().equals("INCLUDE")) {
-                pythonCheckBox.setSelected(false);
-                javaCheckBox.setSelected(false);
-                jsCheckBox.setSelected(false);
-                phpCheckBox.setSelected(false);
-            }
-        });
-
-        jsCheckBox.setOnAction(event -> {
-            if (typeComboBox.getValue().equals("INCLUDE")) {
-                pythonCheckBox.setSelected(false);
-                javaCheckBox.setSelected(false);
-                CCheckBox.setSelected(false);
-                phpCheckBox.setSelected(false);
-            }
-        });
-
-        phpCheckBox.setOnAction(event -> {
-            if (typeComboBox.getValue().equals("INCLUDE")) {
-                pythonCheckBox.setSelected(false);
-                javaCheckBox.setSelected(false);
-                CCheckBox.setSelected(false);
-                jsCheckBox.setSelected(false);
-            }
-        });
         Image saveImage = new Image(saveFile.toURI().toString());
         ImageView saveImageView = new ImageView(saveImage);
         saveImageView.setFitWidth(225); // Largeur de l'image
@@ -712,7 +677,7 @@ public class Main extends Application {
         VBox yes = new VBox(10, correctionRoot, correctionArea);
 
         Scene correctionStage = new Scene(yes, 1600, 900);
-
+        
         // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
             String title = titleInput.getText();
@@ -730,10 +695,37 @@ public class Main extends Application {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                 } else {
-                    correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
-                    // Transition vers la scène de correction
+                    if(typeComboBox.getValue().equals("STDIN/STDOUT")){
+                        correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
+                        primaryStage.setScene(correctionStage);
+                        correctionStage.setCursor(Cursor.DEFAULT);
+                    }
+                    else{
+                        List<String> languageBoxSelected = new ArrayList<>();
+                        if (isPythonSelected) {
+                            languageBoxSelected.add( "Python");
+                        }
+                        if (isJavaSelected) {
+                            languageBoxSelected.add( "Java");
+                        }
+                        if (isCSelected) {
+                            languageBoxSelected.add("C");
+                        }
+                        if (isJSSelected) {
+                            languageBoxSelected.add("JavaScript");
+                        }
+                        if (isPHPSelected) {
+                            languageBoxSelected.add("PHP");
+                        }
+                        
+                    correctionLabel.setText("Correction en "+ languageBoxSelected.get(0) + " :");
+                    String languageToExecute = languageBoxSelected.get(0);
+                    languageBoxSelected.remove(0);
                     primaryStage.setScene(correctionStage);
                     correctionStage.setCursor(Cursor.DEFAULT);
+                        
+                   }
+
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
                         PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(correctionArea);
