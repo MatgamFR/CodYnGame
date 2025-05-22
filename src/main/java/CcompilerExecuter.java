@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,12 +16,27 @@ public class CcompilerExecuter extends IDEExecuteCode {
         Path tempDir = null;
         try {
             tempDir = Files.createTempDirectory("codyngame");
-            Path tempFile = tempDir.resolve("main.c");
+            Path tempFile = tempDir.resolve("codyngame.c");
             Files.writeString(tempFile, code);
 
-            Process compileProcess = Runtime.getRuntime().exec(
+            Process compileProcess;
+
+            if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                compileProcess = Runtime.getRuntime().exec(
                 new String[]{"gcc", tempFile.toAbsolutePath().toString(), "-o", tempDir.resolve("exe").toString()}
             );
+            }
+            else{
+                Path tempFile2 = tempDir.resolve("Exercice" + id + ".c");
+                File tempFile3 = new File("src/main/resources/Correction/Exercice" + id +".c");
+                Files.writeString(tempFile2, Files.readString(tempFile3.toPath()));
+
+                compileProcess = Runtime.getRuntime().exec(
+                new String[]{"gcc", tempFile.toAbsolutePath().toString(), tempFile2.toAbsolutePath().toString(), "-o", tempDir.resolve("exe").toString()}
+            );
+            }
+
+            
 
             if(!compileProcess.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
                 compileProcess.destroyForcibly();
@@ -79,17 +95,31 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
-                Process process3 = Runtime.getRuntime().exec(new String[]{compiledExecutable.toAbsolutePath().toString()});
-                process3.getOutputStream().write(resultat);
-                process3.getOutputStream().close();
-                resultat2 = new String(process3.getInputStream().readAllBytes());
-                String result = resultat2.replace("\n", "\\n");
-                result.concat("\n");
+                Process process3;
+                Process process2;
 
-                Process process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
-                process2.getOutputStream().write((result+"\n").getBytes());
-                process2.getOutputStream().write(resultat);
-                process2.getOutputStream().close();
+                if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                    process3 = Runtime.getRuntime().exec(new String[]{compiledExecutable.toAbsolutePath().toString()});
+                    process3.getOutputStream().write(resultat);
+                    process3.getOutputStream().close();
+                    resultat2 = new String(process3.getInputStream().readAllBytes());
+                    String result = resultat2.replace("\n", "\\n");
+                    result.concat("\n");
+
+                    process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
+                    process2.getOutputStream().write((result+"\n").getBytes());
+                    process2.getOutputStream().write(resultat);
+                    process2.getOutputStream().close();
+                }
+                else{
+                    process3 = Runtime.getRuntime().exec(new String[]{compiledExecutable.toAbsolutePath().toString()});
+                    process3.getOutputStream().write(resultat);
+                    process3.getOutputStream().close();
+
+                    process2 = Runtime.getRuntime().exec(new String[] {"ls"});
+                }
+
+                
 
                 // Définir un timeout global de 15 secondes
                 boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
@@ -111,10 +141,14 @@ public class CcompilerExecuter extends IDEExecuteCode {
                         return;
                     }
                     else {
-                        // Lire le contenu du fichier de sortie
-                        output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                        if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                            output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                        }
+                        else{
+                            output = new String(process3.getInputStream().readAllBytes()).split("\n");
+                        }
 
-                        if(output[0].equals("0")){
+                        if(!output[0].equals("1")){
                             valide = false;
                             break;
                         }
@@ -123,13 +157,16 @@ public class CcompilerExecuter extends IDEExecuteCode {
             }
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
-            if(valide) {
+            if(output.length > 4){
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
+            }
+            else if(valide) {
                 this.printOutput("Le code est correct");
             } 
             else {
                 this.printOutput("Le code est incorrect");
-                this.printOutput("Reçu : '" + resultat2.split("\n")[Integer.parseInt(output[2])-1] + "' valeur " + output[2]);
-                this.printOutput("Attendu : '" + output[1] + "' valeur " + output[2]);
+                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
+                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
             }
             // Nettoyer les fichiers temporaires
             try {

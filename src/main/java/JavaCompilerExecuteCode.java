@@ -138,7 +138,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                             output = new String(process3.getInputStream().readAllBytes()).split("\n");
                         }
 
-                        if(output[0].equals("0")){
+                        if(!output[0].equals("1")){
                             valide = false;
                             break;
                         }
@@ -147,7 +147,10 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             }
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
-            if(valide) {
+            if(output.length > 4){
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
+            }
+            else if(valide) {
                 this.printOutput("Le code est correct");
             } 
             else {

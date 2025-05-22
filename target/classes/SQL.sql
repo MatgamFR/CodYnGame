@@ -37,7 +37,7 @@ Insert Into Exercice Values(15,"Multiplication", "facile","Multiplication de 2 n
 Insert Into Exercice Values(16,"Division", "facile","Division de 2 nombre", '',0,0,'STDIN/STDOUT');
 
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'),(1,'C'),(1,'JavaScript'),(1,'PHP');
-INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python'),(2,'Java');
+INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python'),(2,'Java'), (2,'C'),(2,'JavaScript'),(2,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (3,'C');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (4,'Java');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (5,'Python'),(5,'Java'),(5,'C'),(5,'JavaScript'),(5,'PHP');

@@ -16,10 +16,10 @@ public class PythonExecuteCode extends IDEExecuteCode {
     }
     @Override
     public void executeCode(String code, int id) {
+        // Créer un fichier temporaire avec extension .py
+        File tempFile = new File("src/main/resources/Correction/codyngame.py");
+        
         try {
-            // Créer un fichier temporaire avec extension .py
-            File tempFile = new File("src/main/resources/Correction/codyngame.py");
-            
             // Écrire le code dans le fichier temporaire
             FileWriter fileWriter = new FileWriter(tempFile);
             fileWriter.write(code);
@@ -89,7 +89,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
                             // Lire le contenu du fichier de sortie
                             output = new String(process3.getInputStream().readAllBytes()).split("\n");
                         }
-                        if(output[0].equals("0")){
+                        if(!output[0].equals("1")){
                             valide = false;
                             break;
                         }
@@ -98,7 +98,10 @@ public class PythonExecuteCode extends IDEExecuteCode {
             }
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
-            if(valide) {
+            if(output.length > 4){
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
+            }
+            else if(valide) {
                 this.printOutput("Le code est correct");
             } 
             else {
@@ -117,6 +120,13 @@ public class PythonExecuteCode extends IDEExecuteCode {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
+        } finally {
+            // Ce bloc s'exécutera toujours, même en cas d'exception
+            try {
+                Files.deleteIfExists(tempFile.toPath());
+            } catch (IOException e) {
+                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
+            }
         }
     }
 
