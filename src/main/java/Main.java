@@ -346,7 +346,8 @@ public class Main extends Application {
         String returnPath = basePath + "/src/main/resources/RessourceImage/return.png"; // Chemin relatif à partir du projet
         String executePath = basePath + "/src/main/resources/RessourceImage/execute.png"; // Chemin relatif à partir du projet
         String savePath = basePath + "/src/main/resources/RessourceImage/save.png"; // Chemin relatif à partir du projet    
-        
+        String nextPath = basePath + "/src/main/resources/RessourceImage/next.png"; // Chemin relatif à partir du projet
+
         // Charger l'image en utilisant le chemin absolu
         File imageFile = new File(imagePath);
         File backgroundFile = new File(backgroundPath);
@@ -358,6 +359,7 @@ public class Main extends Application {
         File returnFile = new File(returnPath);
         File executeFile = new File(executePath);
         File saveFile = new File(savePath);
+        File nextFile = new File(nextPath);
 
         if (!imageFile.exists()) {
             System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
@@ -599,13 +601,13 @@ public class Main extends Application {
             }
         });
 
-        Image saveImage = new Image(saveFile.toURI().toString());
-        ImageView saveImageView = new ImageView(saveImage);
-        saveImageView.setFitWidth(225); // Largeur de l'image
-        saveImageView.setFitHeight(225); // Hauteur de l'image
-        saveImageView.setPreserveRatio(true); // Préserver les proportions
+        Image nextImage = new Image(nextFile.toURI().toString());
+        ImageView nextImageView = new ImageView(nextImage);
+        nextImageView.setFitWidth(210); // Largeur de l'image
+        nextImageView.setFitHeight(210); // Hauteur de l'image
+        nextImageView.setPreserveRatio(true); // Préserver les proportions
         Button saveButton = new Button();
-        saveButton.setGraphic(saveImageView);
+        saveButton.setGraphic(nextImageView);
         saveButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
 
         ImageView fermerImageView2 = new ImageView(fermerImage);
@@ -641,23 +643,30 @@ public class Main extends Application {
         correctionArea.setPrefHeight(200); // Hauteur préférée
 
         // Créer un BorderPane pour la scène de correction
-        BorderPane correctionRoot = new BorderPane();
-        VBox correctionBox = new VBox(10);
-        correctionBox.setAlignment(Pos.CENTER);
-        correctionBox.setStyle("-fx-padding: 20px; -fx-background-color: #1E1E1E;");
-
         Label correctionLabel = new Label("Correction en Python :");
-        correctionLabel.setStyle("-fx-text-fill: white;");
+        correctionLabel.setStyle("-fx-font-size: 50px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
 
         CodeArea correctionInput = SyntaxicalColor.createCodeArea();
         correctionInput.setParagraphGraphicFactory(LineNumberFactory.get(correctionInput));
         correctionInput.setPlaceholder(new Label("Entrez la correction en Python pour cet exercice"));
 
-        Button saveCorrectionButton = new Button("Enregistrer la correction");
-        saveCorrectionButton.setStyle("-fx-background-color: linear-gradient(to right, #ffffff, #cccccc); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        Image saveImage = new Image(saveFile.toURI().toString());
+        ImageView saveImageView2 = new ImageView(saveImage);
+        saveImageView2.setFitWidth(225); // Largeur de l'image
+        saveImageView2.setFitHeight(225); // Hauteur de l'image
+        saveImageView2.setPreserveRatio(true); // Préserver les proportions
+        Button saveCorrectionButton = new Button();
+        saveCorrectionButton.setGraphic(saveImageView2);
+        saveCorrectionButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
 
-        Button backToAddExerciseButton = new Button("Retour");
-        backToAddExerciseButton.setStyle("-fx-background-color: linear-gradient(to right, #cccccc, #999999); -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 6, 0.5, 0, 2);");
+        Image returnImage = new Image(returnFile.toURI().toString());
+        ImageView returnImageView2 = new ImageView(returnImage);
+        Button backToAddExerciseButton = new Button();
+        backToAddExerciseButton.setGraphic(returnImageView2);
+        backToAddExerciseButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
+        returnImageView2.setFitWidth(200); // Largeur de l'image
+        returnImageView2.setFitHeight(200); // Hauteur de l'image
+        returnImageView2.setPreserveRatio(true); // Préserver les proportions
         backToAddExerciseButton.setOnAction(event -> {
             primaryStage.setScene(addExerciseScene);
             addExerciseScene.setCursor(Cursor.DEFAULT);
@@ -666,16 +675,23 @@ public class Main extends Application {
         HBox correctionButtonBox = new HBox(10, backToAddExerciseButton, saveCorrectionButton);
         correctionButtonBox.setAlignment(Pos.CENTER);
 
-        correctionBox.getChildren().addAll(correctionLabel, correctionInput, correctionButtonBox);
-        correctionRoot.setCenter(correctionBox);
+        VBox correctionVBox = new VBox(10, correctionLabel, correctionInput, correctionArea, correctionButtonBox);
+        correctionVBox.setStyle(
+            "-fx-background-color: transparent;"+
+            "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
+            "-fx-background-size: cover; " + // Ajuster l'image pour couvrir tout le conteneur
+            "-fx-background-position: center center; " + // Centrer l'image
+            "-fx-background-repeat: no-repeat;" // Ne pas répéter l'image
+            );
+        correctionVBox.setAlignment(Pos.CENTER); // Centrer la VBox
+        correctionVBox.setPrefWidth(800); // Réduire la largeur à 800 pixels
 
-        VBox yes = new VBox(10, correctionRoot, correctionArea);
-
-        Scene correctionStage = new Scene(yes, 1600, 900);
+        
+        Scene correctionStage = new Scene(correctionVBox, 1600, 900);
 
         List<String> languageBoxSelected = new ArrayList<>();
         
-        // Modifier l'action du bouton "Enregistrer" pour aller à la scène de correction
+        // Modifier l'action du bouton "Suivant" pour aller à la scène de correction
         saveButton.setOnAction(event -> {
             String title = titleInput.getText();
             String question = questionInput.getText();
@@ -692,9 +708,9 @@ public class Main extends Application {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Veuillez choisire un autre tire");
+                    alert.setTitle("Erreur");
                     alert.setHeaderText(null);
-                    alert.setContentText(null);
+                    alert.setContentText("Veuillez choisir un autre titre.");
                     alert.showAndWait();
                 } else {
                     if(typeComboBox.getValue().equals("STDIN/STDOUT")){
@@ -720,6 +736,7 @@ public class Main extends Application {
                         }
                         
                     correctionLabel.setText("Correction en "+ languageBoxSelected.get(0) + " :");
+                    correctionLabel.setStyle("-fx-font-size: 40px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
                     primaryStage.setScene(correctionStage);
                     correctionStage.setCursor(Cursor.DEFAULT);
                         
@@ -920,9 +937,9 @@ public class Main extends Application {
             } else {
                 System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue.");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Veuillez remplir tous les champs et sélectionner au moins une langue.");
+                alert.setTitle("Erreur");
                 alert.setHeaderText(null);
-                alert.setContentText(null);
+                alert.setContentText("Veuillez remplir tous les champs et sélectionner au moins une langue.");
                 alert.showAndWait();
             }
         });
@@ -1034,7 +1051,6 @@ public class Main extends Application {
         runButton.setGraphic(runImageView); // Ajouter l'image au bouton
         runButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-cursor: hand;"); // Rendre le fond transparent
         // Ajouter un bouton pour revenir à la liste des exercices
-        Image returnImage = new Image(returnFile.toURI().toString());
         ImageView returnImageView = new ImageView(returnImage);
         Button backButton = new Button();
         backButton.setGraphic(returnImageView);
