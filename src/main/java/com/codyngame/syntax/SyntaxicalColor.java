@@ -12,10 +12,16 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-
+/**
+ * A class that provides syntax highlighting functionality for various programming languages.
+ * It supports keywords recognition and syntax patterns for languages like C, Java, PHP, JavaScript, and Python.
+ * 
+ * @author Matheo,Younes,Remy,Leon,Tom
+ * @version 1.0
+ */
 public class SyntaxicalColor {
     
-    // les mots clés de C et Java, faut que je rajoute les autres mais grosse flemme
+    // Keywords for all languages
     private static final Map<String,String[]> LANGUAGE_KEYWORDS = new HashMap<>();
         static{
             LANGUAGE_KEYWORDS.put("C", new String[] {
@@ -47,8 +53,7 @@ public class SyntaxicalColor {
             });
     }
 
-
-    //differencier les mots clés
+    // Patterns for syntax elements
     private static final String PAREN_PATTERN = "\\(|\\)";
     private static final String BRACE_PATTERN = "\\{|\\}";
     private static final String BRACKET_PATTERN = "\\[|\\]";
@@ -62,10 +67,15 @@ public class SyntaxicalColor {
     private static Pattern currentPattern;
     private static String currentLanguage;
 
-    // Comment inserer un flux de texte dans un texte area avec des couleurs 
-    // Comment faire pour chaanger le stule ou la couleur du texte 
-    // Gerer la tabulation pour qu'il y ai les bons espaces a chaque retour a la ligne 
+    // How to insert a text stream into a text area with colors
+    // How to change the style or color of the text
+    // Handle tabulation to have proper spacing on each line return
 
+    /**
+     * Creates and configures a CodeArea with syntax highlighting capabilities.
+     * 
+     * @return A configured CodeArea instance with syntax highlighting enabled
+     */
     public static CodeArea createCodeArea() {
         CodeArea codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
@@ -84,7 +94,12 @@ public class SyntaxicalColor {
         return codeArea;
     }
 
-    // Si le langage est reconnu, on utilise les mots clés, sinon pas de mots clés
+    /**
+     * Sets the programming language for syntax highlighting.
+     * If the language is recognized, its keywords will be used for highlighting.
+     * 
+     * @param language The programming language to set (e.g., "Java", "C", "Python")
+     */
     public static void setLanguage(String language) {
         currentLanguage = language;
         if(LANGUAGE_KEYWORDS.containsKey(language)) {
@@ -112,8 +127,12 @@ public class SyntaxicalColor {
         }
     }
 
-
-    // Parcours le texte pour savoir où il y a des motifs a changer
+    /**
+     * Computes the syntax highlighting spans for the given text.
+     * 
+     * @param text The text to analyze for syntax highlighting
+     * @return StyleSpans object containing the highlighting information
+     */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
     
         Matcher matcher = currentPattern.matcher(text);
@@ -132,7 +151,7 @@ public class SyntaxicalColor {
             assert styleClass != null;
 
             
-            // Ajoute le style pour la portion de texte correspondante
+            // Add style for the corresponding text portion
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -141,8 +160,4 @@ public class SyntaxicalColor {
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
     }
-
-
 }
-
-

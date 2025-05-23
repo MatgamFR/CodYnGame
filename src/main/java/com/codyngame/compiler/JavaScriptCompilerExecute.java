@@ -1,28 +1,40 @@
 package com.codyngame.compiler;
-import com.codyngame.main.Connexionbdd;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import com.codyngame.main.Connexionbdd;
+
 import javafx.scene.control.TextArea;
 
+/**
+ * Class for executing JavaScript code in the Codyngame environment.
+ * Handles compilation and execution of JavaScript code with input/output validation.
+ * @author Matheo,Younes,Remy,Leon,Tom
+ * @version 1.0
+ */
 public class JavaScriptCompilerExecute extends IDEExecuteCode {
-        /**
-     * Méthode qui exécute le code saisi par l'utilisateur
-     * @param code Le code à exécuter
+    /**
+     * Constructor initializing with a text area for output display
+     * @param textArea The text area to display execution results
      */
     public JavaScriptCompilerExecute(TextArea textArea) {
-        super(textArea); // Appel du constructeur de la classe parente
+        super(textArea); // Call parent class constructor
     }
+    
+    /**
+     * Executes the provided JavaScript code with the given exercise ID
+     * @param code The JavaScript code to execute
+     * @param id The exercise ID for validation
+     */
     @Override
     public void executeCode(String code, int id) {
-        // Créer un fichier temporaire avec extension .py
+        // Create temporary file with .js extension
         File tempFile = new File("src/main/resources/Correction/codyngame.js");
 
         try {
-            // Écrire le code dans le fichier temporaire
+            // Write code to temporary file
             FileWriter fileWriter = new FileWriter(tempFile);
             fileWriter.write(code);
             fileWriter.close();
@@ -34,10 +46,11 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
 
             int exitCode = 1;
 
+            // Test with 10 different seeds
             for (int i = 0; i < 10; i++) {
                 long seed = System.currentTimeMillis();
                 
-                // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
+                // Execute shell script (handles redirection as Runtime.exec can't execute command directly)
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources//Random/randomGeneration" + id + ".py", String.valueOf(seed)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
@@ -54,13 +67,13 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
                         return;
                     } 
 
@@ -82,13 +95,13 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
                         return;
                     } 
               
@@ -101,11 +114,11 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 }
                 else {
                     if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                        // Lire le contenu du fichier de sortie
+                        // Read output file content
                         output = new String(process2.getInputStream().readAllBytes()).split("\n");
                     }
                     else{
-                        // Lire le contenu du fichier de sortie
+                        // Read output file content
                         output = new String(process3.getInputStream().readAllBytes()).split("\n");
                     }
                     if(!output[0].equals("1")){
@@ -115,41 +128,40 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 }
             }
             
-            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
+            this.printOutput("Program finished with exit code: " + exitCode);
             if(output.length > 4){
-                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
+                this.printOutput("incorrect, you did a display instead of a return");
             }
             else if(valide) {
-                this.printOutput("Le code est correct");
+                this.printOutput("The code is correct");
             } 
             else {
-                this.printOutput("Le code est incorrect");
-                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
-                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
+                this.printOutput("The code is incorrect");
+                this.printOutput("Received: '" + output[1] + "' value " + output[3]);
+                this.printOutput("Expected: '" + output[2] + "' value " + output[3]);
             }
             
-            // Nettoyer les fichiers temporaires
+            // Clean temporary files
             try {
                 Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {
-                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
+                System.err.println("Error deleting temporary files: " + e.getMessage());
             }
                 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
+            System.err.println("Error executing code: " + e.getMessage());
         } finally {
             try {
                 Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {
-                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
+                System.err.println("Error deleting temporary files: " + e.getMessage());
             }
         }
     }
 
     @Override
     public void compileCode(String code, int id) {
-
+        // JavaScript doesn't require compilation
     }
-
 }

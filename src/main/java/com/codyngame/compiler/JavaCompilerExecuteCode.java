@@ -1,39 +1,54 @@
 package com.codyngame.compiler;
-import com.codyngame.main.Connexionbdd;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.codyngame.main.Connexionbdd;
+
 import javafx.scene.control.TextArea;
 
+/**
+ * Class for compiling and executing Java code in the Codyngame environment.
+ * Handles both STDIN/STDOUT and INCLUDE type exercises.
+ * @author Matheo,Younes,Remy,Leon,Tom
+ * @version 1.0
+ */
 public class JavaCompilerExecuteCode extends IDEExecuteCode {
-    private Path tempClassDir; // Attribut pour stocker le chemin du répertoire des classes compilées
+    private Path tempClassDir; // Attribute to store compiled classes directory path
 
+    /**
+     * Constructor initializing with a text area for output display
+     * @param textArea The text area to display compilation/execution results
+     */
     public JavaCompilerExecuteCode(TextArea textArea) {
         super(textArea);
     }
 
+    /**
+     * Compiles the provided Java code for the given exercise ID
+     * @param code The Java code to compile
+     * @param id The exercise ID for compilation context
+     */
     @Override
     public void compileCode(String code, int id) {
         try {
             if (!code.contains("public class Codyngame")) {
-                this.printOutput("Le code Java doit contenir une classe publique nommée 'Codyngame'.");
+                this.printOutput("Java code must contain a public class named 'Codyngame'.");
                 return;
             }
 
             if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){     
-                // Créer un répertoire temporaire qui sera conservé jusqu'à l'exécution
+                // Create temporary directory that will be kept until execution
                 tempClassDir = Files.createTempDirectory("codyngame_classes");
                 Path tempFile = tempClassDir.resolve("Codyngame.java");
                 Files.writeString(tempFile, code);
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
+                    this.printOutput("Compilation error:\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
-                    this.printOutput("Compilation réussie.");
+                    this.printOutput("Compilation successful.");
                 }
             } 
             else {
@@ -46,27 +61,31 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile2.toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
+                    this.printOutput("Compilation error:\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
-                    this.printOutput("Compilation réussie.");
+                    this.printOutput("Compilation successful.");
                 }
-                
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de la compilation : " + e.getMessage());
+            System.err.println("Error during compilation: " + e.getMessage());
         }
     }
 
+    /**
+     * Executes the compiled Java code for the given exercise ID
+     * @param code The Java code to execute
+     * @param id The exercise ID for execution context
+     */
     @Override
     public void executeCode(String code, int id) {
         try {
-            // Compiler le code d'abord
+            // Compile code first
             this.compileCode(code, id);
             
-            // Vérifier que la compilation a bien fonctionné 
+            // Verify compilation was successful
             if (tempClassDir == null || !Files.exists(tempClassDir.resolve("Codyngame.class"))) {
-                this.printOutput("Erreur: Le fichier compilé Codyngame.class n'a pas été trouvé");
+                this.printOutput("Error: Compiled file Codyngame.class not found");
                 return;
             }
             
@@ -80,11 +99,11 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             Process process2;
             Process process3;
 
-            // Tester avec 10 seeds différentes
+            // Test with 10 different seeds
             for (int i = 0; i < 10; i++) {
                 long seed = System.currentTimeMillis();
 
-                // Étape 1: Générer les données d'entrée aléatoires
+                // Step 1: Generate random input data
                 Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources//Random/randomGeneration" + id + ".py", String.valueOf(seed)});
                 byte[] resultat = process.getInputStream().readAllBytes();
                 process.waitFor();
@@ -100,20 +119,20 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
                         return;
                     } 
 
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
                     
-                    // Étape 2: Exécuter le code de correction
+                    // Step 2: Execute correction code
                     process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
                     process2.getOutputStream().write((result+"\n").getBytes());
                     process2.getOutputStream().write(resultat);
@@ -129,13 +148,13 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
                         return;
                     } 
                 }
@@ -147,7 +166,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     return;
                 }
                 else {
-                    // Lire le contenu du fichier de sortie
+                    // Read output file content
                     if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
                         output = new String(process2.getInputStream().readAllBytes()).split("\n");
                     }
@@ -162,24 +181,23 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 }
             }
             
-            
-            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
+            this.printOutput("Program finished with exit code: " + exitCode);
             if(output.length > 4){
-                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
+                this.printOutput("incorrect, you did a display instead of a return");
             }
             else if(valide) {
-                this.printOutput("Le code est correct");
+                this.printOutput("The code is correct");
             } 
             else {
-                this.printOutput("Le code est incorrect");
-                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
-                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
+                this.printOutput("The code is incorrect");
+                this.printOutput("Received: '" + output[1] + "' value " + output[3]);
+                this.printOutput("Expected: '" + output[2] + "' value " + output[3]);
             }
 
         } 
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
+            System.err.println("Error executing code: " + e.getMessage());
         }
     }
 }
