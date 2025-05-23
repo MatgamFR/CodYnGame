@@ -1,22 +1,26 @@
+package com.codyngame.compiler;
+import com.codyngame.main.Connexionbdd;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+
 import javafx.scene.control.TextArea;
 
-public class PythonExecuteCode extends IDEExecuteCode {
+public class PhpCompilerExecute extends IDEExecuteCode {
         /**
      * Méthode qui exécute le code saisi par l'utilisateur
      * @param code Le code à exécuter
      */
-    public PythonExecuteCode(TextArea textArea) {
+    public PhpCompilerExecute(TextArea textArea) {
         super(textArea); // Appel du constructeur de la classe parente
     }
     @Override
     public void executeCode(String code, int id) {
-        // Créer un fichier temporaire avec extension .py
-        File tempFile = new File("src/main/resources/Correction/codyngame.py");
-        
+        // Créer un fichier temporaire avec extension .php
+        File tempFile = new File("src/main/resources/Correction/codyngame.php");
+            
         try {
             // Écrire le code dans le fichier temporaire
             FileWriter fileWriter = new FileWriter(tempFile);
@@ -43,7 +47,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
                 boolean completed;
 
                 if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                    process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
+                    process3 = Runtime.getRuntime().exec(new String[]{"php", tempFile.toPath().toString()});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
 
@@ -60,6 +64,7 @@ public class PythonExecuteCode extends IDEExecuteCode {
                         return;
                     } 
 
+
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
 
@@ -69,12 +74,12 @@ public class PythonExecuteCode extends IDEExecuteCode {
                     process2.getOutputStream().close();
                 }
                 else{
-                    process2 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
+                    process2 = Runtime.getRuntime().exec(new String[]{"php", tempFile.toPath().toString()});
 
-                    process3 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
+                    process3 = Runtime.getRuntime().exec(new String[]{"php", "src/main/resources/Correction/Exercice" + id +".php" });
                     process3.getOutputStream().write(resultat);
-                    process3.getOutputStream().close();
-                    
+                    process3.getOutputStream().close();     
+
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
@@ -135,7 +140,6 @@ public class PythonExecuteCode extends IDEExecuteCode {
             e.printStackTrace();
             System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         } finally {
-            // Ce bloc s'exécutera toujours, même en cas d'exception
             try {
                 Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {

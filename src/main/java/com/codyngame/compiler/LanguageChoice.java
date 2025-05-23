@@ -1,3 +1,5 @@
+package com.codyngame.compiler;
+
 import javafx.scene.control.TextArea;
 
 public class LanguageChoice {

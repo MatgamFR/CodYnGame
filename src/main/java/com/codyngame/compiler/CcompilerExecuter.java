@@ -1,3 +1,6 @@
+package com.codyngame.compiler;
+import com.codyngame.main.Connexionbdd;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

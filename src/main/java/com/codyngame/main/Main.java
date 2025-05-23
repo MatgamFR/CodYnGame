@@ -1,3 +1,10 @@
+package com.codyngame.main;
+
+import com.codyngame.compiler.IDEExecuteCode;
+import com.codyngame.compiler.LanguageChoice;
+import com.codyngame.syntax.SyntaxicalColor;
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

@@ -1,3 +1,5 @@
+package com.codyngame.syntax;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

@@ -1,3 +1,6 @@
+package com.codyngame.compiler;
+import com.codyngame.main.Connexionbdd;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -5,19 +8,19 @@ import java.nio.file.Files;
 
 import javafx.scene.control.TextArea;
 
-public class PhpCompilerExecute extends IDEExecuteCode {
+public class JavaScriptCompilerExecute extends IDEExecuteCode {
         /**
      * Méthode qui exécute le code saisi par l'utilisateur
      * @param code Le code à exécuter
      */
-    public PhpCompilerExecute(TextArea textArea) {
+    public JavaScriptCompilerExecute(TextArea textArea) {
         super(textArea); // Appel du constructeur de la classe parente
     }
     @Override
     public void executeCode(String code, int id) {
-        // Créer un fichier temporaire avec extension .php
-        File tempFile = new File("src/main/resources/Correction/codyngame.php");
-            
+        // Créer un fichier temporaire avec extension .py
+        File tempFile = new File("src/main/resources/Correction/codyngame.js");
+
         try {
             // Écrire le code dans le fichier temporaire
             FileWriter fileWriter = new FileWriter(tempFile);
@@ -44,7 +47,7 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                 boolean completed;
 
                 if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                    process3 = Runtime.getRuntime().exec(new String[]{"php", tempFile.toPath().toString()});
+                    process3 = Runtime.getRuntime().exec(new String[]{"node", tempFile.toPath().toString()});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
 
@@ -61,7 +64,6 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                         return;
                     } 
 
-
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
 
@@ -71,13 +73,13 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                     process2.getOutputStream().close();
                 }
                 else{
-                    process2 = Runtime.getRuntime().exec(new String[]{"php", tempFile.toPath().toString()});
+                process2 = Runtime.getRuntime().exec(new String[]{"node", tempFile.toPath().toString()});
 
-                    process3 = Runtime.getRuntime().exec(new String[]{"php", "src/main/resources/Correction/Exercice" + id +".php" });
-                    process3.getOutputStream().write(resultat);
-                    process3.getOutputStream().close();     
+                process3 = Runtime.getRuntime().exec(new String[]{"node", "src/main/resources/Correction/Exercice" + id +".js" });
+                process3.getOutputStream().write(resultat);
+                process3.getOutputStream().close();
 
-                    completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
                         this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
@@ -89,6 +91,7 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                         this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
+              
                 }
 
                 exitCode = process3.exitValue();
@@ -111,7 +114,6 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                     }
                 }
             }
-            
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(output.length > 4){
