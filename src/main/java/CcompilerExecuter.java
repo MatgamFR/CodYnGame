@@ -92,16 +92,32 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 long seed = System.currentTimeMillis();
 
                 // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
-                Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
+                Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources//Random/randomGeneration" + id + ".py", String.valueOf(seed)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
                 Process process3;
                 Process process2;
 
+                boolean completed;
+
                 if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
                     process3 = Runtime.getRuntime().exec(new String[]{compiledExecutable.toAbsolutePath().toString()});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
+
+                    completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+
+                    if (!completed) {
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        process3.destroy();
+                        process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                        if (process3.isAlive()) {
+                            process3.destroyForcibly();
+                        }
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        return;
+                    } 
+
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
                     result.concat("\n");
@@ -116,42 +132,40 @@ public class CcompilerExecuter extends IDEExecuteCode {
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
 
+                    completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+
+                    if (!completed) {
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        process3.destroy();
+                        process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                        if (process3.isAlive()) {
+                            process3.destroyForcibly();
+                        }
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        return;
+                    }
+
                     process2 = Runtime.getRuntime().exec(new String[] {"ls"});
                 }
 
                 
-
-                // Définir un timeout global de 15 secondes
-                boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+                exitCode = process3.exitValue();
                 
-                if (!completed) {
-                    this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
-                    process3.destroy();
-                    process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-                    if (process3.isAlive()) {
-                        process3.destroyForcibly();
-                    }
-                    this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
-                } 
+                if (exitCode != 0) {
+                    this.printOutput(new String(process3.getErrorStream().readAllBytes()));
+                    return;
+                }
                 else {
-                    exitCode = process3.exitValue();
-                    
-                    if (exitCode != 0) {
-                        this.printOutput(new String(process3.getErrorStream().readAllBytes()));
-                        return;
+                    if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                        output = new String(process2.getInputStream().readAllBytes()).split("\n");
                     }
-                    else {
-                        if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                            output = new String(process2.getInputStream().readAllBytes()).split("\n");
-                        }
-                        else{
-                            output = new String(process3.getInputStream().readAllBytes()).split("\n");
-                        }
+                    else{
+                        output = new String(process3.getInputStream().readAllBytes()).split("\n");
+                    }
 
-                        if(!output[0].equals("1")){
-                            valide = false;
-                            break;
-                        }
+                    if(!output[0].equals("1")){
+                        valide = false;
+                        break;
                     }
                 }
             }

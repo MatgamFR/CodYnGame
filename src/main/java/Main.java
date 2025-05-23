@@ -714,11 +714,23 @@ public class Main extends Application {
                     alert.showAndWait();
                 } else {
                     if(typeComboBox.getValue().equals("STDIN/STDOUT")){
-                        correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
+                        correctionLabel.setText("Générateur en Python :"); 
+                        correctionInput.replaceText("from random import *\n" + //
+                                                        "import sys\n" + //
+                                                        "\n" + //
+                                                        "def main():\n" + //
+                                                        "   seed(sys.argv[1])\n" + //
+                                                        "\n" + //
+                                                        "if __name__ == \"__main__\":\n" + //
+                                                        "   main()");
+                        languageBoxSelected.clear();
+                        languageBoxSelected.add("Python");
+                        languageBoxSelected.add("-1");
                         primaryStage.setScene(correctionStage);
                         correctionStage.setCursor(Cursor.DEFAULT);
                     }
                     else{
+                        languageBoxSelected.clear();
                         if (isPythonSelected) {
                             languageBoxSelected.add("Python");
                         }
@@ -734,25 +746,43 @@ public class Main extends Application {
                         if (isPHPSelected) {
                             languageBoxSelected.add("PHP");
                         }
-                        
-                    correctionLabel.setText("Correction en "+ languageBoxSelected.get(0) + " :");
-                    correctionLabel.setStyle("-fx-font-size: 40px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-                    primaryStage.setScene(correctionStage);
-                    correctionStage.setCursor(Cursor.DEFAULT);
+                        correctionInput.replaceText("from random import *\n" + //
+                                                        "import sys\n" + //
+                                                        "\n" + //
+                                                        "def main():\n" + //
+                                                        "   seed(sys.argv[1])\n" + //
+                                                        "\n" + //
+                                                        "if __name__ == \"__main__\":\n" + //
+                                                        "   main()");
+                        languageBoxSelected.add("-1");
+                        correctionLabel.setText("Générateur en Python :"); 
+                        correctionLabel.setStyle("-fx-font-size: 40px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                        primaryStage.setScene(correctionStage);
+                        correctionStage.setCursor(Cursor.DEFAULT);
                         
                    }
 
-
-                    int exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        PythonExecuteCode pythonExecuteCode = new PythonExecuteCode(outputArea);
                         correctionArea.setText("");
                         if(typeComboBox.getValue().equals("STDIN/STDOUT")){
-                            if (!correction.isEmpty() && pythonExecuteCode.verification(correction)) {
+                            if (!correction.isEmpty()) {
                                 try {
                                     // Ajouter l'exercice à la base de données
-                                    
+                                    int exerciseId;
+                                    int exo;
+                                    if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
+                                        exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
+                                        Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+                                        languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                        exo = 1;
+                                    }
+                                    else{
+                                        exerciseId = Integer.parseInt(languageBoxSelected.get(languageBoxSelected.size()-1));
+                                        Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+                                        languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                        exo = 0;
+                                    }
 
                                     // Ajouter les langages sélectionnés à la base de données
                                     if (isPythonSelected) {
@@ -772,7 +802,15 @@ public class Main extends Application {
                                     }
 
                                     // Sauvegarder la correction dans un fichier
-                                    File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                    File exerciceFile;
+
+                                    if (exo == 0) {
+                                        exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                    }
+                                    else {
+                                        exerciceFile = new File("src/main/resources/Random/randomGeneration" + exerciseId + ".py");
+                                    }
+
                                     if (exerciceFile.exists()) {
                                         exerciceFile.delete();
                                     }
@@ -828,8 +866,27 @@ public class Main extends Application {
                                     filterPHPCheckBox.setSelected(false);
 
                                     // Retourner à la scène principale
-                                    primaryStage.setScene(mainScene);
-                                    mainScene.setCursor(Cursor.DEFAULT);
+                                    if (languageBoxSelected.size() > 1) {
+                                        correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
+                                        correctionInput.replaceText("");
+                                        languageBoxSelected.remove(0);
+                                        correctionInput.replaceText("word = input().replace(\"\\\\n" + //
+                                                                                        "\", \"\\n" + //
+                                                                                        "\").split(\"\\n" + //
+                                                                                        "\")//liste des sorties de l'utilisateur \n" + //
+                                                                                        "\n" + //
+                                                                                        "if word[0] == \"hello world\": //Si c'est vrai\n" + //
+                                                                                        "    print(1)\n" + //
+                                                                                        "else: // Si c'est faux\n" + //
+                                                                                        "    print(0)\n" + //
+                                                                                        "    print(word[0]) // valeur de l'utilisateur\n" + //
+                                                                                        "    print(\"hello world\") // valeur attendu\n" + //
+                                                                                        "    print(1) // ligne de l'erreur");
+                                    } else {
+                                        primaryStage.setScene(mainScene);
+                                        mainScene.setCursor(Cursor.DEFAULT);
+                                    }
+
                                 } catch (IOException ex) {
                                     System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                                 }
@@ -838,28 +895,49 @@ public class Main extends Application {
                             }
                         } else {
                             if (!correction.isEmpty()){
-                                Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+                                int exerciseId;
+                                int exo;
+                                
+                                if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
+                                    exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
+                                    languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                    exo = 1;
+                                }
+                                else{
+                                    exerciseId = Integer.parseInt(languageBoxSelected.get(languageBoxSelected.size()-1));
+                                    Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+                                    languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                    exo = 0;
+                                }
 
                                 // Sauvegarder la correction dans un fichier
                                 try {
                                     String end = "";
-                                    if (languageBoxSelected.get(0) == "Python") {
+                                    if (languageBoxSelected.get(0).equals("Python")) {
                                         end = ".py";
                                     }
-                                    else if (languageBoxSelected.get(0) == "Java") {
+                                    else if (languageBoxSelected.get(0).equals("Java")) {
                                         end = ".java";
                                     }
-                                    else if (languageBoxSelected.get(0) == "C") {
+                                    else if (languageBoxSelected.get(0).equals("C")) {
                                         end = ".c";
                                     }
-                                    else if (languageBoxSelected.get(0) == "JavaScript") {
+                                    else if (languageBoxSelected.get(0).equals("JavaScript")) {
                                         end = ".js";
                                     }
-                                    else if (languageBoxSelected.get(0) == "PHP") {
+                                    else if (languageBoxSelected.get(0).equals("PHP")) {
                                         end = ".php";
                                     }
 
-                                    File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + end);
+                                    File exerciceFile;
+
+                                    if (exo == 0) {
+                                        exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + end);
+                                    }
+                                    else {
+                                        exerciceFile = new File("src/main/resources/Random/randomGeneration" + exerciseId + ".py");
+                                    }
+
                                     if (exerciceFile.exists()) {
                                         exerciceFile.delete();
                                     }
@@ -914,11 +992,16 @@ public class Main extends Application {
                                     filterJSCheckBox.setSelected(false);
                                     filterPHPCheckBox.setSelected(false);
 
-                                    languageBoxSelected.remove(0);
-
-                                    if (languageBoxSelected.size() > 0) {
+                                    if (languageBoxSelected.size() > 1) {    
+                                        if (exo == 0){
+                                            languageBoxSelected.remove(0);
+                                            if (languageBoxSelected.size() == 1){
+                                                primaryStage.setScene(mainScene);
+                                                mainScene.setCursor(Cursor.DEFAULT);
+                                            }
+                                        }
                                         correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
-                                        correctionInput.replaceText("");
+                                        correctionInput.replaceText("");                       
                                     } else {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
