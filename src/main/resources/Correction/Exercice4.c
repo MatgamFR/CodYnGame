@@ -2,14 +2,14 @@
 #include <stdbool.h>
 
 // Fonction pour importer la fonction somme du fichier utilisateur
-bool premier(int a);
+bool parfait(int a);
 
 int main() {
     int a,c;
     bool comp=true;
     c=0;
     scanf("%d", &a);
-    bool res=premier(a);
+    bool res=parfait(a);
     
     if(a<=0){
         comp=false;
@@ -27,8 +27,8 @@ int main() {
         printf("1\n");
     } else {
         printf("0\n");
-        printf("%B %d \n",parfait(a));
-        printf("%B %d \n",comp);
+        printf("%B %d \n",parfait(a), a);
+        printf("%B %d \n",comp, a);
         printf("1\n");
     } 
     

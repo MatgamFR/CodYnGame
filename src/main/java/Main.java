@@ -814,96 +814,99 @@ public class Main extends Application {
                                 System.err.println("La correction ne peut pas être vide ou invalide.");
                             }
                         } else {
+                            if (!correction.isEmpty()){
+                                Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
 
-                            Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
+                                // Sauvegarder la correction dans un fichier
+                                try {
+                                    String end = "";
+                                    if (languageBoxSelected.get(0) == "Python") {
+                                        end = ".py";
+                                    }
+                                    else if (languageBoxSelected.get(0) == "Java") {
+                                        end = ".java";
+                                    }
+                                    else if (languageBoxSelected.get(0) == "C") {
+                                        end = ".c";
+                                    }
+                                    else if (languageBoxSelected.get(0) == "JavaScript") {
+                                        end = ".js";
+                                    }
+                                    else if (languageBoxSelected.get(0) == "PHP") {
+                                        end = ".php";
+                                    }
 
-                            // Sauvegarder la correction dans un fichier
-                            try {
-                                String end = "";
-                                if (languageBoxSelected.get(0) == "Python") {
-                                    end = ".py";
+                                    File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + end);
+                                    if (exerciceFile.exists()) {
+                                        exerciceFile.delete();
+                                    }
+                                    if (!exerciceFile.createNewFile()) {
+                                        throw new IOException("Erreur lors de la création du fichier : " + exerciceFile.getAbsolutePath());
+                                    }
+
+                                    FileWriter fileWriter = new FileWriter(exerciceFile);
+                                    fileWriter.write(correction);
+                                    fileWriter.close();
+
+                                    // Mettre à jour la liste des exercices
+                                    exerciseList.getItems().clear();
+                                    for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
+                                        String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
+                                        String difficulty2 = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
+                                        int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
+                                        int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
+                                        String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
+                            
+                                        Label exerciseNumber = new Label("Exercice " + i);
+                                        exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label exerciseTitle = new Label(titre);
+                                        exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label difficultyLabel = new Label("Difficulté : " + difficulty2);
+                                        difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
+                                        statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+                                        Label typeLabel = new Label("Mode: " + typeExo);
+                                        typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
+
+                                        Region spacer = new Region();
+                                        HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
+
+                                        HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, difficultyLabel, statsLabel, spacer, typeLabel);
+                                        exerciseItem.setSpacing(10);
+                                        exerciseItem.setStyle(
+                                            "-fx-background-color: rgba(30, 30, 30, 0.9); " +
+                                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
+                                            "-fx-border-radius: 15px; " +
+                                            "-fx-background-radius: 15px; " +
+                                            "-fx-padding: 10px; " +
+                                            "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
+                                        );
+                                        exerciseList.getItems().add(exerciseItem);
+                                    }
+
+                                    // Décocher toutes les cases de filtrage
+                                    filterPythonCheckBox.setSelected(false);
+                                    filterJavaCheckBox.setSelected(false);
+                                    filterCCheckBox.setSelected(false);
+                                    filterJSCheckBox.setSelected(false);
+                                    filterPHPCheckBox.setSelected(false);
+
+                                    languageBoxSelected.remove(0);
+
+                                    if (languageBoxSelected.size() > 0) {
+                                        correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
+                                        correctionInput.replaceText("");
+                                    } else {
+                                        primaryStage.setScene(mainScene);
+                                        mainScene.setCursor(Cursor.DEFAULT);
+                                    }
+
+                                    
+                                } catch (IOException ex) {
+                                    System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                                 }
-                                else if (languageBoxSelected.get(0) == "Java") {
-                                    end = ".java";
-                                }
-                                else if (languageBoxSelected.get(0) == "C") {
-                                    end = ".c";
-                                }
-                                else if (languageBoxSelected.get(0) == "JavaScript") {
-                                    end = ".js";
-                                }
-                                else if (languageBoxSelected.get(0) == "PHP") {
-                                    end = ".php";
-                                }
-
-                                File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + end);
-                                if (exerciceFile.exists()) {
-                                    exerciceFile.delete();
-                                }
-                                if (!exerciceFile.createNewFile()) {
-                                    throw new IOException("Erreur lors de la création du fichier : " + exerciceFile.getAbsolutePath());
-                                }
-
-                                FileWriter fileWriter = new FileWriter(exerciceFile);
-                                fileWriter.write(correction);
-                                fileWriter.close();
-
-                                // Mettre à jour la liste des exercices
-                                exerciseList.getItems().clear();
-                                for (int i = 1; i <= Connexionbdd.maxexo(); i++) {
-                                    String titre = Connexionbdd.getExerciceTitle(i); // Récupérer le titre de l'exercice
-                                    String difficulty2 = Connexionbdd.getExerciceDifficulty(i); // Récupérer la difficulté de l'exercice
-                                    int attempts = Connexionbdd.getExerciseAttempts(i); // Récupérer le nombre d'essais
-                                    int successfulTries = Connexionbdd.getSuccessfulTries(i); // Récupérer le nombre d'essais réussis
-                                    String typeExo = Connexionbdd.getTypeExo(i); // Récupérer le type de l'exercice
-                        
-                                    Label exerciseNumber = new Label("Exercice " + i);
-                                    exerciseNumber.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-                                    Label exerciseTitle = new Label(titre);
-                                    exerciseTitle.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-                                    Label difficultyLabel = new Label("Difficulté : " + difficulty2);
-                                    difficultyLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-                                    Label statsLabel = new Label("Essais : " + attempts + " | Réussis : " + successfulTries);
-                                    statsLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-                                    Label typeLabel = new Label("Mode: " + typeExo);
-                                    typeLabel.setStyle("-fx-font-size: 23px;-fx-padding: 5px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
-
-                                    Region spacer = new Region();
-                                    HBox.setHgrow(spacer, Priority.ALWAYS); // Pousse le type d'exercice à droite
-
-                                    HBox exerciseItem = new HBox(exerciseNumber, exerciseTitle, difficultyLabel, statsLabel, spacer, typeLabel);
-                                    exerciseItem.setSpacing(10);
-                                    exerciseItem.setStyle(
-                                        "-fx-background-color: rgba(30, 30, 30, 0.9); " +
-                                        "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); " +
-                                        "-fx-border-radius: 15px; " +
-                                        "-fx-background-radius: 15px; " +
-                                        "-fx-padding: 10px; " +
-                                        "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 4, 0.5, 0, 2);"
-                                    );
-                                    exerciseList.getItems().add(exerciseItem);
-                                }
-
-                                // Décocher toutes les cases de filtrage
-                                filterPythonCheckBox.setSelected(false);
-                                filterJavaCheckBox.setSelected(false);
-                                filterCCheckBox.setSelected(false);
-                                filterJSCheckBox.setSelected(false);
-                                filterPHPCheckBox.setSelected(false);
-
-                                languageBoxSelected.remove(0);
-
-                                if (languageBoxSelected.size() > 0) {
-                                    correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
-                                    correctionInput.replaceText("");
-                                } else {
-                                    primaryStage.setScene(mainScene);
-                                    mainScene.setCursor(Cursor.DEFAULT);
-                                }
-
-                                
-                            } catch (IOException ex) {
-                                System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
+                            } else {
+                                System.err.println("La correction ne peut pas être vide.");
                             }
                         }
                     });
