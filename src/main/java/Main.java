@@ -637,14 +637,7 @@ public class Main extends Application {
                             "-fx-font-family: 'Monospace'; " + 
                             "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc);" ); 
 
-        TextArea correctionArea = new TextArea();
-        correctionArea.setEditable(false);
-        correctionArea.setWrapText(true);
-        correctionArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 0.9); " +
-                            "-fx-text-fill: #00FF00; " +  // Couleur verte comme un terminal
-                            "-fx-font-family: 'Monospace'; " +
-                            "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc); ");
-        correctionArea.setPrefHeight(200); // Hauteur préférée
+
 
         // Créer un BorderPane pour la scène de correction
         Label correctionLabel = new Label("Correction en Python :");
@@ -653,6 +646,8 @@ public class Main extends Application {
         CodeArea correctionInput = SyntaxicalColor.createCodeArea();
         correctionInput.setParagraphGraphicFactory(LineNumberFactory.get(correctionInput));
         correctionInput.setPlaceholder(new Label("Entrez la correction en Python pour cet exercice"));
+        correctionInput.setPrefHeight(500); // Hauteur préférée
+
 
         Image saveImage = new Image(saveFile.toURI().toString());
         ImageView saveImageView2 = new ImageView(saveImage);
@@ -679,7 +674,7 @@ public class Main extends Application {
         HBox correctionButtonBox = new HBox(10, backToAddExerciseButton, saveCorrectionButton);
         correctionButtonBox.setAlignment(Pos.CENTER);
 
-        VBox correctionVBox = new VBox(10, correctionLabel, correctionInput, correctionArea, correctionButtonBox);
+        VBox correctionVBox = new VBox(10, correctionLabel, correctionInput, correctionButtonBox);
         correctionVBox.setStyle(
             "-fx-background-color: transparent;"+
             "-fx-background-image: url('" + backgroundFile.toURI().toString() + "'); " +
@@ -691,7 +686,7 @@ public class Main extends Application {
         correctionVBox.setPrefWidth(800); // Réduire la largeur à 800 pixels
 
         
-        Scene correctionStage = new Scene(correctionVBox, 1600, 900);
+        Scene correctionStage = new Scene(correctionVBox, 1600, 1400);
 
         List<String> languageBoxSelected = new ArrayList<>();
         
@@ -768,7 +763,6 @@ public class Main extends Application {
 
                     saveCorrectionButton.setOnAction(e -> {
                         String correction = correctionInput.getText();
-                        correctionArea.setText("");
                         if(typeComboBox.getValue().equals("STDIN/STDOUT")){
                             if (!correction.isEmpty()) {
                                 try {
