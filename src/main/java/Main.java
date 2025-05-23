@@ -746,6 +746,14 @@ public class Main extends Application {
                         if (isPHPSelected) {
                             languageBoxSelected.add("PHP");
                         }
+                        correctionInput.replaceText("from random import *\n" + //
+                                                        "import sys\n" + //
+                                                        "\n" + //
+                                                        "def main():\n" + //
+                                                        "   seed(sys.argv[1])\n" + //
+                                                        "\n" + //
+                                                        "if __name__ == \"__main__\":\n" + //
+                                                        "   main()");
                         languageBoxSelected.add("-1");
                         correctionLabel.setText("Générateur en Python :"); 
                         correctionLabel.setStyle("-fx-font-size: 40px;-fx-padding: 23px;-fx-text-fill: linear-gradient(to right, #ffffff, #cccccc);-fx-font-family: 'Pixel Game';");
@@ -892,7 +900,6 @@ public class Main extends Application {
                                 
                                 if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
                                     exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
-                                    Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
                                     languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
                                     exo = 1;
                                 }
