@@ -859,8 +859,7 @@ public class Main extends Application {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
                                     }
-                                    primaryStage.setScene(mainScene);
-                                    mainScene.setCursor(Cursor.DEFAULT);
+
                                 } catch (IOException ex) {
                                     System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                                 }
@@ -871,6 +870,7 @@ public class Main extends Application {
                             if (!correction.isEmpty()){
                                 int exerciseId;
                                 int exo;
+                                
                                 if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
                                     exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
                                     Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
@@ -966,10 +966,16 @@ public class Main extends Application {
                                     filterJSCheckBox.setSelected(false);
                                     filterPHPCheckBox.setSelected(false);
 
-                                    if (languageBoxSelected.size() > 1) {
+                                    if (languageBoxSelected.size() > 1) {    
+                                        if (exo == 0){
+                                            languageBoxSelected.remove(0);
+                                            if (languageBoxSelected.size() == 1){
+                                                primaryStage.setScene(mainScene);
+                                                mainScene.setCursor(Cursor.DEFAULT);
+                                            }
+                                        }
                                         correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
-                                        correctionInput.replaceText("");
-                                        languageBoxSelected.remove(0);
+                                        correctionInput.replaceText("");                       
                                     } else {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
