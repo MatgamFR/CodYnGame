@@ -15,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -690,6 +691,11 @@ public class Main extends Application {
                 (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
                 if (Connexionbdd.isTitleExists(title)) {
                     System.err.println("Un exercice avec ce titre existe déjà. Veuillez choisir un autre titre.");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Veuillez choisire un autre tire");
+                    alert.setHeaderText(null);
+                    alert.setContentText(null);
+                    alert.showAndWait();
                 } else {
                     if(typeComboBox.getValue().equals("STDIN/STDOUT")){
                         correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
@@ -913,6 +919,11 @@ public class Main extends Application {
                 }
             } else {
                 System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue.");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Veuillez remplir tous les champs et sélectionner au moins une langue.");
+                alert.setHeaderText(null);
+                alert.setContentText(null);
+                alert.showAndWait();
             }
         });
 
