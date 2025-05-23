@@ -64,7 +64,6 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
 
-                    System.out.println(id);
                     process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
                     process2.getOutputStream().write((result+"\n").getBytes());
                     process2.getOutputStream().write(resultat);

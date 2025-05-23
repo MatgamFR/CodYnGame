@@ -715,7 +715,14 @@ public class Main extends Application {
                 } else {
                     if(typeComboBox.getValue().equals("STDIN/STDOUT")){
                         correctionLabel.setText("Générateur en Python :"); 
-                        correctionInput.replaceText("word = input().replace('\\\\n', '\\n').split('\\n')");
+                        correctionInput.replaceText("from random import *\n" + //
+                                                        "import sys\n" + //
+                                                        "\n" + //
+                                                        "def main():\n" + //
+                                                        "   seed(sys.argv[1])\n" + //
+                                                        "\n" + //
+                                                        "if __name__ == \"__main__\":\n" + //
+                                                        "   main()");
                         languageBoxSelected.clear();
                         languageBoxSelected.add("Python");
                         languageBoxSelected.add("-1");
@@ -855,6 +862,18 @@ public class Main extends Application {
                                         correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
                                         correctionInput.replaceText("");
                                         languageBoxSelected.remove(0);
+                                        correctionInput.replaceText("word = input().replace(\"\\\\n" + //
+                                                                                        "\", \"\\n" + //
+                                                                                        "\").split(\"\\n" + //
+                                                                                        "\")//liste des sorties de l'utilisateur \n" + //
+                                                                                        "\n" + //
+                                                                                        "if word[0] == \"hello world\": //Si c'est vrai\n" + //
+                                                                                        "    print(1)\n" + //
+                                                                                        "else: // Si c'est faux\n" + //
+                                                                                        "    print(0)\n" + //
+                                                                                        "    print(word[0]) // valeur de l'utilisateur\n" + //
+                                                                                        "    print(\"hello world\") // valeur attendu\n" + //
+                                                                                        "    print(1) // ligne de l'erreur");
                                     } else {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
