@@ -86,12 +86,27 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 byte[] resultat = process.getInputStream().readAllBytes();
                 process.waitFor();
 
+                boolean completed;
 
                 if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
 
                     process3 = Runtime.getRuntime().exec(new String[]{"java", "-cp", tempClassDir.toAbsolutePath().toString(), "Codyngame"});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
+
+                    completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+
+                    if (!completed) {
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        process3.destroy();
+                        process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                        if (process3.isAlive()) {
+                            process3.destroyForcibly();
+                        }
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        return;
+                    } 
+
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
                     
@@ -103,46 +118,47 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 }
                 else{
                     process2 = Runtime.getRuntime().exec(new String[] {"ls"});
+
                     process3 = Runtime.getRuntime().exec(new String[]{"java", "-cp", tempClassDir.toAbsolutePath().toString(), "Exercice" + id});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
-                }
-                
-                // Définir un timeout global de 15 secondes
-                boolean completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
-                
-                if (!completed) {
-                    this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
-                    process3.destroy();
-                    process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-                    if (process3.isAlive()) {
-                        process3.destroyForcibly();
-                    }
-                    this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
-                } 
-                else {
-                    exitCode = process3.exitValue();
-                    
-                    if (exitCode != 0) {
-                        this.printOutput(new String(process3.getErrorStream().readAllBytes()));
-                        return;
-                    }
-                    else {
-                        // Lire le contenu du fichier de sortie
-                        if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                            output = new String(process2.getInputStream().readAllBytes()).split("\n");
-                        }
-                        else{
-                            output = new String(process3.getInputStream().readAllBytes()).split("\n");
-                        }
 
-                        if(!output[0].equals("1")){
-                            valide = false;
-                            break;
+                    completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
+
+                    if (!completed) {
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
+                        process3.destroy();
+                        process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
+                        if (process3.isAlive()) {
+                            process3.destroyForcibly();
                         }
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
+                        return;
+                    } 
+                }
+
+                exitCode = process3.exitValue();
+                
+                if (exitCode != 0) {
+                    this.printOutput(new String(process3.getErrorStream().readAllBytes()));
+                    return;
+                }
+                else {
+                    // Lire le contenu du fichier de sortie
+                    if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
+                        output = new String(process2.getInputStream().readAllBytes()).split("\n");
+                    }
+                    else{
+                        output = new String(process3.getInputStream().readAllBytes()).split("\n");
+                    }
+
+                    if(!output[0].equals("1")){
+                        valide = false;
+                        break;
                     }
                 }
             }
+            
             
             this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(output.length > 4){
