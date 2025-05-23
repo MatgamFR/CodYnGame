@@ -1001,7 +1001,133 @@ public class Main extends Application {
                                             }
                                         }
                                         correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
-                                        correctionInput.replaceText("");                       
+                                        switch(languageBoxSelected.get(0)){
+                                            case "Python":
+                                                correctionInput.replaceText("import codyngame\n" + //
+                                                                            "\n" + //
+                                                                            "a = int(input())\n" + //
+                                                                            "b = int(input())\n" + //
+                                                                            "\n" + //
+                                                                            "if codyngame.somme(a,b) == a+b:\n" + //
+                                                                            "    print(1)\n" + //
+                                                                            "else:\n" + //
+                                                                            "    print(0)\n" + //
+                                                                            "    print(codyngame.somme(a,b))\n" + //
+                                                                            "    print(a+b)\n" + //
+                                                                            "    print(1)");
+                                                break;
+                                            case "Java":
+                                                correctionInput.replaceText("import java.util.Scanner;\n" + //
+                                                                            "\n" + //
+                                                                            "public class Exercice2 {\n" + //
+                                                                            "    public static void main(String[] args) {\n" + //
+                                                                            "        Scanner scanner = new Scanner(System.in);\n" + //
+                                                                            "\n" + //
+                                                                            "        int a = scanner.nextInt();\n" + //
+                                                                            "        int b = scanner.nextInt();\n" + //
+                                                                            "\n" + //
+                                                                            "        if (Codyngame.somme(a, b) == a + b) {\n" + //
+                                                                            "            System.out.println(1);\n" + //
+                                                                            "        } else {\n" + //
+                                                                            "            System.out.println(0);\n" + //
+                                                                            "            System.out.println(Codyngame.somme(a, b));\n" + //
+                                                                            "            System.out.println(a + b);\n" + //
+                                                                            "            System.out.println(1);\n" + //
+                                                                            "        }\n" + //
+                                                                            "\n" + //
+                                                                            "        scanner.close();\n" + //
+                                                                            "    }\n" + //
+                                                                            "}");
+                                                break;
+                                            case "C":
+                                                correctionInput.replaceText("#include <stdio.h>\n" + //
+                                                                            "\n" + //
+                                                                            "// Fonction pour importer la fonction somme du fichier utilisateur\n" + //
+                                                                            "int fonction(int a, int b);\n" + //
+                                                                            "\n" + //
+                                                                            "int main() {\n" + //
+                                                                            "    int a, b;\n" + //
+                                                                            "    \n" + //
+                                                                            "    // Lecture des deux nombres depuis l'entrée standard\n" + //
+                                                                            "    scanf(\"%d\", &a);\n" + //
+                                                                            "    scanf(\"%d\", &b);\n" + //
+                                                                            "    \n" + //
+                                                                            "    // Vérification du résultat - correction de la condition\n" + //
+                                                                            "    if (somme(a, b) == a + b) {  // Condition corrigée\n" + //
+                                                                            "        printf(\"1\\n" + //
+                                                                            "\");\n" + //
+                                                                            "    } else {\n" + //
+                                                                            "        printf(\"0\\n" + //
+                                                                            "\");\n" + //
+                                                                            "        printf(\"%d\\n" + //
+                                                                            "\", somme(a, b));  // Résultat reçu\n" + //
+                                                                            "        printf(\"%d\\n" + //
+                                                                            "\", a + b);        // Résultat attendu\n" + //
+                                                                            "        printf(\"1\\n" + //
+                                                                            "\");                // Valeur de comparaison\n" + //
+                                                                            "    }\n" + //
+                                                                            "    \n" + //
+                                                                            "    return 0;\n" + //
+                                                                            "}");
+                                                break;
+                                            case "JavaScript":
+                                                correctionInput.replaceText("// Inclure le fichier contenant la fonction somme\n" + //
+                                                                            "const codyngame = require('./codyngame'); // Assurez-vous que codyngame.js contient la fonction somme\n" + //
+                                                                            "\n" + //
+                                                                            "const readline = require('readline');\n" + //
+                                                                            "\n" + //
+                                                                            "// Lire les entrées depuis la console\n" + //
+                                                                            "const rl = readline.createInterface({\n" + //
+                                                                            "    input: process.stdin,\n" + //
+                                                                            "    output: process.stdout\n" + //
+                                                                            "});\n" + //
+                                                                            "\n" + //
+                                                                            "let inputs = [];\n" + //
+                                                                            "rl.on('line', (line) => {\n" + //
+                                                                            "    inputs.push(parseInt(line.trim()));\n" + //
+                                                                            "    if (inputs.length >= 2) {\n" + //
+                                                                            "        const a = inputs[0];\n" + //
+                                                                            "        const b = inputs[1];\n" + //
+                                                                            "\n" + //
+                                                                            "        if (codyngame.somme(a, b) === a + b) {\n" + //
+                                                                            "            console.log(\"1\");\n" + //
+                                                                            "            process.exit(0);\n" + //
+                                                                            "        } else {\n" + //
+                                                                            "            console.log(\"0\");\n" + //
+                                                                            "            console.log(codyngame.somme(a, b));\n" + //
+                                                                            "            console.log(a + b);\n" + //
+                                                                            "            console.log(\"1\");\n" + //
+                                                                            "            process.exit(0);\n" + //
+                                                                            "        }\n" + //
+                                                                            "\n" + //
+                                                                            "        rl.close();\n" + //
+                                                                            "    }\n" + //
+                                                                            "});");
+                                                break;
+                                            case "PHP":
+                                                correctionInput.replaceText("<?php\n" + //
+                                                                            "\n" + //
+                                                                            "include 'codyngame.php'; // Inclure le fichier contenant la fonction somme\n" + //
+                                                                            "\n" + //
+                                                                            "$a = intval(trim(fgets(STDIN))); // Lire la première entrée\n" + //
+                                                                            "$b = intval(trim(fgets(STDIN))); // Lire la deuxième entrée\n" + //
+                                                                            "\n" + //
+                                                                            "if (codyngame_somme($a, $b) == $a + $b) {\n" + //
+                                                                            "    echo \"1\\n" + //
+                                                                            "\";\n" + //
+                                                                            "} else {\n" + //
+                                                                            "    echo \"0\\n" + //
+                                                                            "\";\n" + //
+                                                                            "    echo codyngame_somme($a, $b) . \"\\n" + //
+                                                                            "\";\n" + //
+                                                                            "    echo ($a + $b) . \"\\n" + //
+                                                                            "\";\n" + //
+                                                                            "    echo \"1\\n" + //
+                                                                            "\";\n" + //
+                                                                            "}\n" + //
+                                                                            "?>");
+                                                break;
+                                        }
                                     } else {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
