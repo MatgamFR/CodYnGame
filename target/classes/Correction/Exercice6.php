@@ -13,12 +13,12 @@ if($a<0){
         $f *= $i;
     }
 }       
-if (factorielle($a) == $comp) {
+if (factorielle($a) == $f) {
     echo "1\n";
 } else {
     echo "0\n";
     echo factorielle($a)." " . $a . "\n";
-    echo ($comp)." " . $a . "\n";
+    echo ($f)." " . $a . "\n";
     echo "1\n";
 }
 ?>
