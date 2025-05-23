@@ -779,31 +779,29 @@ public class Main extends Application {
                                     int exo;
                                     if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
                                         exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
-                                        Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
                                         languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
                                         exo = 1;
                                     }
                                     else{
                                         exerciseId = Integer.parseInt(languageBoxSelected.get(languageBoxSelected.size()-1));
-                                        Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
                                         languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
                                         exo = 0;
                                     }
 
                                     // Ajouter les langages sélectionnés à la base de données
-                                    if (isPythonSelected) {
+                                    if (isPythonSelected && exo==1) {
                                         Connexionbdd.addLanguageToExercise(exerciseId, "Python");
                                     }
-                                    if (isJavaSelected) {
+                                    if (isJavaSelected && exo==1) {
                                         Connexionbdd.addLanguageToExercise(exerciseId, "Java");
                                     }
-                                    if (isCSelected) {
+                                    if (isCSelected && exo==1) {
                                         Connexionbdd.addLanguageToExercise(exerciseId, "C");
                                     }
-                                    if (isJSSelected) {
+                                    if (isJSSelected && exo==1) {
                                         Connexionbdd.addLanguageToExercise(exerciseId, "JavaScript");
                                     }
-                                    if (isPHPSelected) {
+                                    if (isPHPSelected && exo==1) {
                                         Connexionbdd.addLanguageToExercise(exerciseId, "PHP");
                                     }
 
