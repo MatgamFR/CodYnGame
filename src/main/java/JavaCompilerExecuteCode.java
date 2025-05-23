@@ -82,9 +82,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 long seed = System.currentTimeMillis();
 
                 // Étape 1: Générer les données d'entrée aléatoires
-                Process process = Runtime.getRuntime().exec(new String[]{
-                    "python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)
-                });
+                Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources//Random/randomGeneration" + id + ".py", String.valueOf(seed)});
                 byte[] resultat = process.getInputStream().readAllBytes();
                 process.waitFor();
 

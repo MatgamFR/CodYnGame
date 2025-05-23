@@ -755,15 +755,18 @@ public class Main extends Application {
                                 try {
                                     // Ajouter l'exercice à la base de données
                                     int exerciseId;
+                                    int exo;
                                     if(languageBoxSelected.get(languageBoxSelected.size()-1) == "-1"){
                                         exerciseId = Connexionbdd.addExercise(title, question, difficulty, type);
                                         Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
                                         languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                        exo = 1;
                                     }
                                     else{
                                         exerciseId = Integer.parseInt(languageBoxSelected.get(languageBoxSelected.size()-1));
                                         Connexionbdd.addLanguageToExercise(exerciseId, languageBoxSelected.get(0));
                                         languageBoxSelected.set(languageBoxSelected.size()-1, exerciseId+"");
+                                        exo = 0;
                                     }
 
                                     // Ajouter les langages sélectionnés à la base de données
@@ -784,7 +787,15 @@ public class Main extends Application {
                                     }
 
                                     // Sauvegarder la correction dans un fichier
-                                    File exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                    File exerciceFile;
+
+                                    if (exo == 0) {
+                                        exerciceFile = new File("src/main/resources/Correction/Exercice" + exerciseId + ".py");
+                                    }
+                                    else {
+                                        exerciceFile = new File("src/main/resources/Random/randomGeneration" + exerciseId + ".py");
+                                    }
+
                                     if (exerciceFile.exists()) {
                                         exerciceFile.delete();
                                     }
@@ -840,6 +851,14 @@ public class Main extends Application {
                                     filterPHPCheckBox.setSelected(false);
 
                                     // Retourner à la scène principale
+                                    if (languageBoxSelected.size() > 1) {
+                                        correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
+                                        correctionInput.replaceText("");
+                                        languageBoxSelected.remove(0);
+                                    } else {
+                                        primaryStage.setScene(mainScene);
+                                        mainScene.setCursor(Cursor.DEFAULT);
+                                    }
                                     primaryStage.setScene(mainScene);
                                     mainScene.setCursor(Cursor.DEFAULT);
                                 } catch (IOException ex) {

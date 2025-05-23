@@ -35,7 +35,7 @@ public class PhpCompilerExecute extends IDEExecuteCode {
                 long seed = System.currentTimeMillis();
                 
                 // Exécuter le script shell (qui gère la redirection car Rutime.exec ne peut pas exécuter directement la commande)
-                Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/randomGeneration.py", String.valueOf(seed), String.valueOf(id)});
+                Process process = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources//Random/randomGeneration" + id + ".py", String.valueOf(seed)});
                 byte[] resultat = process.getInputStream().readAllBytes();
 
                 Process process2;
