@@ -44,7 +44,7 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                 boolean completed;
 
                 if(Connexionbdd.getTypeExo(id).equals("STDIN/STDOUT")){
-                    process3 = Runtime.getRuntime().exec(new String[]{"python3", tempFile.toPath().toString()});
+                    process3 = Runtime.getRuntime().exec(new String[]{"node", tempFile.toPath().toString()});
                     process3.getOutputStream().write(resultat);
                     process3.getOutputStream().close();
 
@@ -64,7 +64,8 @@ public class JavaScriptCompilerExecute extends IDEExecuteCode {
                     resultat2 = new String(process3.getInputStream().readAllBytes());
                     String result = resultat2.replace("\n", "\\n");
 
-                    process2 = Runtime.getRuntime().exec(new String[]{"node", "src/main/resources/Correction/Exercice" + id +".js" });
+                    System.out.println(id);
+                    process2 = Runtime.getRuntime().exec(new String[]{"python3", "src/main/resources/Correction/Exercice" + id +".py" });
                     process2.getOutputStream().write((result+"\n").getBytes());
                     process2.getOutputStream().write(resultat);
                     process2.getOutputStream().close();
