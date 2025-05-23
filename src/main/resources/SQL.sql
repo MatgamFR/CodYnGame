@@ -25,8 +25,8 @@ Insert Into Exercice Values(4,"nombre parfait", "moyen","écrivez un programme p
 Insert Into Exercice Values(5,"Suite de Fibonacci", "difficile","écrivez un programme fibonacci(n) où n est un entier naturel pour que le terminal renvoie la suite de Fibonacci jusqu'à n dans un tableau de longueur n", 0,0,'INCLUDE');
 Insert Into Exercice Values(6,"Factorielle", "difficile","écrivez un programme factorielle(n) où n est un entier naturelle pour que le terminal renvoie la factorielle de n", 0,0,'INCLUDE');
 Insert Into Exercice Values(7,"Palindrome", "difficile","écrivez un programme palindrome(mot) où mot est une chaîne de caractère pour que le terminal renvoie vrai si c'est un palindrome et faux sinon", 0,0,'INCLUDE');
-Insert Into Exercice Values(8,"Table de multiplication", "difficile","écrivez un programme multiplication(n) un entier naturel pour que le terminal renvoie un tableau de la table de multiplication de n", 0,0,'INCLUDE');
-Insert Into Exercice Values(9,"Tri ", "difficile","écrivez un programme tri(tab) où tab est un tableau pour que le terminal renvoie un tableau trié, on affichera le tableau de la façon suivante : 'a, b, c'", 0,0,'INCLUDE');
+Insert Into Exercice Values(8,"Table de multiplication", "difficile","écrivez un programme multiplication(n) un entier naturel pour que le terminal renvoie une chaine de charactère avec des espaces entre chaque charactère représentant les résultats de la table de multiplication de n", 0,0,'INCLUDE');
+Insert Into Exercice Values(9,"Tri ", "difficile","écrivez un programme tri(tab) où tab est un tableau de 50 valeurs fixes pour que le terminal renvoie un tableau trié, on affichera le tableau de la façon suivante : 'a, b, c'", 0,0,'INCLUDE');
 Insert Into Exercice Values(10,"Recherche binaire", "difficile","écrivez un programme index(n, tab) où n est un entier et tab un tableau trié pour que le terminal renvoie l'index d'un nombre dans un tableau trié", 0,0,'INCLUDE');
 Insert Into Exercice Values(11,"Paire", "facile","Affichez un nombre paire dans la console", 0,0,'STDIN/STDOUT');
 Insert Into Exercice Values(12,"Impair", "facile","Affichez un nombre impair dans la console", 0,0,'STDIN/STDOUT');
@@ -39,7 +39,7 @@ INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (1,'Python'),(1,'Java'
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (2,'Python'),(2,'Java'), (2,'C'),(2,'JavaScript'),(2,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (3,'Python'),(3,'Java'),(3,'C'),(3,'JavaScript'),(3,'PHP');
 INSERT INTO LanguageCode (Exerciceid, NomLanguage) VALUES (4,'Java'),(4,'Python'),(4,'JavaScript'),(4,'PHP'),(4,'C');
-Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (5,'Python');
+Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (5,'Python'),(5,'Java'),(5,'JavaScript');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (6,'C'),(6,'PHP');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (7,'Python'),(7,'Java'),(7,'JavaScript');
 Insert Into LanguageCode (Exerciceid, NomLanguage) VALUES (8,'Python'),(8,'Java'),(8,'JavaScript'),(8,'PHP');
