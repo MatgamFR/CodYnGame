@@ -749,7 +749,8 @@ public class Main extends Application {
                                                         "import sys\n" + //
                                                         "\n" + //
                                                         "def main():\n" + //
-                                                        "   seed(sys.argv[1])\n" + //
+                                                        "   seed(sys.argv[1])\n\n" + //
+                                                        "   # Votre code ici\n" + //
                                                         "\n" + //
                                                         "if __name__ == \"__main__\":\n" + //
                                                         "   main()");
@@ -871,15 +872,15 @@ public class Main extends Application {
                                         correctionInput.replaceText("word = input().replace(\"\\\\n" + //
                                                                                         "\", \"\\n" + //
                                                                                         "\").split(\"\\n" + //
-                                                                                        "\")//liste des sorties de l'utilisateur \n" + //
+                                                                                        "\") # liste des sorties de l'utilisateur \n" + //
                                                                                         "\n" + //
-                                                                                        "if word[0] == \"hello world\": //Si c'est vrai\n" + //
+                                                                                        "if word[0] == \"hello world\": # Si c'est vrai\n" + //
                                                                                         "    print(1)\n" + //
-                                                                                        "else: // Si c'est faux\n" + //
+                                                                                        "else: # Si c'est faux\n" + //
                                                                                         "    print(0)\n" + //
-                                                                                        "    print(word[0]) // valeur de l'utilisateur\n" + //
-                                                                                        "    print(\"hello world\") // valeur attendu\n" + //
-                                                                                        "    print(1) // ligne de l'erreur");
+                                                                                        "    print(word[0]) # valeur de l'utilisateur\n" + //
+                                                                                        "    print(\"hello world\") # valeur attendu\n" + //
+                                                                                        "    print(1) # ligne de l'erreur");
                                     } else {
                                         primaryStage.setScene(mainScene);
                                         mainScene.setCursor(Cursor.DEFAULT);
