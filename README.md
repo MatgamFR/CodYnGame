@@ -29,3 +29,8 @@ Un script Bash setup.sh est fourni pour configurer l'environnement et préparer 
 ## Lancer l'application
 ### Commande Maven
 Pour exécuter l'application, utilisez la commande suivante : ```mvn javafx:run```
+
+## Précision pour les exercices en JavaScript, en Java et en C
+- Lorsque vous écrivez votre fonction en mode include, il faut garder en Java la class CodynGame et remplacer le main par votre fonction
+- Lorsque vous écrivez votre fonction en mode include, il faut remplacer en C la ligne la fonction main par votre le nom de votre fonction
+- Lorsque vous écrivez votre fonction en mode include, il faut mettre en JavaScript la ligne ```module.exports = { nomfonction }; ```
