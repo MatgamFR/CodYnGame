@@ -66,13 +66,13 @@ public class PythonExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("The program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
 
@@ -94,13 +94,13 @@ public class PythonExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("The program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
                 }
@@ -127,35 +127,35 @@ public class PythonExecuteCode extends IDEExecuteCode {
             }
             
             
-            this.printOutput("Program finished with exit code: " + exitCode);
+            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(output.length > 4){
-                this.printOutput("Incorrect, you did a display instead of a return");
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
             }
             else if(valide) {
-                this.printOutput("The code is correct");
+                this.printOutput("Le code est correct");
             } 
             else {
-                this.printOutput("The code is incorrect");
-                this.printOutput("Received: '" + output[1] + "' value " + output[3]);
-                this.printOutput("Expected: '" + output[2] + "' value " + output[3]);
+                this.printOutput("Le code est incorrect");
+                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
+                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
             }
             
             // Clean up temporary files
             try {
                 Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {
-                System.err.println("Error deleting temporary files: " + e.getMessage());
+                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
                 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Error executing code: " + e.getMessage());
+            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         } finally {
             // This block will always execute, even if an exception occurs
             try {
                 Files.deleteIfExists(tempFile.toPath());
             } catch (IOException e) {
-                System.err.println("Error deleting temporary files: " + e.getMessage());
+                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
         }
     }
@@ -164,4 +164,5 @@ public class PythonExecuteCode extends IDEExecuteCode {
     public void compileCode(String code, int id) {
 
     }
+
 }

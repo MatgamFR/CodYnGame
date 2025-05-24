@@ -45,7 +45,7 @@ public class Connexionbdd {
         try {
             return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch (SQLException e) {
-            System.err.println("Connection error: " + e.getMessage());
+            System.err.println("Erreur de connexion : " + e.getMessage());
             return null;
         }
     }
@@ -80,9 +80,9 @@ public class Connexionbdd {
      * Displays the list of exercises with their details.
      */
     public static void showExolist() {
-        Connection conn = getConnection();
+        Connection conn = getConnection(); // Connexion à la BDD
         if (conn == null) {
-            System.out.println("Unable to connect to the database.");
+            System.out.println("Impossible de se connecter à la base de données.");
             return;
         }
     
@@ -99,13 +99,13 @@ public class Connexionbdd {
                 int tries = rs.getInt("Try");
                 int successfulTries = rs.getInt("Successfulltry");
     
-                System.out.println("Exercise " + id +
-                    ", Title: " + Titre +
+                System.out.println("Exercice " + id +
+                    ", Titre: " + Titre +
                     ", Difficulty: " + difficulty +
                     ", Question: " + question +
-                    ", Attempts: " + tries +
-                    ", Successful attempts: " + successfulTries +
-                    ", Available languages: ");
+                    ", Try: " + tries +
+                    ", SuccessfulTry: " + successfulTries +
+                    ", Language disponible: ");
                     Statement stmt2 = conn.createStatement();
                     String query2 = "SELECT NomLanguage FROM LanguageCode WHERE Exerciceid = "+id;
                     ResultSet rs2 = stmt2.executeQuery(query2);
@@ -116,7 +116,7 @@ public class Connexionbdd {
             }
             conn.close();
         } catch (SQLException e) {
-            System.err.println("Error retrieving exercises: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des exercices : " + e.getMessage());
         }
     }
 
@@ -143,10 +143,10 @@ public class Connexionbdd {
             e.printStackTrace();
         }
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the exercise number you want");
+        System.out.println("Entrez le numéro de l'exercice que vous souhaitez");
         int choice = scanner.nextInt();
         while(choice <1 || choice > id){
-            System.out.println("Please enter a number between 1 and " + id);
+            System.out.println("Veuillez entrer un nombre entre 1 et " + id);
             choice = scanner.nextInt();
         }
         return choice;
@@ -161,7 +161,7 @@ public class Connexionbdd {
     public static String showConsigne(int choice) {
         Connection conn = getConnection(); 
         if (conn == null) {
-            System.out.println("Unable to connect to the database.");
+            System.out.println("Impossible de se connecter à la base de données.");
             return null;
         }
     
@@ -174,12 +174,12 @@ public class Connexionbdd {
                 String question = rs.getString("Question");
                 return question;
             } else {
-                System.out.println("No instructions found for exercise " + choice);
+                System.out.println("Aucune consigne trouvée pour l'exercice " + choice);
             }
     
             conn.close();
         } catch (SQLException e) {
-            System.err.println("Error retrieving instructions: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération de la consigne : " + e.getMessage());
         }
         return null;
     }
@@ -200,7 +200,7 @@ public class Connexionbdd {
                 languages.add(rs.getString("NomLanguage"));
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving available languages: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des langages disponibles : " + e.getMessage());
         }
         return languages;
     }
@@ -212,7 +212,7 @@ public class Connexionbdd {
      * @return The exercise title, or "Title not available" if not found
      */
     public static String getExerciceTitle(int exerciseId) {
-        String titre = "Title not available";
+        String titre = "Titre non disponible";
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT Titre FROM Exercice WHERE Id = " + exerciseId)) {
@@ -221,7 +221,7 @@ public class Connexionbdd {
                 titre = rs.getString("Titre");
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving exercise title: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération du titre de l'exercice : " + e.getMessage());
         }
         return titre;
     }
@@ -247,12 +247,12 @@ public class Connexionbdd {
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return generatedKeys.getInt(1); // Return the generated ID
+                return generatedKeys.getInt(1); // Retourner l'ID généré
             }
         } catch (SQLException e) {
-            System.err.println("Error adding exercise: " + e.getMessage());
+            System.err.println("Erreur lors de l'ajout de l'exercice : " + e.getMessage());
         }
-        return -1; // Return -1 on error
+        return -1;
     }
 
     /**
@@ -269,7 +269,7 @@ public class Connexionbdd {
             stmt.setString(2, language);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error adding language to exercise: " + e.getMessage());
+            System.err.println("Erreur lors de l'ajout du langage à l'exercice : " + e.getMessage());
         }
     }
 
@@ -286,10 +286,10 @@ public class Connexionbdd {
             stmt.setString(1, title);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Returns true if title exists
+                return rs.getInt(1) > 0; // Retourne true si le titre existe
             }
         } catch (SQLException e) {
-            System.err.println("Error checking title: " + e.getMessage());
+            System.err.println("Erreur lors de la vérification du titre : " + e.getMessage());
         }
         return false; // Returns false on error or if title doesn't exist
     }
@@ -310,7 +310,7 @@ public class Connexionbdd {
                 return rs.getString("difficulty");
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving difficulty: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération de la difficulté : " + e.getMessage());
         }
         return null; // Returns null if difficulty not found or on error
     }
@@ -331,7 +331,7 @@ public class Connexionbdd {
                 return rs.getInt("Try");
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving attempt count: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération du nombre d'essais : " + e.getMessage());
         }
         return 0; // Returns 0 on error
     }
@@ -352,7 +352,7 @@ public class Connexionbdd {
                 return rs.getInt("Successfulltry");
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving successful attempts: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des essais réussis : " + e.getMessage());
         }
         return 0; // Returns 0 on error
     }
@@ -369,7 +369,7 @@ public class Connexionbdd {
             stmt.setInt(1, exerciseId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error incrementing attempt count: " + e.getMessage());
+            System.err.println("Erreur lors de l'incrémentation du nombre d'essais : " + e.getMessage());
         }
     }
 
@@ -385,7 +385,7 @@ public class Connexionbdd {
             stmt.setInt(1, exerciseId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error incrementing successful attempts: " + e.getMessage());
+            System.err.println("Erreur lors de l'incrémentation des réussites : " + e.getMessage());
         }
     }
 
@@ -409,9 +409,9 @@ public class Connexionbdd {
             deleteExerciseStmt.setInt(1, exerciseId);
             deleteExerciseStmt.executeUpdate();
 
-            System.out.println("Exercise with ID " + exerciseId + " successfully deleted.");
+            System.out.println("Exercice avec ID " + exerciseId + " supprimé avec succès.");
         } catch (SQLException e) {
-            System.err.println("Error deleting exercise: " + e.getMessage());
+            System.err.println("Erreur lors de la suppression de l'exercice : " + e.getMessage());
         }
     }
 
@@ -446,11 +446,10 @@ public class Connexionbdd {
                 exerciseIds.add(rs.getInt("Exerciceid"));
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving exercises by language: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des exercices par langage : " + e.getMessage());
         }
         return exerciseIds;
     }
-
     /**
      * Gets the type of a specific exercise.
      * 
@@ -467,7 +466,7 @@ public class Connexionbdd {
                 return rs.getString("TypeExo");
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving exercise type: " + e.getMessage());
+            System.err.println("Erreur lors de la récupération du type d'exercice : " + e.getMessage());
         }
         return null; // Returns null if exercise type not found or on error
     }

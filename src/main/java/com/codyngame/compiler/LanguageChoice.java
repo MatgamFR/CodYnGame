@@ -32,7 +32,7 @@ public class LanguageChoice {
             return new PhpCompilerExecute(textArea); // Use PhpCompilerExecute for PHP
         }
         else {
-            throw new IllegalArgumentException("Unsupported language: " + langage);
+            throw new IllegalArgumentException("Langage non supporté : " + langage);
         }
     }
 }

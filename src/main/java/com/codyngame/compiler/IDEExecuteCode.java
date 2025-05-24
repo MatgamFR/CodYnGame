@@ -32,15 +32,15 @@ public abstract class IDEExecuteCode {
      */
     public void printOutput(String output) {
         textArea.appendText(output+"\n");
-        if(output.equals("The code is correct")){
+        if(output.equals("Le code est correct")){
             textArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 1); " + 
-            "-fx-text-fill: #00FF00; " + // Green terminal-like color 
+            "-fx-text-fill: #00FF00; " + // Couleur verte comme un terminal 
             "-fx-font-family: 'Monospace'; " + 
             "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc);" ); 
         }
         else {
             textArea.setStyle("-fx-control-inner-background: rgba(0, 0, 0, 1); " + 
-            "-fx-text-fill:rgb(255, 0, 0); " + // Red color for errors
+            "-fx-text-fill:rgb(255, 0, 0); " + // Couleur verte comme un terminal 
             "-fx-font-family: 'Monospace'; " + 
             "-fx-border-color: linear-gradient(to right, #ffffff, #cccccc);" ); 
         }

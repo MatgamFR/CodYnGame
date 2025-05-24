@@ -34,7 +34,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
     public void compileCode(String code, int id) {
         try {
             if (!code.contains("public class Codyngame")) {
-                this.printOutput("Java code must contain a public class named 'Codyngame'.");
+                this.printOutput("Le code Java doit contenir une classe publique nommée 'Codyngame'.");
                 return;
             }
 
@@ -46,9 +46,9 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    this.printOutput("Compilation error:\n" + new String(process.getErrorStream().readAllBytes()));
+                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
-                    this.printOutput("Compilation successful.");
+                    this.printOutput("Compilation réussie.");
                 }
             } 
             else {
@@ -61,14 +61,15 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
 
                 Process process = Runtime.getRuntime().exec(new String[]{"javac", tempFile2.toAbsolutePath().toString(), tempFile.toAbsolutePath().toString()});
                 if (process.waitFor() != 0) {
-                    this.printOutput("Compilation error:\n" + new String(process.getErrorStream().readAllBytes()));
+                    this.printOutput("Erreur de compilation :\n" + new String(process.getErrorStream().readAllBytes()));
                 } else {
-                    this.printOutput("Compilation successful.");
+                    this.printOutput("Compilation réussie.");
                 }
+                
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Error during compilation: " + e.getMessage());
+            System.err.println("Erreur lors de la compilation : " + e.getMessage());
         }
     }
 
@@ -85,7 +86,7 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
             
             // Verify compilation was successful
             if (tempClassDir == null || !Files.exists(tempClassDir.resolve("Codyngame.class"))) {
-                this.printOutput("Error: Compiled file Codyngame.class not found");
+                this.printOutput("Erreur: Le fichier compilé Codyngame.class n'a pas été trouvé");
                 return;
             }
             
@@ -119,13 +120,13 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
 
@@ -148,13 +149,13 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
                 }
@@ -181,23 +182,24 @@ public class JavaCompilerExecuteCode extends IDEExecuteCode {
                 }
             }
             
-            this.printOutput("Program finished with exit code: " + exitCode);
+            
+            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(output.length > 4){
-                this.printOutput("incorrect, you did a display instead of a return");
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
             }
             else if(valide) {
-                this.printOutput("The code is correct");
+                this.printOutput("Le code est correct");
             } 
             else {
-                this.printOutput("The code is incorrect");
-                this.printOutput("Received: '" + output[1] + "' value " + output[3]);
-                this.printOutput("Expected: '" + output[2] + "' value " + output[3]);
+                this.printOutput("Le code est incorrect");
+                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
+                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
             }
 
         } 
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Error executing code: " + e.getMessage());
+            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
     }
 }

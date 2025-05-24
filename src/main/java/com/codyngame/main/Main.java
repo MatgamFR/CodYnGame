@@ -144,13 +144,13 @@ public void setupBDD(){
         reader.close();
 
         if (dbUrl == null || dbUser == null || dbPassword == null) {
-            throw new IllegalArgumentException("Invalid configuration in configue.txt");
+            throw new IllegalArgumentException("Configuration invalide dans configue.txt");
         }
 
         // Initialize Connexionbdd with the read values
         new Connexionbdd(dbUrl, dbUser, dbPassword);
     } catch (IOException e) {
-        System.err.println("Error reading configuration: " + e.getMessage());
+        System.err.println("Erreur lors de la lecture de la configuration :  " + e.getMessage());
         return;
     }
 }
@@ -406,22 +406,37 @@ public void start(Stage primaryStage) {
     File nextFile = new File(nextPath);
 
     if (!imageFile.exists()) {
-        System.err.println("Image not found: " + imageFile.getAbsolutePath());}
+        System.err.println("Image introuvable : " + imageFile.getAbsolutePath());}
     else if(!backgroundFile.exists()){
-        System.err.println("Image not found: " + backgroundFile.getAbsolutePath());
+        System.err.println("Image introuvable : " + backgroundFile.getAbsolutePath());
     } 
     
     else if(!addFile.exists()){
-        System.err.println("Image not found: " + addFile.getAbsolutePath());
+        System.err.println("Image introuvable : " + addFile.getAbsolutePath());
     }
     else if(!filterFile.exists()){
-        System.err.println("Image not found: " + filterFile.getAbsolutePath());
+        System.err.println("Image introuvable : " + filterFile.getAbsolutePath());
     }
     else if(!homeFile.exists()){
-        System.err.println("Image not found: " + homeFile.getAbsolutePath());
+        System.err.println("Image introuvable : " + homeFile.getAbsolutePath());
     }
     else if(!searchFile.exists()){
-        System.err.println("Image not found: " + searchFile.getAbsolutePath());
+        System.err.println("Image introuvable : " + searchFile.getAbsolutePath());
+    }
+    else if(!fermerFile.exists()){
+        System.err.println("Image introuvable : " + fermerFile.getAbsolutePath());
+    }
+    else if(!returnFile.exists()){
+        System.err.println("Image introuvable : " + returnFile.getAbsolutePath());
+    }
+    else if(!executeFile.exists()){
+        System.err.println("Image introuvable : " + executeFile.getAbsolutePath());
+    }
+    else if(!saveFile.exists()){
+        System.err.println("Image introuvable : " + saveFile.getAbsolutePath());
+    }
+    else if(!nextFile.exists()){
+        System.err.println("Image introuvable : " + nextFile.getAbsolutePath());
     }
     else {
     // Apply background image to main container
@@ -746,11 +761,11 @@ public void start(Stage primaryStage) {
         if (!title.isEmpty() && !question.isEmpty() && !difficulty.isEmpty() && type != null &&
             (isPythonSelected || isCSelected || isJavaSelected || isJSSelected || isPHPSelected)) {
             if (Connexionbdd.isTitleExists(title)) {
-                System.err.println("An exercise with this title already exists. Please choose another title.");
+                System.err.println("Le titre est déjà pris, veuillez à en choisir un autre.");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
+                alert.setTitle("Erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Please choose another title.");
+                alert.setContentText("Le titre est déjà pris, veuillez à en choisir un autre.");
                 alert.showAndWait();
             } else {
                 if(typeComboBox.getValue().equals("STDIN/STDOUT")){
@@ -791,7 +806,7 @@ public void start(Stage primaryStage) {
                                                     "\n" + //
                                                     "def main():\n" + //
                                                     "   seed(sys.argv[1])\n\n" + //
-                                                    "   # Your code here\n" + //
+                                                    "   # Votre code ici\n" + //
                                                     "\n" + //
                                                     "if __name__ == \"__main__\":\n" + //
                                                     "   main()");
@@ -853,7 +868,7 @@ public void start(Stage primaryStage) {
                                     exerciceFile.delete();
                                 }
                                 if (!exerciceFile.createNewFile()) {
-                                    throw new IOException("Error creating file: " + exerciceFile.getAbsolutePath());
+                                    throw new IOException("Erreur lors de la création du fichier: " + exerciceFile.getAbsolutePath());
                                 }
 
                                 FileWriter fileWriter = new FileWriter(exerciceFile);
@@ -905,31 +920,31 @@ public void start(Stage primaryStage) {
 
                                 // Return to main scene
                                 if (languageBoxSelected.size() > 1) {
-                                    correctionLabel.setText("Correction in " + languageBoxSelected.get(0) + " :");
+                                    correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
                                     correctionInput.replaceText("");
                                     languageBoxSelected.remove(0);
                                     correctionInput.replaceText("word = input().replace(\"\\\\n" + //
                                                                                     "\", \"\\n" + //
                                                                                     "\").split(\"\\n" + //
-                                                                                    "\") # list of user outputs \n" + //
+                                                                                    "\") # liste des sorties de l'utilisateur \n" + //
                                                                                     "\n" + //
-                                                                                    "if word[0] == \"hello world\": # If true\n" + //
+                                                                                    "if word[0] == \"hello world\": # Si c'est vrai\n" + //
                                                                                     "    print(1)\n" + //
-                                                                                    "else: # If false\n" + //
+                                                                                    "else: # Si c'est faux\n" + //
                                                                                     "    print(0)\n" + //
-                                                                                    "    print(word[0]) # user value\n" + //
-                                                                                    "    print(\"hello world\") # expected value\n" + //
-                                                                                    "    print(1) # error line");
+                                                                                    "    print(word[0]) # valeur de l'utilisateur\n" + //
+                                                                                    "    print(\"hello world\") # valeur attendu\n" + //
+                                                                                    "    print(1) # ligne de l'erreur");
                                 } else {
                                     primaryStage.setScene(mainScene);
                                     mainScene.setCursor(Cursor.DEFAULT);
                                 }
 
                             } catch (IOException ex) {
-                                System.err.println("Error saving correction: " + ex.getMessage());
+                                System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
                         } else {
-                            System.err.println("Correction cannot be empty or invalid.");
+                            System.err.println("La correction ne peut pas être vide ou invalide.");
                         }
                     } else {
                         if (!correction.isEmpty()){
@@ -980,7 +995,7 @@ public void start(Stage primaryStage) {
                                     exerciceFile.delete();
                                 }
                                 if (!exerciceFile.createNewFile()) {
-                                    throw new IOException("Error creating file: " + exerciceFile.getAbsolutePath());
+                                    throw new IOException("Erreur lors de la création du fichier: " + exerciceFile.getAbsolutePath());
                                 }
 
                                 FileWriter fileWriter = new FileWriter(exerciceFile);
@@ -1038,7 +1053,7 @@ public void start(Stage primaryStage) {
                                             mainScene.setCursor(Cursor.DEFAULT);
                                         }
                                     }
-                                    correctionLabel.setText("Correction in " + languageBoxSelected.get(0) + " :");
+                                    correctionLabel.setText("Correction en " + languageBoxSelected.get(0) + " :");
                                     switch(languageBoxSelected.get(0)){
                                         case "Python":
                                             correctionInput.replaceText("import codyngame\n" + //
@@ -1080,41 +1095,41 @@ public void start(Stage primaryStage) {
                                         case "C":
                                             correctionInput.replaceText("#include <stdio.h>\n" + //
                                                                         "\n" + //
-                                                                        "// Function to import somme function from user file\n" + //
+                                                                        "// Fonction pour importer la fonction somme du fichier utilisateur\n" + //
                                                                         "int fonction(int a, int b);\n" + //
                                                                         "\n" + //
                                                                         "int main() {\n" + //
                                                                         "    int a, b;\n" + //
                                                                         "    \n" + //
-                                                                        "    // Read two numbers from standard input\n" + //
+                                                                        "    // Lecture des deux nombres depuis l'entrée standard\n" + //
                                                                         "    scanf(\"%d\", &a);\n" + //
                                                                         "    scanf(\"%d\", &b);\n" + //
                                                                         "    \n" + //
-                                                                        "    // Check result - corrected condition\n" + //
-                                                                        "    if (somme(a, b) == a + b) {  // Corrected condition\n" + //
+                                                                        "    // Vérification du résultat - correction de la condition\n" + //
+                                                                        "    if (somme(a, b) == a + b) {  // Condition corrigée\n" + //
                                                                         "        printf(\"1\\n" + //
                                                                         "\");\n" + //
                                                                         "    } else {\n" + //
                                                                         "        printf(\"0\\n" + //
                                                                         "\");\n" + //
                                                                         "        printf(\"%d\\n" + //
-                                                                        "\", somme(a, b));  // Received result\n" + //
+                                                                        "\", somme(a, b));  // Résultat reçu\n" + //
                                                                         "        printf(\"%d\\n" + //
-                                                                        "\", a + b);        // Expected result\n" + //
+                                                                        "\", a + b);        // Résultat attendu\n" + //
                                                                         "        printf(\"1\\n" + //
-                                                                        "\");                // Comparison value\n" + //
+                                                                        "\");                // Valeur de comparaison\n" + //
                                                                         "    }\n" + //
                                                                         "    \n" + //
                                                                         "    return 0;\n" + //
                                                                         "}");
                                             break;
                                         case "JavaScript":
-                                            correctionInput.replaceText("// Include file containing somme function\n" + //
-                                                                        "const codyngame = require('./codyngame'); // Ensure codyngame.js contains somme function\n" + //
+                                            correctionInput.replaceText("// Inclure le fichier contenant la fonction somme\n" + //
+                                                                        "const codyngame = require('./codyngame'); // Assurez-vous que codyngame.js contient la fonction somme\n" + //
                                                                         "\n" + //
                                                                         "const readline = require('readline');\n" + //
                                                                         "\n" + //
-                                                                        "// Read inputs from console\n" + //
+                                                                        "// Lire les entrées depuis la console\n" + //
                                                                         "const rl = readline.createInterface({\n" + //
                                                                         "    input: process.stdin,\n" + //
                                                                         "    output: process.stdout\n" + //
@@ -1145,10 +1160,10 @@ public void start(Stage primaryStage) {
                                         case "PHP":
                                             correctionInput.replaceText("<?php\n" + //
                                                                         "\n" + //
-                                                                        "include 'codyngame.php'; // Include file containing somme function\n" + //
+                                                                        "include 'codyngame.php'; // Inclure le fichier contenant la fonction somme\n" + //
                                                                         "\n" + //
-                                                                        "$a = intval(trim(fgets(STDIN))); // Read first input\n" + //
-                                                                        "$b = intval(trim(fgets(STDIN))); // Read second input\n" + //
+                                                                        "$a = intval(trim(fgets(STDIN))); // Lire la première entrée\n" + //
+                                                                        "$b = intval(trim(fgets(STDIN))); // Lire la deuxième entrée\n" + //
                                                                         "\n" + //
                                                                         "if (codyngame_somme($a, $b) == $a + $b) {\n" + //
                                                                         "    echo \"1\\n" + //
@@ -1173,26 +1188,27 @@ public void start(Stage primaryStage) {
 
                                 
                             } catch (IOException ex) {
-                                System.err.println("Error saving correction: " + ex.getMessage());
+                                System.err.println("Erreur lors de l'enregistrement de la correction : " + ex.getMessage());
                             }
                         } else {
-                            System.err.println("Correction cannot be empty.");
+                            System.err.println("La correction ne peut pas être vide.");
                         }
                     }
                 });
             }
         } else {
-            System.err.println("Please fill all fields and select at least one language.");
+            System.err.println("Veuillez remplir tous les champs et sélectionner au moins une langue.");
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
+            alert.setTitle("Erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Please fill all fields and select at least one language.");
+            alert.setContentText("Veuillez remplir tous les champs et sélectionner au moins une langue.");
             alert.showAndWait();
         }
     });
 
     HBox buttonBoxAdd = new HBox(10, cancelButton, saveButton);
     buttonBoxAdd.setAlignment(Pos.CENTER);
+
 
     // Row for title
     HBox titleRow = new HBox(30); // Horizontal spacing of 10px
@@ -1366,7 +1382,7 @@ public void start(Stage primaryStage) {
                 try {
                     selectedExo = Integer.parseInt(exerciseNumberText); // Convert to integer
                 } catch (NumberFormatException e) {
-                    System.err.println("Error: Cannot convert exercise number. Text: " + exerciseNumberText);
+                    System.err.println("Erreur : Impossible de convertir le numéro de l'exercice. Texte : " + exerciseNumberText);
                     return; // Stop if number is invalid
                 }
 

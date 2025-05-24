@@ -57,33 +57,33 @@ public class CcompilerExecuter extends IDEExecuteCode {
 
             if(!compileProcess.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
                 compileProcess.destroyForcibly();
-                this.printOutput("Compilation timeout exceeded (10s)");
+                this.printOutput("Timeout de compilation dépassé (10s)");
             }
 
             if (compileProcess.exitValue() != 0) {
                 String errorOutputC = new String(compileProcess.getErrorStream().readAllBytes());
                 if (errorOutputC.contains("error:")) {
-                    this.printOutput("[SYNTAX ERROR]");
+                    this.printOutput("[ERREUR SYNTAXE]");
                 } 
                 if (errorOutputC.contains("warning:")) {
-                    this.printOutput("[WARNING]");
+                    this.printOutput("[AVERTISSEMENT]");
                 }
                 
                 this.printOutput(errorOutputC);
             }
             else {
-                this.printOutput("C compilation successful.");
+                this.printOutput("Compilation C reussie.");
                 this.compiledExecutable = tempDir.resolve("exe");  // Save executable path
                 String warningC = new String(compileProcess.getErrorStream().readAllBytes());
                 if (warningC.contains("warning")) {
-                    this.printOutput("Compilation warnings:");
+                    this.printOutput("Avertissement de compilation:");
                     this.printOutput(warningC);
                 }
             }
             
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            this.printOutput("Error during compilation: " + e.getMessage());
+            this.printOutput("Erreur lors de la compilation : " + e.getMessage());
         } 
     }
 
@@ -97,7 +97,7 @@ public class CcompilerExecuter extends IDEExecuteCode {
         this.compileCode(code, id);
 
         if (compiledExecutable == null || !Files.exists(compiledExecutable)) {
-            System.err.println("Error: No compiled executable found. Compile the code first.");
+            System.err.println("Erreur: Aucun exécutable compilé trouvé. Compilez d'abord le code.");
             return;
         }
 
@@ -130,13 +130,13 @@ public class CcompilerExecuter extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     } 
 
@@ -157,19 +157,20 @@ public class CcompilerExecuter extends IDEExecuteCode {
                     completed = process3.waitFor(15, java.util.concurrent.TimeUnit.SECONDS);
 
                     if (!completed) {
-                        this.printOutput("Program exceeded maximum execution time of 15 seconds. Forced stop.");
+                        this.printOutput("Le programme a dépassé la durée d'exécution maximale de 15 secondes. Arrêt forcé.");
                         process3.destroy();
                         process3.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
                         if (process3.isAlive()) {
                             process3.destroyForcibly();
                         }
-                        this.printOutput("Program probably tried to use more inputs than expected or has an infinite loop.");
+                        this.printOutput("Le programme a probablement essayé d'utiliser plus d'entrées que prévu ou une boucle infinie.");
                         return;
                     }
 
                     process2 = Runtime.getRuntime().exec(new String[] {"ls"});
                 }
 
+                
                 exitCode = process3.exitValue();
                 
                 if (exitCode != 0) {
@@ -191,28 +192,28 @@ public class CcompilerExecuter extends IDEExecuteCode {
                 }
             }
             
-            this.printOutput("Program finished with exit code: " + exitCode);
+            this.printOutput("Programme terminé avec le code de sortie: " + exitCode);
             if(output.length > 4){
-                this.printOutput("incorrect, you did a display instead of a return");
+                this.printOutput("incorrect, vous avez fait un affichage au lieu d'un renvoi");
             }
             else if(valide) {
-                this.printOutput("The code is correct");
+                this.printOutput("Le code est correct");
             } 
             else {
-                this.printOutput("The code is incorrect");
-                this.printOutput("Received: '" + output[1] + "' value " + output[3]);
-                this.printOutput("Expected: '" + output[2] + "' value " + output[3]);
+                this.printOutput("Le code est incorrect");
+                this.printOutput("Reçu : '" + output[1] + "' valeur " + output[3]);
+                this.printOutput("Attendu : '" + output[2] + "' valeur " + output[3]);
             }
             // Clean temporary files
             try {
                 Files.deleteIfExists(this.compiledExecutable);
             } catch (IOException e) {
-                System.err.println("Error deleting temporary files: " + e.getMessage());
+                System.err.println("Erreur lors de la suppression des fichiers temporaires: " + e.getMessage());
             }
         } 
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            System.err.println("Error executing code: " + e.getMessage());
+            System.err.println("Erreur lors de l'exécution du code: " + e.getMessage());
         }
     }
 }
